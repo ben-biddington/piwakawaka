@@ -1,0 +1,31 @@
+{
+  "name": "sparrow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test.unit": "mocha test/unit.tests/**/*-test.js --timeout 10000",
+    "install": "bash install.sh",
+    "test.integration": "mocha test/integration.tests/**/*-test.js --timeout 10000",
+    "test.acceptance": "mocha test/acceptance.tests/**/*-test.js --timeout 10000",
+    "server": "node src/adapters/web/server.js",
+    "webpack.build": "webpack --config ./src/adapters/web/application.webpack.config.js && webpack --config ./src/adapters/web/adapters.webpack.config.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "commander": "^2.19.0",
+    "express": "^4.16.4",
+    "moment": "^2.24.0",
+    "request": "^2.88.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "connect": "^3.6.6",
+    "mocha": "^6.0.0",
+    "puppeteer": "^1.12.2",
+    "serve-static": "^1.13.2",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.2.3"
+  }
+}

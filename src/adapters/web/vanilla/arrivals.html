@@ -1,0 +1,53 @@
+<html>
+<head>
+  <!-- `npm run webpack.build` to create the following -->
+  <script src="/dist/adapters.bundle.js"></script>
+  <script src="/dist/application.bundle.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
+  
+  <script language="javascript" defer>
+    const log       = adapters.log;
+    const realTime  = adapters.realTime;
+    
+    const get = (url, headers) => fetch(url).then(reply => reply.text());
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const opts = { baseUrl: '/api/v1/StopDepartures', stopNumber: '4130', routeNumbers: urlParams.getAll('routeNumbers'), enableDebug: false };
+
+    console.log(urlParams);
+
+    const render = result => {
+      const container = document.getElementById("arrivals");
+      const list      = document.createElement("ul");
+
+      log(`${result.stop.name} (${result.stop.sms})\n`);
+
+      result.arrivals.map(arrival => {
+        const item      = document.createElement('li');
+        
+        item.setAttribute('class'       , 'arrival');
+        item.setAttribute('routeNumber' , arrival.code);
+
+        item.innerHTML  = `<span style="margin-right:20px">${arrival.code}</span><span style="margin-right:20px">${arrival.destination}</span>${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`;
+        
+        list.appendChild(item);
+      });
+
+      container.appendChild(list);
+    }
+
+    realTime({ get, log: console.log }, opts).
+      catch(e     => { throw e; }).
+      then(result => render(result, opts));
+  </script>
+</head>
+
+<body>
+  <h1 id="title">Arrivals</h1>
+  <div id="arrivals">
+    
+  </div>
+  <div id="status"></div>
+</body>
+</html>

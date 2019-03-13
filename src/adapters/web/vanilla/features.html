@@ -1,0 +1,31 @@
+<html>
+<head>
+  <!-- `npm run webpack.build` to create the following -->
+  <script src="../dist/adapters.bundle.js"></script>
+  <script src="../dist/application.bundle.js"></script>
+  
+  <!-- You need to run this with `npm run server` to allow query strings to work -->
+  <script language="javascript" defer>
+    const log       = adapters.log;
+    const core      = application.newApplication({ log: adapters.log }, { url: window.location.href });
+
+    const go = () => {
+      core.printFeatures(log);
+      core.featureToggles.forEach(f => {
+        const list     = document.getElementById('features');
+        const listItem = document.createElement('li');
+        listItem.innerText = `${f.name} = ${f.on ? 'ON' : 'OFF'}`;
+        list.appendChild(listItem);
+      });
+    }
+  </script>
+</head>
+
+<body onload="go()">
+  <h1 id="title">Features</h1>
+  <ul id="features">
+    
+  </ul>
+  <div id="status"></div>
+</body>
+</html>

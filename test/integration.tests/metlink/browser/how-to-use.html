@@ -1,0 +1,27 @@
+<html>
+<head>
+  <!-- `npm run webpack.build` to create the following -->
+  <script src="../../../../src/adapters/web/dist/adapters.bundle.js"></script>
+  <script src="../../support/check.js"></script>
+  
+  <script language="javascript">
+    const log          = adapters.log;
+    const realTime     = adapters.realTime;
+
+    const get = (url, headers) => fetch(url, {
+      mode: 'no-cors', 
+      headers: {
+        "Accept": "application/json"
+      },
+    });
+
+    skipTestAsync("can query for real", async () => {
+      const result = await realTime({ log, get }, { stopNumber: '4130', routeNumber: '14' });
+    }, 'CORS problem when direct requesting');
+  </script>
+</head>
+
+<body onload="run()">
+  <h1 id="title">Metlink Examples</h1>
+</body>
+</html>

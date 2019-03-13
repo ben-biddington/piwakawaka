@@ -1,0 +1,55 @@
+<html>
+<head>
+  <!-- `npm run webpack.build` to create the following -->
+  <script src="../../src/adapters/web/webpack/dist/adapters.bundle.js"></script>
+  <script src="../support/check.js"></script>
+
+  <script language="javascript">
+    const log          = adapters.log;
+    const localStorage = adapters.newLocalStorage();
+
+    test("can round trip", () => {
+      const item = { id:'a', name: 'example' };
+
+      localStorage.save('a', item);
+
+      const saved = localStorage.get('a');
+
+      if (JSON.stringify(saved) != JSON.stringify(item))
+        throw `The item returned from local storage doesn't match: \nExpected:\n\n${JSON.stringify(item)}\n\ngot:\n\n${JSON.stringify(saved)}`;
+    });
+
+    test('a missing item returns null', () => {
+      const saved = localStorage.get('xxx-does-not-exist-xxx');
+
+      if (saved !== null)
+        throw `Expected nonexistent item to return null. \n\nGot:\n\n${JSON.stringify(saved)}`
+    });
+
+    test('saving with the same key overwrites entry', () => {
+      localStorage.save('a', 1);
+      localStorage.save('a', 2);
+
+      const actual = localStorage.get('a'); 
+
+      if (actual !== 2)
+        throw `Expected item 'a' to be overwritten and set to <2>.\n\nGot:\n\n${JSON.stringify(actual)}`
+    });
+
+    test('clear removes all entries', () => {
+      localStorage.save('a', '');
+      localStorage.save('b', '');
+      localStorage.save('c', '');
+
+      localStorage.clear();
+
+      if (localStorage.get('a') !== null)
+        throw `Expected nonexistent item to return null. \n\nGot:\n\n${JSON.stringify(saved)}`
+    });
+  </script>
+</head>
+
+<body onload="run()">
+  <h1 id="title">Local Storage Examples</h1>
+</body>
+</html>
