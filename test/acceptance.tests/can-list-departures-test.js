@@ -1,9 +1,8 @@
 const expect                            = require('chai').expect
 const settings                          = require('./support/settings');
 const { choose: chooseInteractor }      = require('./support/interactors/interactors');
-const { newConsoleArrivalsInteractor }  = require('./support/interactors/system-arrivals-interactor');
 
-const interactor = newConsoleArrivalsInteractor({ log : settings.log }); //chooseInteractor(settings);
+const interactor = chooseInteractor(settings);
 
 // [i] Use `DISABLE_SERVER=1` if server is already running
 // [i] Run server with `npm run server`
@@ -12,6 +11,7 @@ let server;
 
 describe('listing arrivals', () => {
   before(() => {
+    //@todo: move this to driver only makes sense for some
     if (settings.features.enableServer){
       // [i] https://nodejs.org/api/child_process.html#child_process_event_message
       const { spawn } = require('child_process');

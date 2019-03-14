@@ -3,7 +3,7 @@ const fs        = require('fs');
 const log       = m => fs.writeSync(1, `${m}\n`);
 const debug     = process.env.DEBUG == 1 ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
 
-const get = (url, headers) => {
+const get = url => {
     const request   = require("request");
     
     return new Promise(function(resolve, reject){
@@ -47,6 +47,4 @@ program.
       then(result => render(result, opts));
   });
 
-  program.parse(process.argv);
-  
-// debug(JSON.stringify(program, null, 2));
+program.parse(process.argv);
