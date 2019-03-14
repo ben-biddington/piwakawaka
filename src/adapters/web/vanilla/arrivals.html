@@ -15,8 +15,6 @@
 
     const opts = { baseUrl: '/api/v1/StopDepartures', stopNumber: '4130', routeNumbers: urlParams.getAll('routeNumbers'), enableDebug: false };
 
-    console.log(urlParams);
-
     const render = result => {
       const container = document.getElementById("arrivals");
       const list      = document.createElement("ul");
@@ -40,6 +38,32 @@
     realTime({ get, log: console.log }, opts).
       catch(e     => { throw e; }).
       then(result => render(result, opts));
+
+    const showStatus = (m) => {
+      const status = document.querySelector("#status");
+      if (status) status.innerHTML = m;
+    }
+
+    const reload = () => {
+      showStatus('Reloading');
+
+      const container = document.querySelector("#arrivals");
+
+      while (container.firstChild) {
+        container.removeChild(container.firstChild);
+      }
+
+      realTime({ get, log: console.log }, opts).
+        catch(e     => { throw e; }).
+        then(result => render(result, opts)).
+        then(() => showStatus(''));
+    };
+
+    const timeout = urlParams.has('timeout') ? parseInt(urlParams.get('timeout')) : 60*1000;
+
+    console.log(`Using timeout <${timeout}>`);
+
+    window.setInterval(reload, timeout);  
   </script>
 </head>
 
