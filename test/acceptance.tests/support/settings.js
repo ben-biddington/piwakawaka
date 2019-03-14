@@ -4,7 +4,8 @@ const features = {
   enableScreenshots: process.env.ENABLE_SCREENSHOTS == 1 ,
   enableLog:         process.env.ENABLE_LOG == 1 || process.env.LOG == 1,
   enableDebug:       process.env.ENABLE_DEBUG == 1 || process.env.ENABLE_DEBUG == 1,
-  hexagonal:         process.env.RUN_HEXAGONALLY == 1
+  hexagonal:         process.env.RUN_HEXAGONALLY == 1,
+  enableServer:      process.env.DISABLE_SERVER != 1
 };
 
 viewAdapter = process.env.VIEW_ADAPTER || '';
