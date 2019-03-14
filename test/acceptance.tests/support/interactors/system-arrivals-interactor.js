@@ -33,4 +33,45 @@ class SystemArrivalsInteractor extends BrowserInteractor {
   }
 }
 
+class ConsoleArrivalsInteractor {
+  constructor(ports = {}) {
+    this._log = console.log;
+    this._exitStatus = null;
+  }
+
+  async list(opts = {}) {
+    const { stopNumber = '4130', routeNumber } = opts;
+
+    const util = require('util');
+    const exec = util.promisify(require('child_process').exec);
+
+    this._cliStdout = [];
+    this._cliStderr = [];
+
+    // [i] http://man7.org/linux/man-pages/man7/signal.7.html
+    const { stdout, stderr } = await exec(`bash bus due ${stopNumber} ${routeNumber}`);
+
+    this._cliStdout = stdout.split('\n');
+    this._cliStderr = stderr.split('\n').filter(it => it != "");
+  }
+
+  async getArrivals() {
+    return this._cliStdout.
+      map   (line     => line.match(/^\d+/gi)).
+      filter(matches  => matches != null).
+      map   (matches  => ({ code: matches[0] }));
+  }
+
+  async quit() { }
+
+  mustNotHaveErrors() {
+    const errors = this._cliStderr;
+
+    if (errors.length > 0)
+      throw new Error(`Expected no errors, got the following <${errors.length}>:\n\n${errors.join('\n')}`);
+  }
+}
+
 module.exports.SystemArrivalsInteractor = SystemArrivalsInteractor;
+module.exports.ConsoleArrivalsInteractor = ConsoleArrivalsInteractor;
+module.exports.newConsoleArrivalsInteractor = () => new ConsoleArrivalsInteractor();

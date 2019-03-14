@@ -28,7 +28,7 @@ const render = (result, opts) => {
   }
 
   result.arrivals.map(arrival => {
-    log(` - ${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`);
+    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`);
   });
 
   debug(JSON.stringify(result, null, 2));
