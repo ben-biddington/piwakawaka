@@ -3,8 +3,6 @@ const choose = settings => {
   const tools                             = require('./system-arrivals-interactor');
   const { newConsoleArrivalsInteractor }  = require('./system-arrivals-interactor');
   
-  const defaultInteractor = new tools.SystemArrivalsInteractor('http://127.0.0.1:1080/vanilla/arrivals.html', settings);
-
   if (settings.viewAdapter == 'cli') {
     settings.log(`Selecting adapter <${settings.viewAdapter}>`);
     return newConsoleArrivalsInteractor();
@@ -12,7 +10,7 @@ const choose = settings => {
 
   return settings.features.hexagonal 
     ? new hex.HexagonalInvoiceInteractor(settings.log, settings.features) 
-    : defaultInteractor;
+    : new tools.SystemArrivalsInteractor('http://127.0.0.1:1080/vanilla/arrivals.html', settings);
 }
 
 module.exports.choose = choose;

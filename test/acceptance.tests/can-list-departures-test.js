@@ -7,22 +7,7 @@ const interactor = chooseInteractor(settings);
 // [i] Use `DISABLE_SERVER=1` if server is already running
 // [i] Run server with `npm run server`
 
-let server;
-
 describe('listing arrivals', () => {
-  before(() => {
-    //@todo: move this to driver only makes sense for some
-    if (settings.features.enableServer){
-      // [i] https://nodejs.org/api/child_process.html#child_process_event_message
-      const { spawn } = require('child_process');
-      server = spawn('node', ['src/adapters/web/server.js']);
-
-      server.stdout.on('data', (data) => {
-        settings.log(`stdout: ${data}`);
-      });
-    }
-  });
-
   it('shows filtered bus numbers only', async () => {
     await interactor.list({ stopNumber: '4130', routeNumber: '14' });
 
@@ -47,9 +32,5 @@ describe('listing arrivals', () => {
 
   after(async () => {
     await interactor.quit();
-
-    if (settings.features.enableServer){
-      server.kill();
-    }
   })
 })

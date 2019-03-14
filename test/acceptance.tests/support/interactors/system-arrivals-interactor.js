@@ -3,6 +3,9 @@ const BrowserInteractor = require('./internal/browser-interactor').BrowserIntera
 class SystemArrivalsInteractor extends BrowserInteractor {
   constructor(url, settings) {
     super(url, settings.browserOptions, settings.log, settings.features);
+    this._settings  = settings;
+    this._log       = settings.log;
+    this.startServer();
   }
 
   async list(opts = {}) {
@@ -13,6 +16,25 @@ class SystemArrivalsInteractor extends BrowserInteractor {
     const fullUrl = `${this._url}?stopNumber=${stopNumber}&routeNumbers=${routeNumber}`;
 
     await this._page.goto(fullUrl);
+  }
+
+  startServer() {
+    if (this._settings.features.enableServer){
+      // [i] https://nodejs.org/api/child_process.html#child_process_event_message
+      const { spawn } = require('child_process');
+      this._server    = spawn('node', ['src/adapters/web/server.js']);
+
+      this._server.stdout.on('data', (data) => {
+        this._settings.log(`stdout: ${data}`);
+      });
+    }
+  }
+
+  stopServer() {
+    if (this._server) {
+      this._log('Stopping server...');
+      this._server.kill();
+    }
   }
 
   async getArrivals() {
@@ -30,6 +52,12 @@ class SystemArrivalsInteractor extends BrowserInteractor {
 
     if (errors.length > 0)
       throw new Error(`Expected no errors, got the following <${errors.length}>:\n\n${errors.join('\n')}`);
+  }
+
+  quit() {
+    this.stopServer();
+
+    BrowserInteractor.prototype.quit.call(this);
   }
 }
 
@@ -72,6 +100,6 @@ class ConsoleArrivalsInteractor {
   }
 }
 
-module.exports.SystemArrivalsInteractor = SystemArrivalsInteractor;
-module.exports.ConsoleArrivalsInteractor = ConsoleArrivalsInteractor;
+module.exports.SystemArrivalsInteractor     = SystemArrivalsInteractor;
+module.exports.ConsoleArrivalsInteractor    = ConsoleArrivalsInteractor;
 module.exports.newConsoleArrivalsInteractor = () => new ConsoleArrivalsInteractor();
