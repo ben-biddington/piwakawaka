@@ -3,11 +3,7 @@ const choose = settings => {
   const tools                             = require('./system-arrivals-interactor');
   const { newConsoleArrivalsInteractor }  = require('./system-arrivals-interactor');
   
-  const defaultInteractor = new tools.SystemArrivalsInteractor(
-    'http://127.0.0.1:1080/vanilla/arrivals.html',
-    settings.browserOptions,
-    settings.log,
-    settings.features);
+  const defaultInteractor = new tools.SystemArrivalsInteractor('http://127.0.0.1:1080/vanilla/arrivals.html', settings);
 
   if (settings.viewAdapter == 'cli') {
     settings.log(`Selecting adapter <${settings.viewAdapter}>`);

@@ -1,12 +1,12 @@
 class BrowserInteractor {
   constructor(url, options, log = null, features = null) {
-    this._url = url;
-    this._options = options;
-    this._browser = null;
-    this._page = null;
-    this._log = log;
-    this._features = features;
-    this._screenshot = this._features.enableScreenshots
+    this._url         = url;
+    this._options     = options;
+    this._browser     = null;
+    this._page        = null;
+    this._log         = log;
+    this._features    = features;
+    this._screenshot  = this._features.enableScreenshots
       ? async path => {
         await this._page.screenshot({ path });
         this._log(`Saved screenshot to <${path}>`);

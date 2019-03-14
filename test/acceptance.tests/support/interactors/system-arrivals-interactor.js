@@ -1,8 +1,8 @@
 const BrowserInteractor = require('./internal/browser-interactor').BrowserInteractor;
 
 class SystemArrivalsInteractor extends BrowserInteractor {
-  constructor(url, options, log = null, features = null) {
-    super(url, options, log, features);
+  constructor(url, settings) {
+    super(url, settings.browserOptions, settings.log, settings.features);
   }
 
   async list(opts = {}) {
