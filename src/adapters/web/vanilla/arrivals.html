@@ -4,7 +4,8 @@
   <script src="/dist/adapters.bundle.js"></script>
   <script src="/dist/application.bundle.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0/moment.min.js"></script>
-  
+  <script src="anime.min.js"></script>
+
   <script language="javascript" defer>
     const log       = adapters.log;
     const realTime  = adapters.realTime;
@@ -30,6 +31,13 @@
         item.innerHTML  = `<span style="margin-right:20px">${arrival.code}</span><span style="margin-right:20px">${arrival.destination}</span>${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`;
         
         list.appendChild(item);
+
+        anime({
+          targets: item,
+          opacity: 1,
+          duration: 2000,
+          easing: 'linear'
+        });
       });
 
       container.appendChild(list);
