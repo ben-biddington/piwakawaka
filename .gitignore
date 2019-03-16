@@ -2,3 +2,4 @@ node_modules/
 dist/
 .cache/
 *.png
+.google-maps-api-key

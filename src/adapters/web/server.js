@@ -13,6 +13,8 @@ const port = 1080;
 var express = require('express')
 var app = express()
 
+const googleMapsApiKey = process.env.GOOGLE_MAPS_API_KEY;
+
 app.get(/^\/api/, async (req, res) => {
   const url = `https://www.metlink.org.nz/${req.path}`;
   
@@ -39,7 +41,13 @@ app.get(/^\/(vanilla|dist)/, function (req, res) {
 
   console.log(`returning file <${path}>`);
 
-  res.sendFile(path);
+  const fs = require("fs");
+
+  fs.readFile(path, "utf8", function(err, data) {
+    if (err) throw err;
+    res.write(data.replace('GOOGLE_MAPS_API_KEY', googleMapsApiKey));
+    res.end();
+  });
 });
 
 app.listen(port, () => console.log(`Server running on ${port}...`));
