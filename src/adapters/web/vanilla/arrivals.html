@@ -49,7 +49,22 @@
 
     const showStatus = (m) => {
       const status = document.querySelector("#status");
-      if (status) status.innerHTML = m;
+      
+      if (status) { 
+        status.innerHTML = m;
+
+        anime({
+          targets: status,
+          opacity: 1,
+          duration: 100,
+          easing: 'linear'
+        });
+      }
+    }
+
+    const clearStatus = () => {
+      const status = document.querySelector("#status");
+      status.innerHTML = '';
     }
 
     const reload = () => {
@@ -64,7 +79,7 @@
       realTime({ get, log: console.log }, opts).
         catch(e     => { throw e; }).
         then(result => render(result, opts)).
-        then(() => showStatus(''));
+        then(()     => clearStatus());
     };
 
     const timeout = urlParams.has('timeout') ? parseInt(urlParams.get('timeout')) : 60*1000;
@@ -77,9 +92,9 @@
 
 <body>
   <h1 id="title">Arrivals</h1>
+  <div id="status"></div>
   <div id="arrivals">
     
   </div>
-  <div id="status"></div>
 </body>
 </html>
