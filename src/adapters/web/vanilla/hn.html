@@ -9,6 +9,8 @@
     const topHackerNews = adapters.top;
     const core          = application.newHackerNewsApplication({ log });
 
+    core.onSaved(result => showStatus(`Saved item <${result.id}>`));
+
     const get = (url, headers) => fetch(url).then(reply => reply.text());
 
     const urlParams = new URLSearchParams(window.location.search);
@@ -34,7 +36,7 @@
         const save = document.createElement('a');
 
         save.innerHTML  = 'save';
-        save.setAttribute('href', '#');
+        save.setAttribute('href', `javascript:save('${newsItem.id}')`);
         item.appendChild(save);
 
         list.appendChild(item);
@@ -61,6 +63,10 @@
     const clearStatus = () => {
       const status = document.querySelector("#status");
       status.innerHTML = '';
+    }
+
+    const save = (id) => {
+      core.save({ id });
     }
   </script>
 </head>

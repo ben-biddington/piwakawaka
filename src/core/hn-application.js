@@ -4,8 +4,7 @@ const events  = require('events');
 class HackerNewsApplication {
   constructor(ports, options = new Options()) {
     this._ports         = ports;
-    this._invoice       = {};
-    
+     
     this._events = new events.EventEmitter();
     
     const parse = require('../core/internal/queryStringFeatureToggles').parse;
@@ -17,9 +16,9 @@ class HackerNewsApplication {
     this._events.on('edited', handler);
   }
   
-  async save() {
-    this._ports.log(`[APPLICATION] Saving this invoice: ${JSON.stringify(this._invoice)}`);
-    this._events.emit('saved', this._invoice);
+  async save(item) {
+    this._ports.log(`[APPLICATION] Saving this item: ${JSON.stringify(item)}`);
+    this._events.emit('saved', item);
     this._events.emit('message', {
       text: 'Item saved'
     });
