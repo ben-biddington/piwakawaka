@@ -63,4 +63,29 @@ describe('Querying for top stories', () => {
       "host":    "www.purl.org",
     });
   });
+
+  it('handles missing url', async () => {
+    const json =
+      {
+        "by": "tosh",
+        "descendants": 152,
+        "id": 19415983,
+        "kids": [],
+        "score": 220,
+        "time": 1552851272,
+        "title": "Alan Kay on the Meaning of “Object-Oriented Programming” (2003)",
+        "type": "story",
+      };
+
+    const ports = { get: cannedGet(JSON.stringify(json)), log: settings.log };
+    
+    const result = await hn.top(ports);
+
+    expect(result.length).to.equal(1);
+
+    const item = result[0];
+
+    expect(item.url).to.equal("");
+    expect(item.host).to.equal("");
+  });
 });
