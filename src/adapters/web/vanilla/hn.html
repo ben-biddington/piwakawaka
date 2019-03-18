@@ -35,7 +35,10 @@
       container.appendChild(list);
     }
 
+    console.time('time-to-get');
+
     topHackerNews({ get, log: console.log }, opts).
+      then(args   => { console.timeEnd('time-to-get'); return args}).
       catch(e     => { throw e; }).
       then(result => render(result, opts));
 
