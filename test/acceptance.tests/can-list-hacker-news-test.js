@@ -4,11 +4,12 @@ const { newSystemHackerNewsInteractor } = require('./support/interactors/system-
 
 // [i] Use `DISABLE_SERVER=1` if server is already running
 // [i] Run server with `npm run server`
+let interactor;
 
-describe.skip('listing hacker news', () => {
+describe('listing hacker news', () => {
   it('shows 5 items', async () => {
     // There is a problem with trying to start server on the same port
-    const interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
+    interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
     
     await interactor.list({ count: '5' });
 
