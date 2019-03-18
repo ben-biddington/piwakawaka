@@ -23,14 +23,14 @@ const realGet = async (url, headers) => {
 }
 
 const top = async (ports, opts = {}) => {
-  const { count = 10 } = opts;
+  const { baseUrl = 'https://hacker-news.firebaseio.com/v0', count = 10 } = opts;
   
   const log = args => { console.log(args); return args; }
 
   return await ports.
-    get(`https://hacker-news.firebaseio.com/v0/topstories.json`, { 'Accept': 'application/json' }).
+    get(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).
     then(JSON.parse).
-    then(ids    => ids.slice(0, count).map(id => ports.get(`https://hacker-news.firebaseio.com/v0/item/${id}.json`))).
+    then(ids    => ids.slice(0, count).map(id => ports.get(`${baseUrl}/v0/item/${id}.json`))).
     then(tasks  => Promise.all(tasks)).
     then(result => result.map(JSON.parse)).
     then(items  => items.map(item => (
