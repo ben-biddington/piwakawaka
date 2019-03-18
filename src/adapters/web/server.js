@@ -13,8 +13,8 @@ const port = 1080;
 var express = require('express')
 var app = express()
 
-app.get(/^\/api/, async (req, res) => {
-  const url = `https://www.metlink.org.nz/${req.path}`;
+app.get(/^\/metlink\/api/, async (req, res) => {
+  const url = `https://www.metlink.org.nz/${req.path.replace('metlink/','')}`;
   
   console.log(`Forwarding to <${url}>`);
 

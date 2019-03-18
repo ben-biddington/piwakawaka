@@ -14,7 +14,7 @@
 
     const urlParams = new URLSearchParams(window.location.search);
 
-    const opts = { baseUrl: '/api/v1/StopDepartures', stopNumber: '4130', routeNumbers: urlParams.getAll('routeNumbers'), enableDebug: false };
+    const opts = { baseUrl: '/metlink/api/v1/StopDepartures', stopNumber: '4130', routeNumbers: urlParams.getAll('routeNumbers'), enableDebug: false };
 
     const render = result => {
       const container = document.getElementById("arrivals");
