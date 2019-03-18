@@ -1,5 +1,6 @@
 const expect    = require('chai').expect;
 const settings  = require('../../acceptance.tests/support/settings');
+const hn        = require('../../../src/adapters/hn');
 
 const cannedGet = (json) => {
   return (url, __) => {
@@ -22,30 +23,11 @@ const realGet = async (url, headers) => {
   });
 }
 
-const top = async (ports, opts = {}) => {
-  const { baseUrl = 'https://hacker-news.firebaseio.com/v0', count = 10 } = opts;
-  
-  const log = args => { console.log(args); return args; }
-
-  return await ports.
-    get(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).
-    then(JSON.parse).
-    then(ids    => ids.slice(0, count).map(id => ports.get(`${baseUrl}/v0/item/${id}.json`))).
-    then(tasks  => Promise.all(tasks)).
-    then(result => result.map(JSON.parse)).
-    then(items  => items.map(item => (
-      {
-        id:     item.id,
-        title:  item.title,
-        url:    item.url,
-      })));
-};
-
 describe('Querying for top stories', () => {
   it('for example', async () => {
     const ports = { get: realGet, log: settings.log };
     
-    const result = await top(ports, { count: 5 });
+    const result = await hn.top(ports, { count: 5 });
 
     expect(result.length).to.equal(5);
 
@@ -68,7 +50,7 @@ describe('Querying for top stories', () => {
 
     const ports = { get: cannedGet(JSON.stringify(json)), log: settings.log };
     
-    const result = await top(ports);
+    const result = await hn.top(ports);
 
     expect(result.length).to.equal(1);
 
