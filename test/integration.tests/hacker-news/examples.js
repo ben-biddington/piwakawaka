@@ -59,7 +59,8 @@ describe('Querying for top stories', () => {
     expect(item).to.deep.equal({
       "id":     19415983,
       "title":  "Alan Kay on the Meaning of “Object-Oriented Programming” (2003)",
-      "url":    "http://www.purl.org/stefan_ram/pub/doc_kay_oop_en"
+      "url":    "http://www.purl.org/stefan_ram/pub/doc_kay_oop_en",
+      "host":    "www.purl.org",
     });
   });
 });

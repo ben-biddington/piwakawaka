@@ -14,6 +14,7 @@ const top = async (ports, opts = {}) => {
         id:     item.id,
         title:  item.title,
         url:    item.url,
+        host:   new URL(item.url).host
       })));
 };
 
