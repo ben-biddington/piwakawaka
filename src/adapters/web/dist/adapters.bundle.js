@@ -103,7 +103,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const { Storage : LocalStorage } = __webpack_require__(/*! ../adapters/local/storage */ \"./src/adapters/local/storage.js\");\r\nconst { realTime } = __webpack_require__(/*! ../adapters/metlink */ \"./src/adapters/metlink.js\");\r\n\r\nconst log = m => console.log(`[LOG.ADAPTER] ${m}`);\r\nconst newLocalStorage = () => new LocalStorage();\r\n\r\nmodule.exports = { log, newLocalStorage, realTime }\r\n\n\n//# sourceURL=webpack://adapters/./src/adapters/adapters.js?");
+eval("const { Storage : LocalStorage }  = __webpack_require__(/*! ../adapters/local/storage */ \"./src/adapters/local/storage.js\");\r\nconst { realTime }                = __webpack_require__(/*! ../adapters/metlink */ \"./src/adapters/metlink.js\");\r\nconst { top }                     = __webpack_require__(/*! ../adapters/hn */ \"./src/adapters/hn.js\");\r\n\r\nconst log = m => console.log(`[LOG.ADAPTER] ${m}`);\r\nconst newLocalStorage = () => new LocalStorage();\r\n\r\nmodule.exports = { log, newLocalStorage, realTime, top }\r\n\n\n//# sourceURL=webpack://adapters/./src/adapters/adapters.js?");
+
+/***/ }),
+
+/***/ "./src/adapters/hn.js":
+/*!****************************!*\
+  !*** ./src/adapters/hn.js ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("const top = async (ports, opts = {}) => {\r\n  const { baseUrl = 'https://hacker-news.firebaseio.com/v0', count = 10 } = opts;\r\n  \r\n  const log = args => { console.log(args); return args; }\r\n\r\n  return await ports.\r\n    get(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).\r\n    then(JSON.parse).\r\n    then(ids    => ids.slice(0, count).map(id => ports.get(`${baseUrl}/item/${id}.json`))).\r\n    then(tasks  => Promise.all(tasks)).\r\n    then(result => result.map(JSON.parse)).\r\n    then(items  => items.map(item => (\r\n      {\r\n        id:     item.id,\r\n        title:  item.title,\r\n        url:    item.url,\r\n      })));\r\n};\r\n\r\nmodule.exports.top = top;\n\n//# sourceURL=webpack://adapters/./src/adapters/hn.js?");
 
 /***/ }),
 

@@ -1,0 +1,64 @@
+<html>
+<head>
+  <!-- `npm run webpack.build` to create the following -->
+  <script src="/dist/adapters.bundle.js"></script>
+  <script src="/dist/application.bundle.js"></script>
+
+  <script language="javascript" defer>
+    const log = adapters.log;
+    const topHackerNews = adapters.top;
+    
+    const get = (url, headers) => fetch(url).then(reply => reply.text());
+
+    const urlParams = new URLSearchParams(window.location.search);
+
+    const opts = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
+
+    const render = result => {
+      const container = document.getElementById("news");
+      const list      = document.createElement("ol");
+
+      result.map(newsItem => {
+        const item      = document.createElement('li');
+        
+        item.setAttribute('class', 'newsItem');
+
+        const link = document.createElement('a');
+
+        link.innerHTML  = `${newsItem.title}`;
+        link.setAttribute('href', newsItem.url);
+        item.appendChild(link);
+
+        list.appendChild(item);
+      });
+
+      container.appendChild(list);
+    }
+
+    topHackerNews({ get, log: console.log }, opts).
+      catch(e     => { throw e; }).
+      then(result => render(result, opts));
+
+    const showStatus = (m) => {
+      const status = document.querySelector("#status");
+      
+      if (status) { 
+        status.innerHTML = m;
+      }
+    }
+
+    const clearStatus = () => {
+      const status = document.querySelector("#status");
+      status.innerHTML = '';
+    }
+  </script>
+</head>
+
+<body>
+  <h1 id="title">News</h1>
+  <div id="status"></div>
+  <div id="news">
+    
+  </div>
+</body>
+</html>

@@ -37,7 +37,6 @@ class SystemArrivalsInteractor extends BrowserInteractor {
     }
   }
 
-
   async getArrivals() {
     this._page = await this.page();
 

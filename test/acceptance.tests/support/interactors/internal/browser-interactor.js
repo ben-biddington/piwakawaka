@@ -50,6 +50,10 @@ class BrowserInteractor {
     this._page = null;
     this._browser = null;
   }
+
+  pretty(what) {
+    return JSON.stringify(what, null, 2);
+  }
 }
 
 module.exports.BrowserInteractor = BrowserInteractor;

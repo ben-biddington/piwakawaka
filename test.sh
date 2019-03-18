@@ -6,7 +6,7 @@ bash install.sh
 
 echo 'Building'
 
-npm run webpack.build
+npm run build
 
 echo 'Running all tests'
 
