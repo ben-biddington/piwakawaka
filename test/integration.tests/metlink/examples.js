@@ -105,8 +105,8 @@ describe('Querying for realtime information', () => {
           "DestinationStopName": "Courtenay Pl",
           "AimedArrival": "2019-03-13T08:25:00+13:00",
           "AimedDeparture": "2019-03-14T08:25:01+13:00",
-          "VehicleFeature": null,
-          "DepartureStatus": null,
+          "VehicleFeature": 'lowFloor',
+          "DepartureStatus": 'ontime',
           "ExpectedDeparture": null,
           "DisplayDeparture": "2019-03-13T08:25:00+13:00",
           "DisplayDepartureSeconds": 84,
@@ -136,5 +136,6 @@ describe('Querying for realtime information', () => {
       expect(first.aimedDeparture).to.deep.equal(new Date('2019-03-13T08:25:00+13:00'));
       expect(first.departureInSeconds).to.deep.equal(84);
       expect(first.destination).to.equal('Courtenay Pl');
+      expect(first.status).to.equal('ontime');
   });
 });

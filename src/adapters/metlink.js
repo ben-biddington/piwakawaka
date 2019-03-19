@@ -8,7 +8,7 @@ const realTime = async (ports = {}, opts = {}) => {
   if (routeNumbers && false === Array.isArray(routeNumbers))
     routeNumbers = [routeNumbers];
 
-  const debug = enableDebug === true ? m => log(`[DEBUG] ${m}`) : _ => {};
+  const debug = enableDebug === true ? (m) => log(`[DEBUG] ${m}`) : _ => {};
 
   if (!get)
     throw "You need to supply ports with a `get` function";
@@ -29,10 +29,8 @@ const realTime = async (ports = {}, opts = {}) => {
   }
 
   const reply = await get(url, {}).
-    then(reply => { debug(`Raw reply:\n${JSON.stringify(reply)}`); return reply; }).
-    then(reply => parse(reply));
-
-  debug(`Full reply from <${url}>:\n${JSON.stringify(reply, null, 2)}`)
+    then(reply => parse(reply)).
+    then(reply => { debug(`Full reply from <${url}>:\n${JSON.stringify(reply, null, 2)}`); return reply; });
 
   const arrivals = reply.Services.
     filter(service => routeNumbers.length > 0 ? routeNumbers.indexOf(service.Service.Code) > -1 : true ).
@@ -43,7 +41,8 @@ const realTime = async (ports = {}, opts = {}) => {
         aimedArrival:       new Date(service.AimedArrival),
         aimedDeparture:     new Date(service.AimedArrival),
         departureInSeconds: service.DisplayDepartureSeconds,
-        destination:        service.DestinationStopName
+        destination:        service.DestinationStopName,
+        status:             service.DepartureStatus,
       }));
 
   return { stop: { name: reply.Stop.Name, sms: reply.Stop.Sms}, arrivals };
