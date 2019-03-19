@@ -3,19 +3,8 @@
   <!-- `npm run webpack.build` to create the following -->
   <script src="/dist/adapters.bundle.js"></script>
   <script src="/dist/hn-application.bundle.js"></script>
-
   <script language="javascript" defer>
-    const log           = adapters.log;
-    const topHackerNews = adapters.top;
-    const get           = (url, headers) => fetch(url).then(reply => reply.text());
-    const urlParams     = new URLSearchParams(window.location.search);
-    const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
-
-    const ports = { log, news: () => topHackerNews({ get, log }, opts)};
-
-    const core          = application.newHackerNewsApplication(ports);
-
-    const render = result => {
+    var render = result => {
       const container = document.getElementById("news");
       const list      = document.createElement("ol");
 
@@ -42,12 +31,8 @@
 
       container.appendChild(list);
     }
-    // topHackerNews({ get, log: console.log }, opts).
-    //   then(args   => { console.timeEnd('time-to-get'); return args}).
-    //   catch(e     => { throw e; }).
-    //   then(result => render(result, opts));
 
-    const showStatus = (m) => {
+    var showStatus = (m) => {
       const status = document.querySelector("#status");
       
       if (status) { 
@@ -55,10 +40,22 @@
       }
     }
 
-    const clearStatus = () => {
+    var clearStatus = () => {
       const status = document.querySelector("#status");
       status.innerHTML = '';
     }
+  </script>
+
+  <script language="javascript" defer>
+    const log           = adapters.log;
+    const topHackerNews = adapters.top;
+    const get           = (url, headers) => fetch(url).then(reply => reply.text());
+    const urlParams     = new URLSearchParams(window.location.search);
+    const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
+
+    const ports = { log, news: () => topHackerNews({ get, log }, opts)};
+
+    const core          = application.newHackerNewsApplication(ports);
 
     const save = (id) => {
       core.save({ id });
