@@ -7,15 +7,13 @@
   <script language="javascript" defer>
     const log           = adapters.log;
     const topHackerNews = adapters.top;
-    const core          = application.newHackerNewsApplication({ log });
+    const get           = (url, headers) => fetch(url).then(reply => reply.text());
+    const urlParams     = new URLSearchParams(window.location.search);
+    const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
 
-    core.onSaved(result => showStatus(`Saved item <${result.id}>`));
+    const ports = { log, news: () => topHackerNews({ get, log }, opts)};
 
-    const get = (url, headers) => fetch(url).then(reply => reply.text());
-
-    const urlParams = new URLSearchParams(window.location.search);
-
-    const opts = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
+    const core          = application.newHackerNewsApplication(ports);
 
     const render = result => {
       const container = document.getElementById("news");
@@ -44,13 +42,10 @@
 
       container.appendChild(list);
     }
-
-    console.time('time-to-get');
-
-    topHackerNews({ get, log: console.log }, opts).
-      then(args   => { console.timeEnd('time-to-get'); return args}).
-      catch(e     => { throw e; }).
-      then(result => render(result, opts));
+    // topHackerNews({ get, log: console.log }, opts).
+    //   then(args   => { console.timeEnd('time-to-get'); return args}).
+    //   catch(e     => { throw e; }).
+    //   then(result => render(result, opts));
 
     const showStatus = (m) => {
       const status = document.querySelector("#status");
@@ -68,6 +63,14 @@
     const save = (id) => {
       core.save({ id });
     }
+
+    core.onSaved(result   => showStatus(`Saved item <${result.id}>`));
+    core.onFetching(()    => showStatus(`Fetching news`));
+    core.onFetched(result => render(result));
+
+    console.time('time-to-get');
+
+    core.news();
   </script>
 </head>
 
