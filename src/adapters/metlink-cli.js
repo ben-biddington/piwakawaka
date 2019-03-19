@@ -28,7 +28,7 @@ const render = (result, opts) => {
   }
 
   result.arrivals.map(arrival => {
-    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`);
+    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${(arrival.status || '-').padEnd('20')} ${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`);
   });
 
   debug(JSON.stringify(result, null, 2));
@@ -40,9 +40,8 @@ program.
   version('0.0.1').
   command("due <stopNumber> [routeNumber...]").
   action((stopNumber, routeNumber) => {
-    const opts = { stopNumber, routeNumber };
-
-    realTime({ get }, opts).
+    const opts = { stopNumber, routeNumber, enableDebug: process.env.DEBUG == 1 };
+    realTime({ get, log }, opts).
       catch(e     => { throw e; }).
       then(result => render(result, opts));
   });
