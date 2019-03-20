@@ -137,5 +137,6 @@ describe('Querying for realtime information', () => {
       expect(first.departureInSeconds).to.deep.equal(84);
       expect(first.destination).to.equal('Courtenay Pl');
       expect(first.status).to.equal('ontime');
+      expect(first.isRealtime).to.equal(false);
   });
 });
