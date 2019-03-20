@@ -28,7 +28,10 @@ const render = (result, opts) => {
   }
 
   result.arrivals.map(arrival => {
-    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${(arrival.status || '-').padEnd('20')} ${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`);
+    const scheduled = arrival.isRealtime ? '' : 'SCHEDULED';
+    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${(arrival.status || '-').padEnd('20')} ` + 
+        `${moment.duration(arrival.departureInSeconds, "seconds").humanize().padEnd(15)} ` + 
+        `${scheduled}`);
   });
 
   debug(JSON.stringify(result, null, 2));
