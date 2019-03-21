@@ -12,6 +12,10 @@ class HackerNewsApplication {
     this.featureToggles = parse(options.url, this._ports.log);
   }
 
+  queryWith(news) {
+    this._ports = { log: this._ports.log, news };
+  }
+
   onEdited(handler) {
     this._events.on('edited', handler);
   }

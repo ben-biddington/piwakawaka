@@ -10,9 +10,25 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
 
   async supplyPorts(ports = {}) {
     this._page = await this.page();
-    await this._page.evaluate(() => {
-      window.topHackerNews = _ => Promise.resolve([]);
-      window.console.log('Reset hacker news port');
+
+    const fake = ports.top;
+
+    await this._page.evaluate(async () => {
+      window.console.log('Resetting hacker news port');
+      window.topHackerNews = () => Promise.resolve([{
+        "id":     19415983,
+        "title":  "Sample",
+        "url":    "http://www.purl.org/stefan_ram/pub/doc_kay_oop_en",
+        "host":    "www.purl.org",
+      }]);
+
+      const cannedResult = await window.topHackerNews()
+
+      window.console.log(`Reset hacker news port, and it is returning: ${JSON.stringify(cannedResult)}`);
+      
+      core.queryWith(window.topHackerNews);
+
+      core.news();
     });
   }
 

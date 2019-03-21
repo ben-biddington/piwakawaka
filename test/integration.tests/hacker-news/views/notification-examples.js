@@ -7,10 +7,15 @@ const { newSystemHackerNewsInteractor } = require('../../../acceptance.tests/sup
 let interactor;
 
 describe('[WIP] Saving hacker news items', () => {
-  xit('notifies with <save> action', async () => {
+  xit.only('notifies with <save> action', async () => {
     interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
     
-    const stubTop = () => [];
+    const stubTop = () => Promise.resolve([{
+      "id":     19415983,
+      "title":  "Sample",
+      "url":    "http://www.purl.org/stefan_ram/pub/doc_kay_oop_en",
+      "host":    "www.purl.org",
+    }]);
     
     await interactor.unplug();
     

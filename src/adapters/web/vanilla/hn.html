@@ -61,7 +61,7 @@
     
     const isUnplugged   = urlParams.get('unplugged') === 'true';
     const log           = adapters.log;
-    const topHackerNews = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
+    let topHackerNews   = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
     const get           = (url, headers) => fetch(url).then(reply => reply.text());
     const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
 
