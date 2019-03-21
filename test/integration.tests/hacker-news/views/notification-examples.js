@@ -6,26 +6,26 @@ const { newSystemHackerNewsInteractor } = require('../../../acceptance.tests/sup
 // [i] Run server with `npm run server`
 let interactor;
 
-describe.only('Saving hacker news items', () => {
-  it('notifies with <save> action', async () => {
+describe('[WIP] Saving hacker news items', () => {
+  xit('notifies with <save> action', async () => {
     interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
     
     const stubTop = () => [];
-
+    
+    await interactor.unplug();
+    
     await interactor.supplyPorts({ top: stubTop });
 
-    await interactor.list({ count: '5' });
+    const notifications = await interactor.getNotifications();
 
-    const newsItems = await interactor.getNewsItems();
+    expect(notifications).to.contain('save');
 
     interactor.mustNotHaveErrors();
-
-    expect(newsItems).to.not.be.empty;
-    
-    newsItems.every(newsItem => expect(newsItem.title).to.not.be.null);
   });
 
   after(async () => {
-    await interactor.quit();
+    if (interactor) {
+      await interactor.quit();
+    }
   })
 })

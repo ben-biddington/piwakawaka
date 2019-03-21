@@ -8,6 +8,20 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
     this.startServer();
   }
 
+  async supplyPorts(ports = {}) {
+    this._page = await this.page();
+    await this._page.evaluate(() => {
+      window.topHackerNews = _ => Promise.resolve([]);
+      window.console.log('Reset hacker news port');
+    });
+  }
+
+  async unplug() {
+    await this.page();
+    await this._page.goto(`${this._url}?unplugged=true`);
+    await this._page.waitForSelector('div#news');
+  }
+
   async list(opts = {}) {
     const { count = '5' } = opts;
     
@@ -19,7 +33,7 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
   }
 
   startServer() {
-    if (this._settings.features.enableServer){
+    if (this._settings.features.enableServer) {
       // [i] https://nodejs.org/api/child_process.html#child_process_event_message
       const { spawn } = require('child_process');
       this._server    = spawn('node', ['src/adapters/web/server.js']);
@@ -43,6 +57,14 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
     await this._page.waitForSelector('div#news li');
 
     return await this._page.$$eval('div#news li', items => items.map(it => ( { title: it.innerHTML } )));
+  }
+
+  async getNotifications() {
+    this._page = await this.page();
+
+    await this._page.waitForSelector('div#news');
+
+    return Promise.resolve([]);
   }
 
   mustNotHaveErrors() {

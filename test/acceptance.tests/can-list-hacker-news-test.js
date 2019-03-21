@@ -7,7 +7,7 @@ const { newSystemHackerNewsInteractor } = require('./support/interactors/system-
 let interactor;
 
 describe('listing hacker news', () => {
-  it('shows 5 items', async () => {
+  it.only('shows 5 items', async () => {
     // There is a problem with trying to start server on the same port
     interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
     

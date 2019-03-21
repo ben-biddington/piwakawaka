@@ -45,12 +45,24 @@
       status.innerHTML = '';
     }
   </script>
+</head>
 
-  <script language="javascript" defer>
-    const log           = adapters.log;
-    const topHackerNews = adapters.top;
-    const get           = (url, headers) => fetch(url).then(reply => reply.text());
+<body>
+  <h1 id="title">News</h1>
+  <div id="status"></div>
+  <div id="news">
+    
+  </div>
+</body>
+</html>
+
+<script language="javascript" defer>
     const urlParams     = new URLSearchParams(window.location.search);
+    
+    const isUnplugged   = urlParams.get('unplugged') === 'true';
+    const log           = adapters.log;
+    const topHackerNews = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
+    const get           = (url, headers) => fetch(url).then(reply => reply.text());
     const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
 
     const ports = { log, news: () => topHackerNews({ get, log }, opts)};
@@ -69,13 +81,3 @@
 
     core.news();
   </script>
-</head>
-
-<body>
-  <h1 id="title">News</h1>
-  <div id="status"></div>
-  <div id="news">
-    
-  </div>
-</body>
-</html>
