@@ -1,4 +1,5 @@
 const BrowserInteractor = require('./internal/browser-interactor').BrowserInteractor;
+const util = require('util');
 
 class SystemHackerNewsInteractor extends BrowserInteractor {
   constructor(url, settings) {
@@ -11,25 +12,15 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
   async supplyPorts(ports = {}) {
     this._page = await this.page();
 
-    const fake = ports.top;
+    await this._page.evaluate(fun => {
+      core.queryWith(() => eval(fun)());
 
-    await this._page.evaluate(async () => {
-      window.console.log('Resetting hacker news port');
-      window.topHackerNews = () => Promise.resolve([{
-        "id":     19415983,
-        "title":  "Sample",
-        "url":    "http://www.purl.org/stefan_ram/pub/doc_kay_oop_en",
-        "host":    "www.purl.org",
-      }]);
-
-      const cannedResult = await window.topHackerNews()
-
-      window.console.log(`Reset hacker news port, and it is returning: ${JSON.stringify(cannedResult)}`);
+      core.onSaved(e => console.log(`[ACTION.SAVED]`));
       
-      core.queryWith(window.topHackerNews);
+      window.console.log(`Reset hacker news port and added action listener`);
 
       core.news();
-    });
+    }, ports.top.toString());
   }
 
   async unplug() {
@@ -67,6 +58,12 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
     }
   }
 
+  async save(id) {
+    this._page = await this.page();
+
+    await this._page.click(`#save-${id}`);
+  }
+
   async getNewsItems() {
     this._page = await this.page();
 
@@ -76,15 +73,12 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
   }
 
   async getNotifications() {
-    this._page = await this.page();
-
-    await this._page.waitForSelector('div#news');
-
-    return Promise.resolve([]);
+    return this._browserConsoleMessages.
+      filter(it => it._text.match(/\[ACTION/g)).
+      map(it => ({ type: it._text.toString().toLowerCase() }));
   }
 
   mustNotHaveErrors() {
-    const util = require('util');
     this._log(`${util.inspect(this._browserConsoleMessages)}`);
     const errors = this._browserConsoleMessages.filter(m => m._type == 'error').map(m => this.pretty(m));
 

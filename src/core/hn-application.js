@@ -13,7 +13,7 @@ class HackerNewsApplication {
   }
 
   queryWith(news) {
-    this._ports = { log: this._ports.log, news };
+    this._ports = { log: this._ports.log, news: news };
   }
 
   onEdited(handler) {

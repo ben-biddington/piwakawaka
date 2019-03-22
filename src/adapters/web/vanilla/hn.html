@@ -8,6 +8,8 @@
       const container = document.getElementById("news");
       const list      = document.createElement("ol");
 
+      console.log('result', JSON.stringify(result));
+
       result.map(newsItem => {
         const item      = document.createElement('li');
         item.setAttribute('style', 'padding:5px');
@@ -24,6 +26,7 @@
 
         save.innerHTML  = 'save';
         save.setAttribute('href', `javascript:save('${newsItem.id}')`);
+        save.setAttribute('id', `save-${newsItem.id}`);
         item.appendChild(save);
 
         list.appendChild(item);
@@ -61,7 +64,7 @@
     
     const isUnplugged   = urlParams.get('unplugged') === 'true';
     const log           = adapters.log;
-    let topHackerNews   = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
+    const topHackerNews   = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
     const get           = (url, headers) => fetch(url).then(reply => reply.text());
     const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
 

@@ -13,3 +13,7 @@ It **is** possible to execute arbitrary javascript (we do that already) -- we co
 ## Unplugged mode
 
 Because our screen is dynamic and queries its ports on load, we need to be able to signal it to run unplugged.
+
+## Passing functions
+
+This requires serialization and `eval`.

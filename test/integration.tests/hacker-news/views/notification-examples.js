@@ -7,9 +7,9 @@ const { newSystemHackerNewsInteractor } = require('../../../acceptance.tests/sup
 let interactor;
 
 describe('[WIP] Saving hacker news items', () => {
-  xit.only('notifies with <save> action', async () => {
+  it('notifies with <save> action', async () => {
     interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
-    
+    //../../../../src/adapters/web/vanilla/hn.html
     const stubTop = () => Promise.resolve([{
       "id":     19415983,
       "title":  "Sample",
@@ -21,9 +21,11 @@ describe('[WIP] Saving hacker news items', () => {
     
     await interactor.supplyPorts({ top: stubTop });
 
-    const notifications = await interactor.getNotifications();
+    await interactor.save(19415983);
 
-    expect(notifications).to.contain('save');
+    const notifications = await interactor.getNotifications().then(result => result.map(notification => notification.type));
+
+    expect(notifications).to.contain('[action.saved]');
 
     interactor.mustNotHaveErrors();
   });

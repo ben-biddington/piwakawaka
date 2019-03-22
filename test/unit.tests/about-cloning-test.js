@@ -49,14 +49,4 @@ describe('Eval-ing', () => {
 
     expect(result).to.equal(2);
   });
-
-  it('does not work with serialized function', () => { 
-    const fun = () => 1 + 1;
-    
-    const func = new Function(fun.toString());
-
-    const result = func();
-
-    expect(result).to.equal(2);
-  });
 });
