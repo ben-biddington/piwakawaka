@@ -17,3 +17,7 @@ Because our screen is dynamic and queries its ports on load, we need to be able 
 ## Passing functions
 
 This requires serialization and `eval`.
+
+## Setting unplugged
+
+You can't do that if not running from a server as query params don't work. Hmmm.
