@@ -46,12 +46,11 @@ const listStops = log => {
 
   return exists(fileName).
     then(fileExists => {
-      if (false === fileExists)
-        return writeFile("./.stops", '[]', "utf8");
+      if (fileExists === true)
+        return readFile(fileName, "utf8");
        
       return Promise.resolve();
     }).
-    then(()   => readFile(fileName, "utf8")).
     then(text => log(JSON.parse(text || "[]").join('\n')));
 }
 
