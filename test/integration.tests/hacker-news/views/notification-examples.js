@@ -9,7 +9,6 @@ let interactor;
 describe('[WIP] Saving hacker news items', () => {
   it('notifies with <save> action', async () => {
     interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
-    //../../../../src/adapters/web/vanilla/hn.html
     const stubTop = () => Promise.resolve([{
       "id":     19415983,
       "title":  "Sample",

@@ -21,3 +21,11 @@ This requires serialization and `eval`.
 ## Setting unplugged
 
 You can't do that if not running from a server as query params don't work. Hmmm.
+
+## Consider replacing the application
+
+If we're isolating view, does that mean we should replace the application? 
+
+This means all we're verifying is the actions reaised by the view itself.
+
+One problem is that it is the **application** that triggers the render and so we'd have to reimplement that behaviour just to get things to click on. 

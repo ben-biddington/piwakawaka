@@ -49,4 +49,61 @@ program.
       then(result => render(result, opts));
   });
 
+  program.
+    command("watch <intervalInSeconds> <stopNumber> [routeNumber...]").
+    action((intervalInSeconds = 30, stopNumber, routeNumber) => {
+      const opts = { stopNumber, routeNumber, enableDebug: process.env.DEBUG == 1 };
+      
+      const notifier = require('node-notifier');
+
+      const notify = (result, opts) => {
+        const moment = require('moment');
+
+        const message = result.arrivals.map(arrival => {
+          return `${arrival.code.padEnd(5)} ${arrival.destination.padEnd(10)} ` + 
+                 `${(arrival.status || '-').padEnd('10')} ` +
+                 `${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`;
+        }).join('\n');
+
+        notifier.notify(
+          {
+            title: `${result.stop.name} (${result.stop.sms})`,
+            message: message,
+            time: 10000,
+            sound: false,
+            wait: false
+          }, function(args) {
+            log(`${args}`);
+          }
+        );
+      }
+
+      log(`Starting watch, notifying every ${intervalInSeconds}s`);
+
+      const action = () => {
+        realTime({ get, log }, opts).
+        catch(e     => { throw e; }).
+        then(result => notify(result, opts));
+      }
+
+      action();
+
+      setInterval(action, intervalInSeconds*1000);
+
+      const readline = require('readline');
+
+      const rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout
+      });
+      
+      return new Promise((resolve, reject) => {
+        rl.question('Press any key to quit', () => {
+          rl.close();
+          log(`Stopping...`);
+          resolve();
+        })
+      });
+    })
+
 program.parse(process.argv);
