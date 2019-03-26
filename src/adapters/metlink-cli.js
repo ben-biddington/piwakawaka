@@ -1,22 +1,9 @@
 const realTime  = require('../adapters/metlink').realTime;
+const run       = require('../adapters/metlink-view').run;
+const get       = require('../adapters/internet').get;
 const fs        = require('fs');
 const log       = m => fs.writeSync(1, `${m}\n`);
 const debug     = process.env.DEBUG == 1 ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
-
-const get = url => {
-    const request   = require("request");
-    
-    return new Promise(function(resolve, reject){
-      request({ uri: url }, (error, _, body) => {
-        if (error){
-          reject(error);
-          return;
-        }
-  
-        resolve(body);
-      })  
-    });
-};
 
 const render = (result, opts) => {
   log(`${result.stop.name} (${result.stop.sms})\n`);
@@ -54,69 +41,15 @@ program.
     option("-i --interval <interval>" , "How often to poll" , 30).
     option("-d --dryRrun"             , "Dry run only"      , false).
     action((stopNumber, routeNumber, cmd) => {
-      const opts = { stopNumber, routeNumber, enableDebug: process.env.DEBUG == 1 };
-      const { interval, dryRun = false} = cmd
-      
-      if (interval < 20)
-        throw `Interval <${interval}> is too short`; 
+      const opts = { 
+        stopNumber, 
+        routeNumber, 
+        enableDebug: process.env.DEBUG == 1,
+        interval: cmd.interval, 
+        dryRun:   cmd.dryRun
+       };
 
-      const notifier = require('node-notifier');
-
-      const notify = (result, opts) => {
-        const moment = require('moment');
-
-        const message = result.arrivals.map(arrival => {
-          return `${arrival.code.padEnd(5)} ${arrival.destination.padEnd(10)} ` + 
-                 `${(arrival.status || '-').padEnd('10')} ` +
-                 `${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`;
-        }).join('\n');
-
-        notifier.notify(
-          {
-            title: `${result.stop.name} (${result.stop.sms})`,
-            message: message,
-            time: 10000,
-            sound: false,
-            wait: false
-          }, function(args) {
-            log(`${args}`);
-          }
-        );
-      }
-
-      log(`Starting watch, notifying every ${interval}s`);
-
-      const action = () => {
-        realTime({ get, log }, opts).
-        catch(e     => { throw e; }).
-        then(result => notify(result, opts));
-      }
-
-      action();
-
-      if (dryRun === false) {
-        setInterval(() => {
-          action();
-          log(new Date());
-        }, interval*1000);
-      } else {
-        log(`[DRY-RUN] Not scheduling because dry run has value <${dryRun}>`);
-      }
-
-      const readline = require('readline');
-
-      const rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout
-      });
-      
-      return new Promise((resolve, reject) => {
-        rl.question('Press any key to quit', () => {
-          rl.close();
-          log(`Stopping...`);
-          resolve();
-        })
-      });
+      return run({ log }, opts);
     })
 
 program.parse(process.argv);
