@@ -29,27 +29,24 @@ const program = require('commander');
 program.
   version('0.0.1').
   command("due <stopNumber> [routeNumber...]").
-  action((stopNumber, routeNumber) => {
-    const opts = { stopNumber, routeNumber, enableDebug: process.env.DEBUG == 1 };
-    realTime({ get, log }, opts).
+  option("-i --interval <interval>" , "How often to poll" , 30).
+  option("-d --dryRrun"             , "Dry run only"      , false).
+  option("-w --watch"               , "Watch and notify"  , false).
+  action((stopNumber, routeNumber, cmd) => {
+    const opts = { 
+      stopNumber, 
+      routeNumber, 
+      enableDebug: process.env.DEBUG == 1,
+      interval: cmd.interval, 
+      dryRun:   cmd.dryRun
+     };
+
+    if (cmd.watch === true)
+      return run({ log }, opts);
+
+    return realTime({ get, log }, opts).
       catch(e     => { throw e; }).
       then(result => render(result, opts));
   });
-
-  program.
-    command("watch <stopNumber> [routeNumber...]").
-    option("-i --interval <interval>" , "How often to poll" , 30).
-    option("-d --dryRrun"             , "Dry run only"      , false).
-    action((stopNumber, routeNumber, cmd) => {
-      const opts = { 
-        stopNumber, 
-        routeNumber, 
-        enableDebug: process.env.DEBUG == 1,
-        interval: cmd.interval, 
-        dryRun:   cmd.dryRun
-       };
-
-      return run({ log }, opts);
-    })
 
 program.parse(process.argv);
