@@ -50,10 +50,16 @@ program.
   });
 
   program.
-    command("watch <intervalInSeconds> <stopNumber> [routeNumber...]").
-    action((intervalInSeconds = 30, stopNumber, routeNumber) => {
+    command("watch <stopNumber> [routeNumber...]").
+    option("-i --interval <interval>" , "How often to poll" , 30).
+    option("-d --dryRrun"             , "Dry run only"      , false).
+    action((stopNumber, routeNumber, cmd) => {
       const opts = { stopNumber, routeNumber, enableDebug: process.env.DEBUG == 1 };
+      const { interval, dryRun = false} = cmd
       
+      if (interval < 20)
+        throw `Interval <${interval}> is too short`; 
+
       const notifier = require('node-notifier');
 
       const notify = (result, opts) => {
@@ -78,7 +84,7 @@ program.
         );
       }
 
-      log(`Starting watch, notifying every ${intervalInSeconds}s`);
+      log(`Starting watch, notifying every ${interval}s`);
 
       const action = () => {
         realTime({ get, log }, opts).
@@ -88,7 +94,14 @@ program.
 
       action();
 
-      setInterval(action, intervalInSeconds*1000);
+      if (dryRun === false) {
+        setInterval(() => {
+          action();
+          log(new Date());
+        }, interval*1000);
+      } else {
+        log(`[DRY-RUN] Not scheduling because dry run has value <${dryRun}>`);
+      }
 
       const readline = require('readline');
 
