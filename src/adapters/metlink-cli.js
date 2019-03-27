@@ -15,6 +15,7 @@ program.
   option("-w --watch"               , "Watch and notify").
   option("-v --verbose"             , "Enable verbose logging").
   option("-s --sound"               , "Play sound").
+  option("-l --limit <limit>"       , "Limit how many results"       , 3).
   action((stopNumber, routeNumber, cmd) => {
     const opts = { 
       stopNumber, 
@@ -25,6 +26,7 @@ program.
       watch:        cmd.watch   || false,
       verbose:      cmd.verbose || false,
       enableSound:  cmd.sound   || false,
+      limit:        cmd.limit
     };
     
     debug     = (process.env.DEBUG == 1 || cmd.verbose === true) ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};

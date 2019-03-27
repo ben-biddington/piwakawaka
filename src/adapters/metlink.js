@@ -33,6 +33,7 @@ const realTime = async (ports = {}, opts = {}) => {
     then(reply => { debug(`Full reply from <${url}>:\n${JSON.stringify(reply, null, 2)}`); return reply; });
 
   const arrivals = reply.Services.
+    slice(0, opts.limit).
     filter(service => routeNumbers.length > 0 ? routeNumbers.indexOf(service.Service.Code) > -1 : true ).
     map(   service => ( 
       { 
