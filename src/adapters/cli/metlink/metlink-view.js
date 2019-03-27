@@ -7,7 +7,7 @@ const render = (ports, result, opts) => {
 
   const moment = require('moment');
 
-  if (opts.routeNumber) {
+  if (opts.routeNumber != '') {
     log(`(Filtering to route number <${opts.routeNumber}>)\n`);
   }
 
