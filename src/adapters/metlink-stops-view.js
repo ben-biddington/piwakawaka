@@ -19,7 +19,7 @@ const updateStops = (log, stopNumber) => {
       then(text => {
         const stops = text.split('\n').filter(line => line.length > 0);
         
-        if (stops.filter(stop => stop == stopNumber).length === 0) {
+        if (false === stops.includes(stopNumber)) {
           stops.push(stopNumber);
         }
 
