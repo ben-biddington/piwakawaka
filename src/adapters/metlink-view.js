@@ -43,8 +43,7 @@ const run = (ports, opts) => {
     const moment = require('moment');
 
     const message = result.arrivals.map(arrival => {
-      return `${arrival.code.padEnd(5)} ${arrival.destination.padEnd(10)} ` + 
-             `${(arrival.status || '-').padEnd('10')} ` +
+      return `${arrival.code.padEnd(4)} ${arrival.destination.padEnd(20)} ` + 
              `${moment.duration(arrival.departureInSeconds, "seconds").humanize()}`;
     }).join('\n');
 
