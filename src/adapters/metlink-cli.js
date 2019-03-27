@@ -10,10 +10,10 @@ program.
   version('0.0.1').
   command("due <stopNumber> [routeNumber...]").
   option("-i --interval <interval>" , "How often to poll in seconds" , 30).
-  option("-d --dryRrun"      , "Dry run only").
-  option("-w --watch"        , "Watch and notify").
-  option("-v --verbose"      , "Enable verbose logging").
-  option("-s --sound"        , "Play sound").
+  option("-d --dryRrun"             , "Dry run only").
+  option("-w --watch"               , "Watch and notify").
+  option("-v --verbose"             , "Enable verbose logging").
+  option("-s --sound"               , "Play sound").
   action((stopNumber, routeNumber, cmd) => {
     const opts = { 
       stopNumber, 
