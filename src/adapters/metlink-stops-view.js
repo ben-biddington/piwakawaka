@@ -1,3 +1,5 @@
+const fileName = "./.stops"; 
+
 const updateStops = (log, stopNumber) => {
     const fs        = require('fs');
   
@@ -6,12 +8,10 @@ const updateStops = (log, stopNumber) => {
     const writeFile     = promisify(fs.writeFile);
     const exists        = promisify(fs.exists);
   
-    const fileName = "./.stops"; 
-  
     return exists(fileName).
       then(fileExists => {
         if (false === fileExists)
-          return writeFile("./.stops", '[]', "utf8");
+          return writeFile(fileName, '[]', "utf8");
          
         return Promise.resolve();
       }).
@@ -25,7 +25,7 @@ const updateStops = (log, stopNumber) => {
         
         return stops;
       }).
-      then(stops => writeFile("./.stops", JSON.stringify(stops), "utf8"));
+      then(stops => writeFile(fileName, JSON.stringify(stops), "utf8"));
   }
   
   const listStops = log => {
@@ -34,8 +34,6 @@ const updateStops = (log, stopNumber) => {
     const { promisify } = require('util');
     const readFile      = promisify(fs.readFile);
     const exists        = promisify(fs.exists);
-  
-    const fileName = "./.stops"; 
   
     return exists(fileName).
       then(fileExists => {
