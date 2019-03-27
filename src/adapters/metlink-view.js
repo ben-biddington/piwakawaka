@@ -23,7 +23,7 @@ const render = (ports, result, opts) => {
 
 const run = (ports, opts) => {
   const { log, debug, get } = ports;
-  const { interval, dryRun = false} = opts;
+  const { interval, dryRun = false, enableSound = false } = opts;
 
   debug(JSON.stringify(opts));
 
@@ -53,7 +53,7 @@ const run = (ports, opts) => {
         title: `${result.stop.name} (${result.stop.sms})`,
         message: message,
         time: 10000,
-        sound: false,
+        sound: enableSound,
         wait: false
       }, function(args) {
         log(`${args}`);
