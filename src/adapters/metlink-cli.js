@@ -36,8 +36,6 @@ program.
 
 program.
   command("stops").
-  action(() => {
-    listStops({ log, debug, get }, { enableDebug:  process.env.DEBUG == 1 });
-  });
+  action(() => listStops({ log, debug, get }, { enableDebug: process.env.DEBUG == 1 }));
 
 program.parse(process.argv);

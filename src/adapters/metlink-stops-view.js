@@ -45,11 +45,8 @@ const listStops = (ports = {}, opts = {}) => {
       return Promise.resolve('No stops on file');
     }).
     then(text     => detail(text.split('\n'))).
-    then(results  => {
-      results.
-        map(result => log(`${result.sms.padEnd(20)} - ${result.name}`));
-    });
+    then(results  => results.map(result => log(`${result.sms.padEnd(20)} - ${result.name}`)));
 }
 
-module.exports.updateStops = updateStops;
-module.exports.listStops = listStops;
+module.exports.updateStops  = updateStops;
+module.exports.listStops    = listStops;
