@@ -7,15 +7,18 @@ const updateStops = (log, stopNumber) => {
     const readFile      = promisify(fs.readFile);
     const writeFile     = promisify(fs.writeFile);
     const exists        = promisify(fs.exists);
-  
+    
+    const read  = ()    => readFile (fileName,       'utf8');
+    const write = text  => writeFile(fileName, text, 'utf8');
+
     return exists(fileName).
       then(fileExists => {
         if (false === fileExists)
-          return writeFile(fileName, '', "utf8");
+          return write('');
          
         return Promise.resolve();
       }).
-      then(()   => readFile(fileName, "utf8")).
+      then(read).
       then(text => {
         const stops = text.split('\n').filter(line => line.length > 0);
         
@@ -23,9 +26,9 @@ const updateStops = (log, stopNumber) => {
           stops.push(stopNumber);
         }
 
-        return stops;
+        return stops.join('\n');
       }).
-      then(stops => writeFile(fileName, stops.join('\n'), "utf8"));
+      then(write);
   }
   
   const listStops = log => {
