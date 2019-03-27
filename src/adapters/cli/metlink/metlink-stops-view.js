@@ -1,13 +1,16 @@
-const fs = require('fs');
+const fs            = require('fs');
 const { promisify } = require('util');
-const readFile = promisify(fs.readFile);
-const writeFile = promisify(fs.writeFile);
-const exists = promisify(fs.exists);
+const readFile      = promisify(fs.readFile);
+const writeFile     = promisify(fs.writeFile);
+const exists        = promisify(fs.exists);
 
 const fileName = "./.stops";
 
+const readLines = ()  => readFile(fileName, 'utf8').
+  then(         text  => text.split('\n')).
+  then(         lines => lines.filter(line => line.length > 0));
+
 const updateStops = (log, stopNumber) => {
-  const read = () => readFile(fileName, 'utf8');
   const write = text => writeFile(fileName, text, 'utf8');
 
   return exists(fileName).
@@ -17,10 +20,8 @@ const updateStops = (log, stopNumber) => {
 
       return Promise.resolve();
     }).
-    then(read).
-    then(text => {
-      const stops = text.split('\n').filter(line => line.length > 0);
-
+    then(readLines).
+    then(stops => {
       if (false === stops.includes(stopNumber)) {
         stops.push(stopNumber);
       }
@@ -31,8 +32,8 @@ const updateStops = (log, stopNumber) => {
 }
 
 const listStops = (ports = {}, opts = {}) => {
-  const { log, get }          = ports;
-  const { enableDebug }       = opts;
+  const { log, get }    = ports;
+  const { enableDebug } = opts;
 
   const detail = (stopNumbers = []) => require('../adapters/metlink').stops({ get, log }, { enableDebug }, ...stopNumbers);
 
@@ -43,7 +44,8 @@ const listStops = (ports = {}, opts = {}) => {
 
       return Promise.resolve('No stops on file');
     }).
-    then(text     => detail(text.split('\n'))).
+    then(readLines).
+    then(lines    => detail(lines)).
     then(results  => results.map(result => log(`${result.sms.padEnd(20)} - ${result.name}`)));
 }
 
