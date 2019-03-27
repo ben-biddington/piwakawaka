@@ -30,7 +30,13 @@ const updateStops = (log, stopNumber) => {
     then(write);
 }
 
-const listStops = log => {
+const listStops = (ports = {}, opts = {}) => {
+  const { log, get }          = ports;
+  const { enableDebug }       = opts;
+  const { stops: stopLookup } = require('../adapters/metlink');
+
+  const detail = (stopNumbers = []) => stopLookup({ get, log }, { enableDebug }, ...stopNumbers);
+
   return exists(fileName).
     then(fileExists => {
       if (fileExists === true)
@@ -38,7 +44,11 @@ const listStops = log => {
 
       return Promise.resolve('No stops on file');
     }).
-    then(log);
+    then(text     => detail(text.split('\n'))).
+    then(results  => {
+      results.
+        map(result => log(`${result.sms.padEnd(20)} - ${result.name}`));
+    });
 }
 
 module.exports.updateStops = updateStops;

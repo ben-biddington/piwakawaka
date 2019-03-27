@@ -3,6 +3,7 @@ const { listStops, updateStops }  = require('../adapters/metlink-stops-view');
 const { get }                     = require('../adapters/internet');
 const fs                          = require('fs');
 const log                         = m => fs.writeSync(1, `${m}\n`);
+let debug;
 
 const program = require('commander');
 
@@ -26,15 +27,15 @@ program.
       enableSound:  cmd.sound   || false,
     };
     
-    const debug     = (process.env.DEBUG == 1 || cmd.verbose === true) ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
+    debug     = (process.env.DEBUG == 1 || cmd.verbose === true) ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
 
     return Promise.all([updateStops(log, stopNumber), run({ log, debug, get }, opts)]);
   });
 
 program.
   command("stops").
-  action(cmd => {
-    listStops(log);
+  action(() => {
+    listStops({ log, debug, get }, { enableDebug:  process.env.DEBUG == 1 });
   });
 
 program.parse(process.argv);

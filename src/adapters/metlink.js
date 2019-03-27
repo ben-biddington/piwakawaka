@@ -56,13 +56,18 @@ const stops = async (ports = {}, opts = {}, ...stopNumbers) => {
 
   if (!get)
     throw "You need to supply ports with a `get` function";
+  
+  debug(`stopNumbers: ${stopNumbers}`);
 
   const result = await Promise.all(stopNumbers.map(stopNumber => {
     const url  = `${baseUrl}/${stopNumber}`;
     
-    debug(`URL: ${url}, stopNumbers: ${stopNumbers}`);
+    debug(`URL: ${url}, stopNumber: ${stopNumber}`);
     
     return get(url, {}).
+      catch(_ => {
+        throw `Failed to get ${url}`;
+      }).
       then(reply => parse(reply)).
       then(reply => { debug(`Full reply from <${url}>:\n${JSON.stringify(reply, null, 2)}`); return reply; }).
       then(thirdPartyStop => ({
