@@ -40,7 +40,8 @@ const run = (ports, opts) => {
   const notifier = require('node-notifier');
 
   const notify = result => {
-    const moment = require('moment');
+    const moment  = require('moment');
+    const path    = require('path');
 
     const message = result.arrivals.map(arrival => {
       return `${arrival.code.padEnd(4)} ${arrival.destination.padEnd(20)} ` + 
@@ -53,7 +54,9 @@ const run = (ports, opts) => {
         message: message,
         time: 10000,
         sound: enableSound,
-        wait: false
+        wait: false,
+        icon: path.join(__dirname, 'metlink.ico'),
+        appId: 'xxx'
       }, function(args) {
         log(`${args}`);
       }
