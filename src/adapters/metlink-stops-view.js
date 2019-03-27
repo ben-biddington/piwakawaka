@@ -11,21 +11,21 @@ const updateStops = (log, stopNumber) => {
     return exists(fileName).
       then(fileExists => {
         if (false === fileExists)
-          return writeFile(fileName, '[]', "utf8");
+          return writeFile(fileName, '', "utf8");
          
         return Promise.resolve();
       }).
       then(()   => readFile(fileName, "utf8")).
       then(text => {
-        const stops = JSON.parse(text || "[]");
+        const stops = text.split('\n').filter(line => line.length > 0);
         
         if (stops.filter(stop => stop == stopNumber).length === 0) {
           stops.push(stopNumber);
         }
-        
+
         return stops;
       }).
-      then(stops => writeFile(fileName, JSON.stringify(stops), "utf8"));
+      then(stops => writeFile(fileName, stops.join('\n'), "utf8"));
   }
   
   const listStops = log => {
@@ -40,9 +40,9 @@ const updateStops = (log, stopNumber) => {
         if (fileExists === true)
           return readFile(fileName, "utf8");
          
-        return Promise.resolve();
+        return Promise.resolve('No stops on file');
       }).
-      then(text => log(JSON.parse(text || "[]").join('\n')));
+      then(log);
   }
 
   module.exports.updateStops = updateStops;
