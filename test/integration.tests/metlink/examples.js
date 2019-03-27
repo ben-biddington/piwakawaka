@@ -1,25 +1,11 @@
-const expect    = require('chai').expect;
-const settings  = require('../../acceptance.tests/support/settings');
-const realTime  = require('../../../src/adapters/metlink').realTime;
+const expect      = require('chai').expect;
+const path        = require('path');
+const settings    = require('../../acceptance.tests/support/settings');
+const realTime    = require('../../../src/adapters/metlink').realTime;
 const enableDebug = settings.features.enableDebug;
+const { fakeGet: fakeGetFun, cannedGet } = require('../support/net');
 
-const fakeGet = (url, headers) => {
-  const fs = require('fs');
-  const path = require('path'),
-  filePath = path.join(__dirname, 'samples/metlink-4130.json')
-  
-  return new Promise(function(resolve, reject){
-    fs.readFile(filePath, 'utf-8', (err, data) => {
-        err ? reject(err) : resolve(data);
-    });
-  });
-};
-
-const cannedGet = (json) => {
-  return (_, __) => {
-    return Promise.resolve(json);
-  };
-}
+const fakeGet = (args) => fakeGetFun(path.join(__dirname, 'samples/metlink-4130.json'))(...args); 
 
 describe('Querying for realtime information', () => {
   it('for example, filtering by route', async () => {
