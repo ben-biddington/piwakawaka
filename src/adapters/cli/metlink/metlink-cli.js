@@ -1,6 +1,6 @@
-const { run }                     = require('../adapters/metlink-view');
-const { listStops, updateStops }  = require('../adapters/metlink-stops-view');
-const { get }                     = require('../adapters/internet');
+const { run }                     = require('./metlink-view');
+const { listStops, updateStops }  = require('./metlink-stops-view');
+const { get }                     = require('../../internet');
 const fs                          = require('fs');
 const log                         = m => fs.writeSync(1, `${m}\n`);
 let debug;

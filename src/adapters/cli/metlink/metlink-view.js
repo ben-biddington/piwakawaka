@@ -1,4 +1,4 @@
-const realTime  = require('./metlink').realTime;
+const realTime  = require('../../metlink').realTime;
 
 const render = (ports, result, opts) => {
   const {debug, log} = ports;

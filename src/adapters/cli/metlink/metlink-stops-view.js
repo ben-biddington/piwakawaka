@@ -35,7 +35,7 @@ const listStops = (ports = {}, opts = {}) => {
   const { log, get }    = ports;
   const { enableDebug } = opts;
 
-  const detail = (stopNumbers = []) => require('../adapters/metlink').stops({ get, log }, { enableDebug }, ...stopNumbers);
+  const detail = (stopNumbers = []) => require('../../metlink').stops({ get, log }, { enableDebug }, ...stopNumbers);
 
   return exists(fileName).
     then(fileExists => {
