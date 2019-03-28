@@ -11,7 +11,7 @@ program.
   option("-v --verbose", "Enable verbose logging").
   action((bearerToken, cmd) => {
     debug     = (process.env.DEBUG == 1 || cmd.verbose === true) ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
-
+    // $ ./twitter timeline `cat .twitter-bearer-token`
     // @todo: https://developer.twitter.com/en/docs/basics/authentication/overview/application-only
     return get(
       'https://api.twitter.com/1.1/statuses/user_timeline.json?count=10&screen_name=benbiddington', 
