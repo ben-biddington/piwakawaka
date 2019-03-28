@@ -71,8 +71,8 @@ const stops = async (ports = {}, opts = {}, ...stopNumbers) => {
       catch(_ => {
         throw `Failed to get ${url}`;
       }).
-      then(reply => parse(reply)).
-      then(reply => { debug(`Full reply from <${url}>:\n${JSON.stringify(reply, null, 2)}`); return reply; }).
+      then(reply          => parse(reply)).
+      then(reply          => { debug(`Full reply from <${url}>:\n${JSON.stringify(reply, null, 2)}`); return reply; }).
       then(thirdPartyStop => ({
         name: thirdPartyStop.Name,
         sms : thirdPartyStop.Sms
