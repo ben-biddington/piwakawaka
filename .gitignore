@@ -3,3 +3,5 @@ dist/
 .cache/
 *.png
 .stops
+.twitter-secret-key
+.twitter-api-key
