@@ -1,8 +1,8 @@
-const get = url => {
+const get = (url, headers = {}) => {
   const request   = require("request");
   
   return new Promise(function(resolve, reject){
-    request({ uri: url }, (error, _, body) => {
+    request({ uri: url, headers }, (error, _, body) => {
       if (error){
         reject(error);
         return;

@@ -6,6 +6,8 @@ const parse = (text) => {
   }
 }
 
+const defaultHeaders = { 'X-Author': 'ben.biddington@gmail.com' };
+
 const realTime = async (ports = {}, opts = {}) => { 
   const { get, log = _ => {} } = ports;
   const { baseUrl = 'https://www.metlink.org.nz/api/v1/StopDepartures', stopNumber, enableDebug = false } = opts;
@@ -26,9 +28,9 @@ const realTime = async (ports = {}, opts = {}) => {
 
   const url  = `${baseUrl}/${stopNumber}`;
 
-  debug(`URL: ${url}, routeNumbers: ${routeNumbers}`);
+  debug(`URL: ${url}, headers: ${JSON.stringify(defaultHeaders)}, routeNumbers: ${routeNumbers}`);
 
-  const reply = await get(url, {}).
+  const reply = await get(url, defaultHeaders).
     then(reply => parse(reply)).
     then(reply => { debug(`Full reply from <${url}>:\n${JSON.stringify(reply, null, 2)}`); return reply; });
 
@@ -65,7 +67,7 @@ const stops = async (ports = {}, opts = {}, ...stopNumbers) => {
     
     debug(`URL: ${url}, stopNumber: ${stopNumber}`);
     
-    return get(url, {}).
+    return get(url, defaultHeaders).
       catch(_ => {
         throw `Failed to get ${url}`;
       }).
