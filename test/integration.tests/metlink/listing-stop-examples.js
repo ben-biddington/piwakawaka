@@ -17,4 +17,15 @@ describe('Querying for bus stops', () => {
     expect(result.name).to.equal('Manners Street at Cuba Street - Stop A');
     expect(result.sms) .to.equal('5515');
   });
+
+  it('it handle nonexistent stops', async () => {
+    const ports = { get: (url, headers) => Promise.resolve({ statusCode: 404, body: "NOT FOUND" }) , log: settings.log };
+    
+    const results = await stops(ports, { enableDebug }, '20');
+
+    const result = results[0];
+
+    expect(result.name).to.equal('UNKNOWN STOP');
+    expect(result.sms) .to.equal('20');
+  });
 });
