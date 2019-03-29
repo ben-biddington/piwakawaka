@@ -19,7 +19,7 @@ describe('Querying for bus stops', () => {
   });
 
   it('it handle nonexistent stops', async () => {
-    const ports = { get: (url, headers) => Promise.resolve({ statusCode: 404, body: "NOT FOUND" }) , log: settings.log };
+    const ports = { get: () => Promise.resolve({ statusCode: 404, body: "NOT FOUND" }) , log: settings.log };
     
     const results = await stops(ports, { enableDebug }, '20');
 

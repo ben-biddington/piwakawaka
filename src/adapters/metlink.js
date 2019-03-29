@@ -76,12 +76,12 @@ const stops = async (ports = {}, opts = {}, ...stopNumbers) => {
         return Promise.resolve({ name: 'UNKNOWN STOP', sms: stopNumber });
 
       return Promise.resolve(reply).
-      then(reply => parse(reply.body)).
-      then(body          => { debug(`Full reply from <${url}>:\n${JSON.stringify(body, null, 2)}`); return body; }).
-      then(thirdPartyStop => ({
-        name: thirdPartyStop.Name,
-        sms : thirdPartyStop.Sms
-      }));
+        then(reply => parse(reply.body)).
+        then(body  => { debug(`Full reply from <${url}>:\n${JSON.stringify(body, null, 2)}`); return body; }).
+        then(thirdPartyStop => ({
+          name: thirdPartyStop.Name,
+          sms : thirdPartyStop.Sms
+        }));
   }));
 
   debug(result);
