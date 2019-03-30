@@ -11,7 +11,7 @@ program.
   version('0.0.1').
   command("pop").
   option("-v --verbose"   , "Enable verbose logging").
-  option("-t --trace"   , "Enable trace logging").
+  option("-t --trace"     , "Enable trace logging").
   option("-s --enableSeen", "Enable seen filter").
   action(async   (opts) => {
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
@@ -23,6 +23,9 @@ program.
           item: ['torrent']}});
 
     const url     = process.env.RSS_URL;
+    
+    if (!url)
+      throw `You need to set the <RSS_URL> env var`;
 
     const feed = await parser.parseURL(url);
 
@@ -44,14 +47,16 @@ program.
       catch(_ => '').
       then(text => { return text.split('\n').filter(line => line.length > 0); });
     
-    let seenCount =0;
+    let seenCount = 0;
     
     debug(`Using seen list at <${seenFile}>: ${seen.join(',')}`);
 
     feed.items.slice(0, 25).forEach(item => {
       const age = moment.duration(new moment(item.pubDate).diff(new moment()));  
       
-      const keep = (opts.enableSeen === true && false === seen.includes(item.torrent.infoHash.toString())) || true;  
+      const keep = (opts.enableSeen === true ) 
+        ? false === seen.includes(item.torrent.infoHash.toString()) 
+        : true;  
 
       if (keep) {
         log(`${age.humanize().padEnd(10)} ${item.title.padEnd(75)} ${item.torrent.infoHash}`);
