@@ -50,3 +50,17 @@ describe('Eval-ing', () => {
     expect(result).to.equal(2);
   });
 });
+
+describe('Regular expressions', () => {
+  it('use literals', () => {
+    const match = 'The Highwaymen'.match(/.+highway.+/ig);
+
+    expect(match[0]).to.equal('The Highwaymen');
+  });
+
+  it('when parsing from string you must omit slashes', () => {
+    const match = 'The Highwaymen'.match(new RegExp('.+highway.+', "ig"));
+
+    expect(match[0]).to.equal('The Highwaymen');
+  });
+});

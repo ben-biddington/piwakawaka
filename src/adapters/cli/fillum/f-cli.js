@@ -51,12 +51,25 @@ program.
     
     debug(`Using seen list at <${seenFile}>: ${seen.join(',')}`);
 
+    const isNotSeen = item => {
+      const matchesPattern = (line, title) => {
+        const pattern = new RegExp(line.replace(/\//g, ''), 'ig');
+
+        const matches = title.toString().match(pattern) || [];
+
+        return matches != matches.length > 0;
+      }
+
+      return seen.filter(line => item.torrent.infoHash.toString() === line).length === 0 && 
+             seen.filter(line => matchesPattern(line, item.title.toString())).length === 0;
+    }
+
     feed.items.slice(0, 25).forEach(item => {
       const age = moment.duration(new moment(item.pubDate).diff(new moment()));  
       
-      const keep = (opts.enableSeen === true ) 
-        ? false === seen.includes(item.torrent.infoHash.toString()) 
-        : true;  
+      const keep = (opts.enableSeen === true)
+        ? isNotSeen(item) 
+        : true;
 
       if (keep) {
         log(`${age.humanize().padEnd(10)} ${item.title.padEnd(75)} ${item.torrent.infoHash}`);
