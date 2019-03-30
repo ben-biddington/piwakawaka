@@ -47,7 +47,7 @@ program.
       catch(_ => '').
       then(text => { return text.split('\n').filter(line => line.length > 0); });
     
-    let seenCount = 0;
+    const seenItems = [];
     
     debug(`Using seen list at <${seenFile}>: ${seen.join(',')}`);
 
@@ -75,7 +75,7 @@ program.
         if (i != null) {
           results.push(i);
         } else {
-          seenCount++;
+          seenItems.push(item);
         }
 
         if (results.length === count)
@@ -98,8 +98,16 @@ program.
 
     log('');
 
-    if (seenCount > 0) {
-      log(`<${seenCount}> items skipped as seen`);
+    if (seenItems.length > 0) {
+      log(`<${seenItems.length}> items skipped as seen`);
+
+      if (opts.verbose) {
+        log('');
+        
+        seenItems.forEach(item => {
+          log(`${item.title.padEnd(75)} ${item.torrent.infoHash}`);
+        });
+      }
     }
   });
 
