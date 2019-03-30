@@ -13,6 +13,7 @@ program.
   option("-v --verbose"   , "Enable verbose logging").
   option("-t --trace"     , "Enable trace logging").
   option("-s --enableSeen", "Enable seen filter").
+  option("-c --count <count>", "Count", 25).
   action(async   (opts) => {
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
     debug(util.inspect(opts));
@@ -39,9 +40,9 @@ program.
 
     log(`${feed.title} (${url})\n`);
     
-    const moment  = require('moment');
-    const seenFile = path.join(process.cwd(), '.seen');
-    const read = util.promisify(fs.readFile);
+    const moment    = require('moment');
+    const seenFile  = path.join(process.cwd(), '.seen');
+    const read      = util.promisify(fs.readFile);
 
     const seen = await read(seenFile, 'utf8').
       catch(_ => '').
@@ -73,7 +74,7 @@ program.
         const i = selector(item);
         
         if (i != null) {
-          results.push(i);
+          results.push({ index, item: i });
         } else {
           seenItems.push(item);
         }
@@ -85,15 +86,17 @@ program.
       return results;
     };
 
-    take(feed.items, 25, item => {
+    take(feed.items, parseInt(opts.count), item => {
       if (opts.enableSeen === false)
         return item;
 
       return isNotSeen(item) ? item : null;
-    }).forEach(item => {
+    }).forEach(result => {
+      const { index, item } = result;
+
       const age = moment.duration(new moment(item.pubDate).diff(new moment()));  
       
-      log(`${age.humanize().padEnd(10)} ${item.title.padEnd(75)} ${item.torrent.infoHash}`);
+      log(`${index.toString().padEnd(2)} - ${age.humanize().padEnd(10)} ${item.title.padEnd(75)} ${item.torrent.infoHash}`);
     });
 
     log('');
