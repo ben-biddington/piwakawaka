@@ -6,3 +6,4 @@ dist/
 .twitter-secret-key
 .twitter-api-key
 .twitter-bearer-token
+.seen
