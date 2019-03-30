@@ -64,18 +64,36 @@ program.
              seen.filter(line => matchesPattern(line, item.title.toString())).length === 0;
     }
 
-    feed.items.slice(0, 25).forEach(item => {
+    const take = (arr = [], count, selector) => {
+      const results = [];
+
+      for (let index = 0; index < arr.length; index++) {
+        const item = arr[index];
+
+        const i = selector(item);
+        
+        if (i != null) {
+          results.push(i);
+        } else {
+          seenCount++;
+        }
+
+        if (results.length === count)
+          return results;
+      }
+
+      return results;
+    };
+
+    take(feed.items, 25, item => {
+      if (opts.enableSeen === false)
+        return item;
+
+      return isNotSeen(item) ? item : null;
+    }).forEach(item => {
       const age = moment.duration(new moment(item.pubDate).diff(new moment()));  
       
-      const keep = (opts.enableSeen === true)
-        ? isNotSeen(item) 
-        : true;
-
-      if (keep) {
-        log(`${age.humanize().padEnd(10)} ${item.title.padEnd(75)} ${item.torrent.infoHash}`);
-      } else {
-        seenCount++;
-      }
+      log(`${age.humanize().padEnd(10)} ${item.title.padEnd(75)} ${item.torrent.infoHash}`);
     });
 
     log('');
