@@ -59,8 +59,12 @@ describe('Regular expressions', () => {
   });
 
   it('when parsing from string you must omit slashes', () => {
-    const match = 'The Highwaymen'.match(new RegExp('.+highway.+', "ig"));
+    let match = 'The Highwaymen'.match(new RegExp('.+highway.+', "ig"));
 
     expect(match[0]).to.equal('The Highwaymen');
+
+    match = 'The Highwaymen'.match(new RegExp('/.+highway.+/', "ig"));
+
+    expect(match).to.equal(null);
   });
 });
