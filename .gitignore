@@ -8,3 +8,4 @@ dist/
 .twitter-bearer-token
 .seen
 .rss_url
+.omdb-api-key
