@@ -7,3 +7,4 @@ dist/
 .twitter-api-key
 .twitter-bearer-token
 .seen
+.rss_url
