@@ -7,6 +7,24 @@ const util  = require('util');
 
 const program = require('commander');
 
+class Measured {
+  constructor(fn) {
+    this._fn = fn;
+    this._count = 0;
+  }
+
+  fun() {
+    return args => {
+      this._count++;
+      return this._fn(args);
+    };
+  }
+
+  count() {
+    return this._count;
+  }
+}
+
 program.
   version('0.0.1').
   command("rating [title...]").
@@ -24,20 +42,22 @@ program.
       : () => {};
 
     if (!apiKey)
+      throw `You need to set the <OMDB_API_KEY> env var`;
 
-    throw `You need to set the <OMDB_API_KEY> env var`;
+    const measuredGet = new Measured(get);
+    const _get = measuredGet.fun();
 
     const title = titleWords.join(' ');
 
     const url = `http://www.omdbapi.com?apikey=${apiKey}&s=${encodeURI(title)}`;
 
-    const reply = await get(url).then(result => ({ statusCode: result.statusCode, body: JSON.parse(result.body) }));
+    const reply = await _get(url).then(result => ({ statusCode: result.statusCode, body: JSON.parse(result.body) }));
 
     debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${JSON.stringify(reply.body, null, 2)}`, 'list');
 
     const searchResults = await Promise.all(reply.body.Search.map(it => {
       const detailUrl = `http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`;
-      return get(detailUrl).
+      return _get(detailUrl).
         then(reply  => JSON.parse(reply.body)).
         then(detail => { debug(JSON.stringify(detail, null, 2), 'detail.http'); return detail; }).
         then(detail => ({ ...it, imdbRating: detail.imdbRating })).
@@ -54,6 +74,8 @@ program.
     ratings.forEach(result => {
       log(`${result.title.padEnd(50)} - ${result.rating}`);
     });
+
+    log(`\nAPI hits: ${measuredGet.count()}`);
   });
 
 program.
