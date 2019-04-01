@@ -30,6 +30,8 @@ program.
 
     const chalk = require('chalk');
 
+    log(`\nShowing <${results.length}> stories\n`);
+
     results.forEach(story => {
       const label = `${index++}.`;
       log(chalk.green(`${label.padEnd(3)}${story.title}\n`));
