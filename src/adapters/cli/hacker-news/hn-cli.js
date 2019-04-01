@@ -50,25 +50,38 @@ program.
 
 program.
   version('0.0.1').
-  command("hide <id>").
-  option("-v --verbose", "Enable verbose logging").
-  option("-s --save", "Whether to save or hide", false).
+  command("hide [id]").
+  option("-v --verbose"         , "Enable verbose logging").
+  option("-s --save"            , "Whether to save or hide", false).
+  option("-c --count <count>"   , "How many to hide", 0).
   action(async (id, opts) => {
+    const { add: hide } = require('./seen.js');
+    
     debug = (process.env.DEBUG == 1 || opts.verbose === true)
-      ? (m, label = null) => {
-        if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-          const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
+    ? (m, label = null) => {
+      if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
+        const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
 
-          fs.writeSync(1, `${prefix} ${m}\n`);
-        }
+        fs.writeSync(1, `${prefix} ${m}\n`);
       }
-      : () => { };
+    }
+    : () => { };
 
-    const { add } = require('./seen.js');
+    if (opts.count) {
+      log(`Hiding the top <${opts.count}> items`);
 
-    const count = await add({ log }, id, { save: opts.save });
+      const results = await 
+        top({ get, debug }, { count: opts.count }).
+        then(results => { log(results.map(it => it.id).join(', ')); return results; }).
+        then(results => Promise.all(results.map(result => hide({ log }, result.id))));
+    } 
+    else {
+      log(`Hiding item with id <${id}>`);
 
-    log(`You have <${count}> ${opts.save ? 'saved' : 'seen'} items`);
+      const count = await hide({ log }, id, { save: opts.save });
+
+      log(`You have <${count}> ${opts.save ? 'saved' : 'seen'} items`);
+    }
   });
 
 program.
