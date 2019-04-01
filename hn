@@ -1,0 +1,3 @@
+#!/bin/bash
+
+node src/adapters/cli/hacker-news/hn-cli.js $@

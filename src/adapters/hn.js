@@ -19,18 +19,25 @@ const mapItem = item => {
   return result;
 };
 
+const tap = (fn) => {
+  return (args) => {
+    fn(args); return args;
+  };
+};
+
 const top = async (ports, opts = {}) => {
   const { baseUrl = 'https://hacker-news.firebaseio.com/v0', count = 10 } = opts;
-
-  const log = args => { console.log(args); return args; }
+  const { debug } = ports;
 
   return await ports.
     get(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).
-    then(JSON.parse).
-    then(ids    => ids.slice(0, count).map(id => ports.get(`${baseUrl}/item/${id}.json`))).
-    then(tasks  => Promise.all(tasks)).
-    then(result => result.map(JSON.parse)).
-    then(items  => items.map(mapItem));
+    then(tap(reply => debug(`${reply.statusCode}\n\n${reply.body}`))).
+    then(reply     => JSON.parse(reply.body)).
+    then(ids       => ids.slice(0, count).map(id => ports.get(`${baseUrl}/item/${id}.json`))).
+    then(tasks     => Promise.all(tasks)).
+    then(replies   => replies.map(it => it.body)).
+    then(result    => result.map(JSON.parse)).
+    then(items     => items.map(mapItem));
 };
 
 module.exports.top = top;
