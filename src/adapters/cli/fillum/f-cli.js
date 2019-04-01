@@ -1,10 +1,13 @@
 const { get } = require('../../internet');
 const fs      = require('fs');
 const path    = require('path');
-const log     = m => fs.writeSync(1, `${m}\n`);
-let debug;
+
 const util  = require('util');
 const { search }  = require('./imdb');
+
+const log     = m => fs.writeSync(1, `${m}\n`);
+const { debug: taggedDebug } = require('./debug');
+const debugLog = (opts) => (process.env.DEBUG == 1 || opts.verbose === true) ? taggedDebug : () => {};
 
 const program = require('commander');
 
@@ -15,16 +18,9 @@ program.
   option("-t --trace"                     , "Enable trace logging").
   option("-l --logLabels <logLabels...>"  , "Log labels", []).
   action(async (titleWords, opts) => {
-    const apiKey  = process.env.OMDB_API_KEY;
-    debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
-      ? (m, label = null) => {
-        if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-          const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
+    const debug = debugLog(opts);
 
-          fs.writeSync(1, `${prefix} ${m}\n`);
-        }
-      }
-      : () => {};
+    const apiKey  = process.env.OMDB_API_KEY;
 
     const searchResults = await search({ get, debug, log }, apiKey, titleWords);
 
@@ -49,7 +45,8 @@ program.
   option("-s --enableSeen", "Enable seen filter").
   option("-c --count <count>", "Count", 25).
   action(async   (opts) => {
-    debug         = (process.env.DEBUG == 1 || opts.verbose === true) ? m => fs.writeSync(1, `[DEBUG] ${m}\n`) : _ => {};
+    const debug = debugLog(opts);
+
     debug(util.inspect(opts));
     const Parser  = require('rss-parser');
     const parser  = new Parser({
