@@ -51,18 +51,17 @@ program.
 
     const url = `http://www.omdbapi.com?apikey=${apiKey}&type=movie&s=${encodeURI(title)}`;
 
-    const reply = await _get(url).then(result => ({ statusCode: result.statusCode, body: JSON.parse(result.body) }));
-
-    debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${JSON.stringify(reply.body, null, 2)}`, 'list');
-
-    const searchResults = await Promise.all(( reply.body.Search || [] ).map(it => {
-      const detailUrl = `http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`;
-      return _get(detailUrl).
-        then(reply  => JSON.parse(reply.body)).
-        then(detail => { debug(JSON.stringify(detail, null, 2), 'detail.http'); return detail; }).
-        then(detail => ({ ...it, imdbRating: detail.imdbRating })).
-        then(result => { debug(JSON.stringify(result, null, 2), 'detail'); return result; });
-    })); 
+    const searchResults = await
+      _get(url).
+        then(reply    => { debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${JSON.stringify(reply.body, null, 2)}`, 'list'); return reply}).
+        then(reply    => ({ statusCode: reply.statusCode, body: JSON.parse(reply.body) })).
+        then(result   => result.body.Search || []).
+        then(results  => Promise.all(results.map(it => 
+          _get(`http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`).
+            then(reply  => JSON.parse(reply.body)).
+            then(detail => { debug(JSON.stringify(detail, null, 2), 'detail.http'); return detail; }).
+            then(detail => ({ ...it, imdbRating: detail.imdbRating })).
+            then(result => { debug(JSON.stringify(result, null, 2), 'detail'); return result; }))));
 
     debug(JSON.stringify(searchResults, null, 2), 'results');
 
