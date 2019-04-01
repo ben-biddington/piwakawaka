@@ -9,3 +9,4 @@ dist/
 .seen
 .rss_url
 .omdb-api-key
+seen.db

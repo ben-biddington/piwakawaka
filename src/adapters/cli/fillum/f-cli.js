@@ -1,4 +1,4 @@
-const { get, post } = require('../../internet');
+const { get } = require('../../internet');
 const fs      = require('fs');
 const path    = require('path');
 const log     = m => fs.writeSync(1, `${m}\n`);

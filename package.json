@@ -17,11 +17,11 @@
     "chalk": "^2.4.2",
     "commander": "^2.19.0",
     "express": "^4.16.4",
-    "lokijs": "^1.5.6",
     "moment": "^2.24.0",
     "node-notifier": "^5.4.0",
     "request": "^2.88.0",
     "rss-parser": "^3.7.0",
+    "sqlite3": "^4.0.6",
     "xml-formatter": "^1.1.0"
   },
   "devDependencies": {

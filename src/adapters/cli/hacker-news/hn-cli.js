@@ -1,5 +1,6 @@
 const { get } = require('../../internet');
 const fs      = require('fs');
+const util    = require('util');
 const log     = m => fs.writeSync(1, `${m}\n`);
 let debug;
 const { top } = require('../../hn');
@@ -12,7 +13,7 @@ program.
   option("-v --verbose"                   , "Enable verbose logging").
   option("-t --trace"                     , "Enable trace logging").
   option("-l --logLabels <logLabels...>"  , "Log labels", []).
-  option("-c --count <count>"             , "Count"     , []).
+  option("-c --count <count>"             , "Count"     , 25).
   action(async (opts) => {
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
       ? (m, label = null) => {
@@ -32,7 +33,14 @@ program.
 
     log(`\nShowing <${results.length}> stories\n`);
 
-    results.forEach(story => {
+    const { exists } = require('./seen.js');
+
+    const filtered = await Promise.all(results.map(async item => {
+        const isSeen = await exists({ log }, item.id);
+        return { ...item, isSeen };
+    })).then(result => result.filter(it => false === it.isSeen));
+
+    filtered.forEach(story => {
       const label = `${index++}.`;
       log(chalk.green(`${label.padEnd(3)}${story.title}\n`));
       log(`   ${story.url}\n`);
@@ -42,10 +50,8 @@ program.
 
 program.
   version('0.0.1').
-  command("hide [id]").
+  command("hide <id>").
   option("-v --verbose"                   , "Enable verbose logging").
-  option("-t --trace"                     , "Enable trace logging").
-  option("-l --logLabels <logLabels...>"  , "Log labels", []).
   action(async (id, opts) => {
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
       ? (m, label = null) => {
@@ -57,16 +63,11 @@ program.
       }
       : () => {};
 
-    // [i] http://lokijs.org/#/
-    const loki = require('lokijs');
+    const { add } = require('./seen.js');
 
-    var db = new loki('loki.json');
+    const count = await add({ log }, id);
 
-    const seen = db.addCollection('children');
-
-    seen.insert({ id });
-
-    log(`There are <${seen.count()}> seen items`);
+    log(`You have <${count}> seen items`);
   });
 
 program.parse(process.argv);
