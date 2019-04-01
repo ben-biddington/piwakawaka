@@ -31,7 +31,7 @@ program.
   option("-v --verbose"                   , "Enable verbose logging").
   option("-t --trace"                     , "Enable trace logging").
   option("-l --logLabels <logLabels...>"  , "Log labels", []).
-  action(async   (titleWords, opts) => {
+  action(async (titleWords, opts) => {
     const apiKey  = process.env.OMDB_API_KEY;
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
       ? (m, label = null) => {
@@ -49,7 +49,7 @@ program.
 
     const title = titleWords.join(' ');
 
-    const url = `http://www.omdbapi.com?apikey=${apiKey}&s=${encodeURI(title)}`;
+    const url = `http://www.omdbapi.com?apikey=${apiKey}&type=movie&s=${encodeURI(title)}`;
 
     const reply = await _get(url).then(result => ({ statusCode: result.statusCode, body: JSON.parse(result.body) }));
 
@@ -66,12 +66,11 @@ program.
 
     debug(JSON.stringify(searchResults, null, 2), 'results');
 
-    const ratings = searchResults.map(it => ({
-      title: it.Title,
+    searchResults.map(it => ({
+      title:  it.Title,
       rating: it.imdbRating
-    }));
-
-    ratings.forEach(result => {
+    })).
+    forEach(result => {
       log(`${result.title.padEnd(50)} - ${result.rating}`);
     });
 
