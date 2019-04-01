@@ -73,6 +73,22 @@ const add = (ports = {}, id, opts = {}) => {
   });
 };
 
+const listSaved = (ports = {}) => {
+    return connected(db => {
+      return new Promise((accept, reject) => {
+        db.all(`SELECT id from saved`, (e, rows) => {
+          if (e)
+            {
+              reject(e);
+              return;
+            }
+  
+            accept(rows);
+        })
+      });
+    });
+  };
+
 const missing = (ports, id) => exists(ports, id).then(result => !result);
 const exists = (ports, id) => {
     return connected(db => {
@@ -90,6 +106,7 @@ const exists = (ports, id) => {
       });
 };
 
-module.exports.add      = add;
-module.exports.exists   = exists;
-module.exports.missing  = missing;
+module.exports.add          = add;
+module.exports.exists       = exists;
+module.exports.missing      = missing;
+module.exports.listSaved    = listSaved;

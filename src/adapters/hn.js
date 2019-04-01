@@ -40,4 +40,11 @@ const top = async (ports, opts = {}) => {
     then(items     => items.map(mapItem));
 };
 
-module.exports.top = top;
+const single = (ports, opts, id) => {
+  const { baseUrl = 'https://hacker-news.firebaseio.com/v0' } = opts;
+
+  return ports.get(`${baseUrl}/item/${id}.json`);
+}
+
+module.exports.top    = top;
+module.exports.single = single;

@@ -3,7 +3,7 @@ const fs      = require('fs');
 const util    = require('util');
 const log     = m => fs.writeSync(1, `${m}\n`);
 let debug;
-const { top } = require('../../hn');
+const { top, single } = require('../../hn');
 
 const program = require('commander');
 
@@ -69,6 +69,36 @@ program.
     const count = await add({ log }, id, { save: opts.save });
 
     log(`You have <${count}> ${opts.save ? 'saved' : 'seen' } items`);
+  });
+
+  program.
+  version('0.0.1').
+  command("saved").
+  option("-v --verbose" , "Enable verbose logging").
+  action(async (opts) => {
+    debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
+      ? (m, label = null) => {
+        if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
+          const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
+
+          fs.writeSync(1, `${prefix} ${m}\n`);
+        }
+      }
+      : () => {};
+
+    const { listSaved } = require('./seen.js');
+
+    const allSaved = await
+        listSaved({ log }).
+        then(items      => items.map  (item => item.id)).
+        then(ids        => ids.map    (id => single({ get }, {}, id))).
+        then(promises   => Promise.all(promises)).
+        then(replies    => replies.map(it => it.body)).
+        then(result     => result.map (JSON.parse));
+
+    allSaved.forEach(story => {
+      log(`${story.id} - ${story.title}`);
+    });
   });
 
 program.parse(process.argv);
