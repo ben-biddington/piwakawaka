@@ -12,6 +12,7 @@ program.
   option("-v --verbose"                   , "Enable verbose logging").
   option("-t --trace"                     , "Enable trace logging").
   option("-l --logLabels <logLabels...>"  , "Log labels", []).
+  option("-c --count <count>"             , "Count"     , []).
   action(async (opts) => {
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
       ? (m, label = null) => {
@@ -23,12 +24,15 @@ program.
       }
       : () => {};
 
-    const results = await top({ get, debug });
+    const results = await top({ get, debug }, { count: opts.count });
 
     let index = 1;
 
     results.forEach(story => {
-      log(`${index++}. ${story.title}\n     ${story.url}\n`);
+      const label = `${index++}.`;
+      log(`${label.padEnd(3)}${story.title}\n`);
+      log(`   ${story.url}\n`);
+      log(`   ${story.id}\n`);
     });
   });
 
