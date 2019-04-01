@@ -100,3 +100,4 @@ module.exports.add = add;
 module.exports.exists = exists;
 module.exports.missing = missing;
 module.exports.listSaved = listSaved;
+module.exports.listSeen = listSeen;
