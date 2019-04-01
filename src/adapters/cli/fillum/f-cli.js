@@ -25,6 +25,8 @@ class Measured {
   }
 }
 
+const pretty = o => JSON.stringify(o, null, 2);
+
 program.
   version('0.0.1').
   command("rating [title...]").
@@ -36,7 +38,9 @@ program.
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
       ? (m, label = null) => {
         if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-          fs.writeSync(1, `[DEBUG] ${m}\n`);
+          const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
+
+          fs.writeSync(1, `${prefix} ${m}\n`);
         }
       }
       : () => {};
@@ -51,17 +55,23 @@ program.
 
     const url = `http://www.omdbapi.com?apikey=${apiKey}&type=movie&s=${encodeURI(title)}`;
 
+    const tap = (fn) => {
+      return (args) => {
+        fn(args); return args;
+      };
+    };
+
     const searchResults = await
       _get(url).
-        then(reply    => { debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${JSON.stringify(reply.body, null, 2)}`, 'list'); return reply}).
-        then(reply    => ({ statusCode: reply.statusCode, body: JSON.parse(reply.body) })).
-        then(result   => result.body.Search || []).
-        then(results  => Promise.all(results.map(it => 
+        then(tap(reply  => debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${pretty(reply.body)}`, 'list'))).
+        then(reply      => JSON.parse(reply.body)).
+        then(result     => result.Search || []).
+        then(results    => Promise.all(results.map(it => 
           _get(`http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`).
-            then(reply  => JSON.parse(reply.body)).
-            then(detail => { debug(JSON.stringify(detail, null, 2), 'detail.http'); return detail; }).
-            then(detail => ({ ...it, imdbRating: detail.imdbRating })).
-            then(result => { debug(JSON.stringify(result, null, 2), 'detail'); return result; }))));
+            then(reply      => JSON.parse(reply.body)).
+            then(tap(detail => debug(pretty(detail), 'detail.http'))).
+            then(detail     => ({ ...it, imdbRating: detail.imdbRating })).
+            then(tap(result => debug(pretty(result), 'detail'))))));
 
     debug(JSON.stringify(searchResults, null, 2), 'results');
 
