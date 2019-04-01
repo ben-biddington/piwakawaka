@@ -10,3 +10,4 @@ dist/
 .rss_url
 .omdb-api-key
 seen.db
+hn.db

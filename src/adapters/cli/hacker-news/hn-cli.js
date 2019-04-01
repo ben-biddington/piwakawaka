@@ -51,7 +51,8 @@ program.
 program.
   version('0.0.1').
   command("hide <id>").
-  option("-v --verbose"                   , "Enable verbose logging").
+  option("-v --verbose" , "Enable verbose logging").
+  option("-s --save"    , "Whether to save or hide", false).
   action(async (id, opts) => {
     debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
       ? (m, label = null) => {
@@ -65,9 +66,9 @@ program.
 
     const { add } = require('./seen.js');
 
-    const count = await add({ log }, id);
+    const count = await add({ log }, id, { save: opts.save });
 
-    log(`You have <${count}> seen items`);
+    log(`You have <${count}> ${opts.save ? 'saved' : 'seen' } items`);
   });
 
 program.parse(process.argv);

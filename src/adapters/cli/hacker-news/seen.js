@@ -2,22 +2,40 @@ const sqlite3 = require('sqlite3').verbose();
 const util = require('util');
 
 const open = () => {
-  return new sqlite3.Database('seen.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
+  return new sqlite3.Database('hn.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
 } 
 
-const applySchema = (db) => {
-  return new Promise((accept, reject) => {
-    db.run(`CREATE TABLE IF NOT EXISTS seen (id text PRIMARY KEY);`, (e, row) => {
-        if (e)
-        {
-          reject(e);
-          return;
-        }
-
-        accept(row);
+const createSeen = (db) => {
+    return new Promise((accept, reject) => {
+      db.run(`
+          CREATE TABLE IF NOT EXISTS seen (id text PRIMARY KEY);`, (e, row) => {
+          if (e)
+          {
+            reject(e);
+            return;
+          }
+  
+          accept(row);
+      });
     });
-  });
-};
+  };
+
+  const createSaved = (db) => {
+    return new Promise((accept, reject) => {
+      db.run(`
+          CREATE TABLE IF NOT EXISTS saved (id text PRIMARY KEY);`, (e, row) => {
+          if (e)
+          {
+            reject(e);
+            return;
+          }
+  
+          accept(row);
+      });
+    });
+  };
+
+const applySchema = db => Promise.all([ createSeen(db), createSaved(db) ]);
 
 const connected = async fn => {
     let db;
@@ -35,12 +53,14 @@ const connected = async fn => {
     }
 }
 
-const add = (ports = {}, id) => {
+const add = (ports = {}, id, opts = {}) => {
   return connected(db => {
-    db.run(`REPLACE INTO seen (id) VALUES (?)`, id);
+    const { save = false } = opts;
+
+    db.run(`REPLACE INTO ${save ? 'saved' : 'seen'} (id) VALUES (?)`, id);
     
     return new Promise((accept, reject) => {
-      db.get(`SELECT COUNT(1) as count FROM seen`, (e, row) => {
+      db.get(`SELECT COUNT(1) as count FROM  ${save ? 'saved' : 'seen'}`, (e, row) => {
         if (e)
           {
             reject(e);
