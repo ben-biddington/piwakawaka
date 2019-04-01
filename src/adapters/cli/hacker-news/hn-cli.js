@@ -7,6 +7,10 @@ const { top, single } = require('../../hn');
 
 const program = require('commander');
 
+const topNew = (ports = {}, opts = {}) {
+  
+}
+
 program.
   version('0.0.1').
   command("pop").
@@ -70,7 +74,7 @@ program.
     if (opts.count) {
       log(`Hiding the top <${opts.count}> items`);
 
-      const results = await 
+      await 
         top({ get, debug }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => Promise.all(results.map(result => hide({ log }, result.id))));

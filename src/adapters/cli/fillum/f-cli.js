@@ -4,6 +4,7 @@ const path    = require('path');
 
 const util  = require('util');
 const { search }  = require('./imdb');
+const { take }  = require('../../../core/array');
 
 const log     = m => fs.writeSync(1, `${m}\n`);
 const { debug: taggedDebug } = require('./debug');
@@ -93,27 +94,6 @@ program.
       return seen.filter(line => item.torrent.infoHash.toString() === line).length === 0 && 
              seen.filter(line => matchesPattern(line, item.title.toString())).length === 0;
     }
-
-    const take = (arr = [], count, selector) => {
-      const results = [];
-
-      for (let index = 0; index < arr.length; index++) {
-        const item = arr[index];
-
-        const i = selector(item);
-        
-        if (i != null) {
-          results.push({ index, item: i });
-        } else {
-          seenItems.push(item);
-        }
-
-        if (results.length === count)
-          return results;
-      }
-
-      return results;
-    };
 
     take(feed.items, parseInt(opts.count), item => {
       if (opts.enableSeen === false)
