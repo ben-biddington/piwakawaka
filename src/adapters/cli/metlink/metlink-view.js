@@ -18,6 +18,8 @@ const render = (ports, result, opts) => {
         `${scheduled}`);
   });
 
+  log('');
+
   debug(JSON.stringify(result, null, 2));
 };
 
