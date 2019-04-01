@@ -4,15 +4,15 @@ class Measured {
     this._count = 0;
   }
 
-  fun() {
+  get fun() {
     return args => {
       this._count++;
       return this._fn(args);
     };
   }
 
-  count() {
-    return this._count;
+  get stats() {
+    return () => ({ count: this._count });
   }
 }
 
@@ -25,29 +25,28 @@ const tap = (fn) => {
 };
 
 const search = (ports={}, apiKey, titleWords) => {
-  const { get, log, debug} = ports;
+  const { debug} = ports;
 
   if (!apiKey)
     throw `You need to set the <OMDB_API_KEY> env var`;
 
-  const measuredGet = new Measured(get);
-  const _get = measuredGet.fun();
+  const { stats, fun: get } = new Measured(ports.get);
 
   const title = titleWords.join(' ');
 
   const url = `http://www.omdbapi.com?apikey=${apiKey}&type=movie&s=${encodeURI(title)}`;
 
-  return _get(url).
+  return get(url).
       then(tap(reply  => debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${pretty(reply.body)}`, 'list'))).
       then(reply      => JSON.parse(reply.body)).
       then(result     => result.Search || []).
       then(results    => Promise.all(results.map(it => 
-        _get(`http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`).
+        get(`http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`).
           then(reply      => JSON.parse(reply.body)).
           then(tap(detail => debug(pretty(detail), 'detail.http'))).
           then(detail     => ({ ...it, imdbRating: detail.imdbRating })).
           then(tap(result => debug(pretty(result), 'detail')))))).
-      then(results => ({ results, apiHits: measuredGet.count() }));
+      then(results => ({ results, apiHits: stats().count }));
 }
 
 module.exports.search = search;
