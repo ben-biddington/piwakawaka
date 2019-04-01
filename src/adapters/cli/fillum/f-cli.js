@@ -55,7 +55,7 @@ program.
 
     debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${JSON.stringify(reply.body, null, 2)}`, 'list');
 
-    const searchResults = await Promise.all(reply.body.Search.map(it => {
+    const searchResults = await Promise.all(( reply.body.Search || [] ).map(it => {
       const detailUrl = `http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`;
       return _get(detailUrl).
         then(reply  => JSON.parse(reply.body)).
