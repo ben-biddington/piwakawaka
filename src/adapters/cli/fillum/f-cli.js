@@ -9,6 +9,55 @@ const program = require('commander');
 
 program.
   version('0.0.1').
+  command("rating [title...]").
+  option("-v --verbose"                   , "Enable verbose logging").
+  option("-t --trace"                     , "Enable trace logging").
+  option("-l --logLabels <logLabels...>"  , "Log labels", []).
+  action(async   (titleWords, opts) => {
+    const apiKey  = process.env.OMDB_API_KEY;
+    debug         = (process.env.DEBUG == 1 || opts.verbose === true) 
+      ? (m, label = null) => {
+        if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
+          fs.writeSync(1, `[DEBUG] ${m}\n`);
+        }
+      }
+      : () => {};
+
+    if (!apiKey)
+
+    throw `You need to set the <OMDB_API_KEY> env var`;
+
+    const title = titleWords.join(' ');
+
+    const url = `http://www.omdbapi.com?apikey=${apiKey}&s=${encodeURI(title)}`;
+
+    const reply = await get(url).then(result => ({ statusCode: result.statusCode, body: JSON.parse(result.body) }));
+
+    debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${JSON.stringify(reply.body, null, 2)}`, 'list');
+
+    const searchResults = await Promise.all(reply.body.Search.map(it => {
+      const detailUrl = `http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`;
+      return get(detailUrl).
+        then(reply  => JSON.parse(reply.body)).
+        then(detail => { debug(JSON.stringify(detail, null, 2), 'detail.http'); return detail; }).
+        then(detail => ({ ...it, imdbRating: detail.imdbRating })).
+        then(result => { debug(JSON.stringify(result, null, 2), 'detail'); return result; });
+    })); 
+
+    debug(JSON.stringify(searchResults, null, 2), 'results');
+
+    const ratings = searchResults.map(it => ({
+      title: it.Title,
+      rating: it.imdbRating
+    }));
+
+    ratings.forEach(result => {
+      log(`${result.title.padEnd(50)} - ${result.rating}`);
+    });
+  });
+
+program.
+  version('0.0.1').
   command("pop").
   option("-v --verbose"   , "Enable verbose logging").
   option("-t --trace"     , "Enable trace logging").
@@ -31,8 +80,6 @@ program.
     const feed = await parser.parseURL(url);
 
     if (opts.trace) {
-      const format = require('xml-formatter');
-      
       const xml = await (get(url).catch(e => {throw e;}));
 
       debug(`Reply from <${url}>:\n\n${xml.body}`);
