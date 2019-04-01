@@ -4,28 +4,9 @@ const path    = require('path');
 const log     = m => fs.writeSync(1, `${m}\n`);
 let debug;
 const util  = require('util');
+const { search }  = require('./imdb');
 
 const program = require('commander');
-
-class Measured {
-  constructor(fn) {
-    this._fn = fn;
-    this._count = 0;
-  }
-
-  fun() {
-    return args => {
-      this._count++;
-      return this._fn(args);
-    };
-  }
-
-  count() {
-    return this._count;
-  }
-}
-
-const pretty = o => JSON.stringify(o, null, 2);
 
 program.
   version('0.0.1').
@@ -45,37 +26,11 @@ program.
       }
       : () => {};
 
-    if (!apiKey)
-      throw `You need to set the <OMDB_API_KEY> env var`;
-
-    const measuredGet = new Measured(get);
-    const _get = measuredGet.fun();
-
-    const title = titleWords.join(' ');
-
-    const url = `http://www.omdbapi.com?apikey=${apiKey}&type=movie&s=${encodeURI(title)}`;
-
-    const tap = (fn) => {
-      return (args) => {
-        fn(args); return args;
-      };
-    };
-
-    const searchResults = await
-      _get(url).
-        then(tap(reply  => debug(`Request to <${url}> returned status <${reply.statusCode}> with body:\n${pretty(reply.body)}`, 'list'))).
-        then(reply      => JSON.parse(reply.body)).
-        then(result     => result.Search || []).
-        then(results    => Promise.all(results.map(it => 
-          _get(`http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`).
-            then(reply      => JSON.parse(reply.body)).
-            then(tap(detail => debug(pretty(detail), 'detail.http'))).
-            then(detail     => ({ ...it, imdbRating: detail.imdbRating })).
-            then(tap(result => debug(pretty(result), 'detail'))))));
+    const searchResults = await search({ get, debug, log }, apiKey, titleWords);
 
     debug(JSON.stringify(searchResults, null, 2), 'results');
 
-    searchResults.map(it => ({
+    searchResults.results.map(it => ({
       title:  it.Title,
       rating: it.imdbRating
     })).
@@ -83,7 +38,7 @@ program.
       log(`${result.title.padEnd(50)} - ${result.rating}`);
     });
 
-    log(`\nAPI hits: ${measuredGet.count()}`);
+    log(`\nAPI hits: ${searchResults.apiHits}`);
   });
 
 program.
