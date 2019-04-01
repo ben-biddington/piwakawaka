@@ -38,7 +38,7 @@ program.
     const filtered = await Promise.all(results.map(async item => {
       const isSeen = await exists({ log }, item.id);
       return { ...item, isSeen };
-    })).then(result => result.filter(it => false === it.isSeen));
+    })).then(result => result.filter(it => false === it.isSeen && it.url));
 
     filtered.forEach(story => {
       const label = `${index++}.`;
