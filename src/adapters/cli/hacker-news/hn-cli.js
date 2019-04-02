@@ -7,8 +7,14 @@ const { top, single } = require('../../hn');
 
 const program = require('commander');
 
-const topNew = (ports = {}, opts = {}) {
-  
+const { takeAsync }  = require('../../../core/array');
+
+const topNew = async (ports = {}, opts = {}) => {
+  const { count }   = opts;
+  const { missing } = require('./seen.js');
+  const results     = await top(ports, { count: 100 });
+
+  return takeAsync(results, count, item => missing({ log }, item.id));
 }
 
 program.
@@ -29,7 +35,8 @@ program.
       }
       : () => { };
 
-    const results = await top({ get, debug }, { count: opts.count });
+    //const results = await top({ get, debug }, { count: opts.count });
+    const results = await topNew({ get, debug }, { count: opts.count });
 
     let index = 1;
 
