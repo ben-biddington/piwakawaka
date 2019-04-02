@@ -22,6 +22,8 @@ const take = (arr = [], count, selector) => {
 const takeAsync = async (arr = [], count, selectorAsync) => {
   const results = [];
 
+  count = parseInt(count);
+
   for (let index = 0; index < arr.length; index++) {
     const item = arr[index];
 
@@ -29,10 +31,8 @@ const takeAsync = async (arr = [], count, selectorAsync) => {
     
     if (i != null) {
       results.push({ index, item: i });
-    } else {
-      seenItems.push(item);
     }
-
+    
     if (results.length === count)
       return results;
   }

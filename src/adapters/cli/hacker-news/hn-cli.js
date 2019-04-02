@@ -14,7 +14,12 @@ const topNew = async (ports = {}, opts = {}) => {
   const { missing } = require('./seen.js');
   const results     = await top(ports, { count: 100 });
 
-  return takeAsync(results, count, item => missing({ log }, item.id));
+  const fn = item => missing(ports, item.id).then(it => it === true ? item : null);
+
+  debug(count);
+
+  return takeAsync(results, count, item => fn(item)).
+    then(results => results.map(it => it.item));
 }
 
 program.
@@ -35,7 +40,6 @@ program.
       }
       : () => { };
 
-    //const results = await top({ get, debug }, { count: opts.count });
     const results = await topNew({ get, debug }, { count: opts.count });
 
     let index = 1;
@@ -82,7 +86,7 @@ program.
       log(`Hiding the top <${opts.count}> items`);
 
       await 
-        top({ get, debug }, { count: opts.count }).
+        topNew({ get, debug }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => Promise.all(results.map(result => hide({ log }, result.id))));
     } 
