@@ -44,22 +44,12 @@ const connected = async fn => {
 }
 
 const add = (ports = {}, id, opts = {}) => {
-  return connected(db => {
-    const { save = false } = opts;
-
-    db.run(`REPLACE INTO ${save ? 'saved' : 'seen'} (id) VALUES (?)`, id);
-
-    return new Promise((accept, reject) => {
-      db.get(`SELECT COUNT(1) as count FROM  ${save ? 'saved' : 'seen'}`, (e, row) => {
-        if (e) {
-          reject(e);
-          return;
-        }
-
-        accept(row.count);
-      })
-    });
+  connected(db => {
+    db.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, id);
   });
+  
+  return get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`).
+    then(row => row.count); 
 };
 
 const listSaved = () => list('saved');
@@ -81,20 +71,23 @@ const list = (table) => {
 };
 
 const missing = (ports, id) => exists(ports, id).then(result => !result);
-const exists = (ports, id) => {
+const exists = (ports, id)  => get(`SELECT COUNT(1) as count FROM seen where id = ?`, id).
+  then(row => row.count > 0);
+
+const get = (query, args) => {
   return connected(db => {
     return new Promise((accept, reject) => {
-      db.get(`SELECT COUNT(1) as count FROM seen where id = ?`, id, (e, row) => {
+      db.get(query, args, (e, row) => {
         if (e) {
           reject(e);
           return;
         }
 
-        accept(row.count > 0);
+        accept(row);
       })
     });
   });
-};
+}
 
 module.exports.add = add;
 module.exports.exists = exists;
