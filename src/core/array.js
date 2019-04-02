@@ -8,10 +8,8 @@ const take = (arr = [], count, selector) => {
     
     if (i != null) {
       results.push({ index, item: i });
-    } else {
-      seenItems.push(item);
     }
-
+    
     if (results.length === count)
       return results;
   }
