@@ -15,6 +15,7 @@ const render = (ports, result, opts) => {
     const scheduled = arrival.isRealtime ? '' : 'SCHEDULED';
     log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${(arrival.status || '-').padEnd('20')} ` + 
         `${moment.duration(arrival.departureInSeconds, "seconds").humanize().padEnd(15)} ` + 
+        `${moment(arrival.aimedArrival).format('HH:mm A').padEnd(10)}` + 
         `${scheduled}`);
   });
 
