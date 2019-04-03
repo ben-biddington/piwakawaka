@@ -11,3 +11,4 @@ dist/
 .omdb-api-key
 seen.db
 hn.db
+.conf/

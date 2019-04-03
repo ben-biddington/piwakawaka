@@ -29,10 +29,14 @@ program.
 
     searchResults.results.map(it => ({
       title:  it.Title,
-      rating: it.imdbRating
+      rating: it.imdbRating,
+      actors: it.actors,
+      plot:   it.plot,
     })).
     forEach(result => {
-      log(`${result.title.padEnd(50)} - ${result.rating}`);
+      log(`${result.title.padEnd(50)} - ${result.rating}\n`);
+      log(`${result.plot}\n`);
+      log(`${result.actors}\n`);
     });
 
     log(`\nAPI hits: ${searchResults.apiHits}`);

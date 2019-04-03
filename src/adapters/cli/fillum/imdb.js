@@ -44,7 +44,7 @@ const search = (ports={}, apiKey, titleWords) => {
         get(`http://www.omdbapi.com?apikey=${apiKey}&i=${it.imdbID}`).
           then(reply      => JSON.parse(reply.body)).
           then(tap(detail => debug(pretty(detail), 'detail.http'))).
-          then(detail     => ({ ...it, imdbRating: detail.imdbRating })).
+          then(detail     => ({ ...it, actors: detail.Actors, plot: detail.Plot, imdbRating: detail.imdbRating })).
           then(tap(result => debug(pretty(result), 'detail')))))).
       then(results => ({ results, apiHits: stats().count }));
 }
