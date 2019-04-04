@@ -12,7 +12,7 @@ const { takeAsync }  = require('../../../core/array');
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
   const { missing } = require('./seen.js');
-  const results     = await top(ports, { count: 100 });
+  const results     = await top(ports, { count: 50 });
 
   const fn = item => missing(ports, item.id).then(it => it === true ? item : null);
 
