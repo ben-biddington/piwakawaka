@@ -11,11 +11,21 @@ const render = (ports, result, opts) => {
     log(`(Filtering to route number <${opts.routeNumber}>)\n`);
   }
 
+  const arrivalTime = arrival => {
+    const arrivalTime = moment(arrival.aimedArrival);
+
+    if (arrivalTime.fromNow() < 60) { 
+      return arrivalTime.format('HH:mm A').padEnd(10);
+    } else {
+      return "".padEnd(5);
+    }
+  } 
+
   result.arrivals.map(arrival => {
     const scheduled = arrival.isRealtime ? '' : 'SCHEDULED';
-    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${(arrival.status || '-').padEnd('20')} ` + 
+    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${(arrival.status || '-').padEnd(10)} ` + 
         `${moment.duration(arrival.departureInSeconds, "seconds").humanize().padEnd(15)} ` + 
-        `${moment(arrival.aimedArrival).format('HH:mm A').padEnd(10)}` + 
+        `${arrivalTime(arrival)}` + 
         `${scheduled}`);
   });
 
