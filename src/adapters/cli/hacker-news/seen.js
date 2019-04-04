@@ -44,11 +44,8 @@ const connected = async fn => {
 }
 
 const add = (ports = {}, id, opts = {}) => {
-  connected(db => {
-    db.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, id);
-  });
-  
-  return get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`).
+  return run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, id).
+    then(()  => get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
     then(row => row.count); 
 };
 
@@ -78,6 +75,21 @@ const get = (query, args) => {
   return connected(db => {
     return new Promise((accept, reject) => {
       db.get(query, args, (e, row) => {
+        if (e) {
+          reject(e);
+          return;
+        }
+
+        accept(row);
+      })
+    });
+  });
+}
+
+const run = (query, args) => {
+  return connected(db => {
+    return new Promise((accept, reject) => {
+      db.run(query, args, (e, row) => {
         if (e) {
           reject(e);
           return;
