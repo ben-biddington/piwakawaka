@@ -15,10 +15,6 @@ class DiskCache {
     return write(this.fullPath(name), JSON.stringify(what));
   }
 
-  async ensureDir() {
-    return exists(this._dir).then(okay => okay === true ? Promise.resolve() : mkdir(this._dir));
-  };
-
   async get(name) {
     const fullFilePath = this.fullPath(name);
 
@@ -26,6 +22,10 @@ class DiskCache {
       then(()   => exists(fullFilePath)).
       then(yes  => yes ? read(fullFilePath, 'utf8').then(JSON.parse) : Promise.resolve());
   }
+
+  async ensureDir() {
+    return exists(this._dir).then(okay => okay === true ? Promise.resolve() : mkdir(this._dir));
+  };
 
   fullPath(name) {
     return path.join(this._dir, name.toString())
