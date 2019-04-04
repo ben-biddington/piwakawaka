@@ -7,7 +7,8 @@ const { top, single } = require('../../hn');
 
 const program = require('commander');
 
-const { takeAsync }  = require('../../../core/array');
+const { takeAsync } = require('../../../core/array');
+const DiskCache     = require('../../cli/hacker-news/disk-cache').DiskCache;
 
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
@@ -21,6 +22,8 @@ const topNew = async (ports = {}, opts = {}) => {
   return takeAsync(results, count, item => fn(item)).
     then(results => results.map(it => it.item));
 }
+
+const cache = new DiskCache('.cache');
 
 program.
   version('0.0.1').
@@ -40,7 +43,7 @@ program.
       }
       : () => { };
 
-    const results = await topNew({ get, debug }, { count: opts.count });
+    const results = await topNew({ get, debug, cache }, { count: opts.count });
 
     let index = 1;
 
