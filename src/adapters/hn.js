@@ -59,21 +59,9 @@ const top = async (ports, opts = {}) => {
   const { debug } = ports;
 
   const cache = new DiskCache('.cache');
-  const enableCache = true;
 
   const getDetail = async id => {
-    if (enableCache) {
-      const cached = await cache.get(id);
-
-      if (cached != null)
-        return cached;
-    }
-
-    return ports.get(`${baseUrl}/item/${id}.json`).
-      then(reply => {
-        return cache.set(id, reply).
-          then(() => reply);
-      });
+    return (await cache.get(id)) || ports.get(`${baseUrl}/item/${id}.json`).then(tap(reply => cache.set(id, reply)));
   };
 
   const timedGetDetail = id => {
