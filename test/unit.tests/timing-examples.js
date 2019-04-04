@@ -1,19 +1,5 @@
 const expect    = require('chai').expect;
-
-const timeAsync = async fn => {
-  let result;
-  
-  const start = new Date();
-  let finish;
-
-  try { 
-    result = await fn(); 
-  } finally {
-    finish = new Date();
-  }
-
-  return { duration: (finish - start), result };
-}
+const { timeAsync } = require('../../src/core/time');
 
 describe('Timing', () => {
   it('for example', async () => {
