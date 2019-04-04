@@ -58,14 +58,6 @@ const top = async (ports, opts = {}) => {
   const { baseUrl = 'https://hacker-news.firebaseio.com/v0', count = 10 } = opts;
   const { debug } = ports;
 
-  const timedGet = args => {
-    return timeAsync(() => ports.get(args)).
-      then(timed => {
-        debug(`Request to <${args}> took <${timed.duration}ms>`);
-        return timed.result;
-      });
-  };
-
   const cache = new DiskCache('.cache');
   const enableCache = true;
 
@@ -84,11 +76,19 @@ const top = async (ports, opts = {}) => {
       });
   };
 
+  const timedGetDetail = id => {
+    return timeAsync(() => getDetail(id)).
+      then(timed => {
+        //console.log(`Request took <${timed.duration}.ms>`);
+        return timed.result;
+      });
+  }
+
   return await 
-    timedGet(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).
+    ports.get(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).
     then(tap(reply => debug(`${reply.statusCode}\n\n${reply.body}`))).
     then(reply     => JSON.parse(reply.body)).
-    then(ids       => ids.slice(0, opts.count).map(id => getDetail(id))).
+    then(ids       => ids.slice(0, opts.count).map(id => timedGetDetail(id))).
     then(tasks     => Promise.all(tasks)).
     then(replies   => replies.map(it => it.body)).
     then(result    => result.map(JSON.parse)).
