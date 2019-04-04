@@ -1,14 +1,10 @@
 const { get } = require('../../internet');
 const fs = require('fs');
-const util = require('util');
 const log = m => fs.writeSync(1, `${m}\n`);
-let debug;
 const { top, single } = require('../../hn');
-
-const program = require('commander');
-
 const { takeAsync } = require('../../../core/array');
 const DiskCache     = require('../../cli/hacker-news/disk-cache').DiskCache;
+const program = require('commander');
 
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
@@ -22,8 +18,6 @@ const topNew = async (ports = {}, opts = {}) => {
   return takeAsync(results, count, item => fn(item)).
     then(results => results.map(it => it.item));
 }
-
-const cache = new DiskCache('.cache');
 
 program.
   version('0.0.1').
@@ -43,7 +37,7 @@ program.
       }
       : () => { };
 
-    const results = await topNew({ get, debug, cache }, { count: opts.count });
+    const results = await topNew({ get, debug, cache: new DiskCache('.cache') }, { count: opts.count });
 
     let index = 1;
 
@@ -75,7 +69,7 @@ program.
   action(async (id, opts) => {
     const { add: hide } = require('./seen.js');
     
-    debug = (process.env.DEBUG == 1 || opts.verbose === true)
+    const debug = (process.env.DEBUG == 1 || opts.verbose === true)
     ? (m, label = null) => {
       if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
         const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
@@ -107,7 +101,7 @@ program.
   command("saved").
   option("-v --verbose", "Enable verbose logging").
   action(async (opts) => {
-    debug = (process.env.DEBUG == 1 || opts.verbose === true)
+    const debug = (process.env.DEBUG == 1 || opts.verbose === true)
       ? (m, label = null) => {
         if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
           const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
