@@ -5,10 +5,15 @@ const write     = util.promisify(fs.writeFile);
 const exists    = util.promisify(fs.exists);
 const mkdir     = util.promisify(fs.mkdir);
 const read      = util.promisify(fs.readFile);
+const ls        = util.promisify(fs.readdir);
 
 class DiskCache {
   constructor(dir) {
     this._dir = dir;
+  }
+
+  async count() {
+    return ls(this._dir).then(files => files.length);
   }
 
   async set(name, what) {

@@ -19,6 +19,8 @@ const topNew = async (ports = {}, opts = {}) => {
     then(results => results.map(it => it.item));
 }
 
+const cache = new DiskCache('.cache');
+
 program.
   version('0.0.1').
   command("pop").
@@ -37,7 +39,7 @@ program.
       }
       : () => { };
 
-    const results = await topNew({ get, debug, cache: new DiskCache('.cache') }, { count: opts.count });
+    const results = await topNew({ get, debug, cache }, { count: opts.count });
 
     let index = 1;
 
@@ -58,6 +60,8 @@ program.
       log(`   ${story.url}\n`);
       log(`   ${story.id}\n`);
     });
+
+    cache.count().then(count => log(chalk.grey(`Cache contains <${count}> articles`)));
   });
 
 program.
