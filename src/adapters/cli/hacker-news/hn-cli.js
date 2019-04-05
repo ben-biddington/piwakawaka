@@ -41,6 +41,18 @@ class TraceLog {
 
 const traceLog = new TraceLog(process.env.TRACE == 1);
 
+const render = (stories = [], format) => {
+  let index = 1;
+
+  stories.forEach(story => {
+    const label = `${index++}.`;
+    log(chalk.green(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.gray(story.url.host) + '\n');
+    if (format == 'long') {
+      log(`   ${story.id}, ${story.url.href}\n`);
+    }
+  });
+};
+
 program.
   version('0.0.1').
   command("pop").
@@ -48,6 +60,7 @@ program.
   option("-t --trace", "Enable trace logging").
   option("-l --logLabels <logLabels...>", "Log labels", []).
   option("-c --count <count>", "Count", 25).
+  option("-f --format <format>", "Output formatting", 'short').
   action(async (opts) => {
     debug = (process.env.DEBUG == 1 || opts.verbose === true)
       ? (m, label = null) => {
@@ -61,8 +74,6 @@ program.
 
     const results = await topNew({ get, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count });
 
-    let index = 1;
-
     log(`\nShowing <${results.length}> stories\n`);
 
     const { exists } = require('./seen.js');
@@ -72,12 +83,7 @@ program.
       return { ...item, isSeen };
     })).then(result => result.filter(it => false === it.isSeen && it.url));
 
-    filtered.forEach(story => {
-      const label = `${index++}.`;
-      log(chalk.green(`${label.padEnd(3)}${story.title}\n`));
-      log(`   ${story.url}\n`);
-      log(`   ${story.id}\n`);
-    });
+    render(filtered, opts.format);
 
     cache.count().
       then(count => log(chalk.grey(`Cache contains <${count}> articles`))).
@@ -139,11 +145,11 @@ program.
 
     const allSaved = await
       listSaved({ log }).
-        then(items => items.map(item => item.id)).
-        then(ids => ids.map(id => single({ get }, {}, id))).
+        then(items    => items.map(item => item.id)).
+        then(ids      => ids.map(id => single({ get }, {}, id))).
         then(promises => Promise.all(promises)).
-        then(replies => replies.map(it => it.body)).
-        then(result => result.map(JSON.parse));
+        then(replies  => replies.map(it => it.body)).
+        then(result   => result.map(JSON.parse));
 
     allSaved.forEach(story => {
       log(`${story.id} - ${story.title}`);

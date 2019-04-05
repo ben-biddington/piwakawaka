@@ -14,7 +14,7 @@ const mapItem = item => {
     
     result = {
       ...result,
-      url: item.url,
+      url: url.parse(item.url),
       host: url.parse(item.url).host
     };
   }
