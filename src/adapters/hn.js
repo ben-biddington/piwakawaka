@@ -1,4 +1,5 @@
 const { timeAsync } = require('../core/time');
+const { tap }       = require('../core/sugar');
 
 const mapItem = item => { 
   let result = {
@@ -19,12 +20,6 @@ const mapItem = item => {
   }
 
   return result;
-};
-
-const tap = (fn) => {
-  return (args) => {
-    fn(args); return args;
-  };
 };
 
 const top = async (ports, opts = {}) => {
