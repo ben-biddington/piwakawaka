@@ -144,6 +144,22 @@ program.
     }
   });
 
+  program.
+  version('0.0.1').
+  command("unhide").
+  option("-v --verbose"         , "Enable verbose logging").
+  option("-d --domain <domain>" , "A domain to unhide").
+  action(async (opts) => {
+    if (opts.domain) {
+      log(`Unblocking domain <${opts.domain}> items`);
+      
+      const { unblock } = require('./seen.js');
+      
+      return unblock({ log }, opts.domain).
+        then(list => log(`You have <${list.length}> blocked domains: ${list.map(it => it.domain).join(', ')}`));
+    }
+  });
+
 program.
   version('0.0.1').
   command("saved").
