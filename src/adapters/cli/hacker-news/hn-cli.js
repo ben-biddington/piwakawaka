@@ -44,13 +44,24 @@ const traceLog = new TraceLog(process.env.TRACE == 1);
 const render = (stories = [], format) => {
   let index = 1;
 
-  stories.forEach(story => {
+  const { isBlocked } = require('./seen');
+
+  return Promise.all(stories.map(async story => {
+    const blocked = await isBlocked({ log }, story.url.host);
+
+    return { ...story, blocked };
+  })).
+  then(stories => stories.forEach(story => {
     const label = `${index++}.`;
-    log(chalk.green(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.gray(story.url.host) + '\n');
+    
+    const color = story.blocked ? chalk.green.dim : chalk.green;
+
+    log(color(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.gray(story.url.host) + '\n');
+    
     if (format == 'long') {
       log(`   ${story.id}, ${story.url.href}\n`);
     }
-  });
+  }));
 };
 
 program.
@@ -83,11 +94,10 @@ program.
       return { ...item, isSeen };
     })).then(result => result.filter(it => false === it.isSeen && it.url));
 
-    render(filtered, opts.format);
-
-    cache.count().
-      then(count => log(chalk.grey(`Cache contains <${count}> articles`))).
-      then(()    => traceLog.forEach(m => log(chalk.grey(m))));
+    return render(filtered, opts.format).
+      then(() => cache.count().
+        then(count => log(chalk.white.dim(`Cache contains <${count}> articles`))).
+        then(()    => traceLog.forEach(m => log(chalk.grey(m)))));
   });
 
 program.

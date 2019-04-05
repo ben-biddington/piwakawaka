@@ -90,6 +90,11 @@ const block = (ports ={}, domain) => {
     then(() => all(`SELECT domain as domain FROM blocked`)); 
 }
 
+const isBlocked = (ports ={}, domain) => {
+  return get(`SELECT COUNT(1) as count from blocked WHERE domain = ?`, domain).
+    then(row => row.count === 1); 
+}
+
 const get = (query, args) => {
   return connected(db => {
     return new Promise((accept, reject) => {
@@ -135,9 +140,10 @@ const run = (query, args) => {
   });
 }
 
-module.exports.add = add;
-module.exports.exists = exists;
-module.exports.missing = missing;
-module.exports.listSaved = listSaved;
-module.exports.listSeen = listSeen;
-module.exports.block = block;
+module.exports.add        = add;
+module.exports.exists     = exists;
+module.exports.missing    = missing;
+module.exports.listSaved  = listSaved;
+module.exports.listSeen   = listSeen;
+module.exports.block      = block;
+module.exports.isBlocked  = isBlocked;
