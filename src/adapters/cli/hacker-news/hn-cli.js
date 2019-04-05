@@ -13,7 +13,7 @@ const topNew = async (ports = {}, opts = {}) => {
 
   const fn = item => missing(ports, item.id).then(it => it === true ? item : null);
 
-  debug(count);
+  ports.debug(count);
 
   return takeAsync(results, count, item => fn(item)).
     then(results => results.map(it => it.item));
@@ -94,20 +94,20 @@ program.
     const { add: hide } = require('./seen.js');
     
     const debug = (process.env.DEBUG == 1 || opts.verbose === true)
-    ? (m, label = null) => {
-      if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-        const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
+      ? (m, label = null) => {
+          if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
+            const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
 
-        fs.writeSync(1, `${prefix} ${m}\n`);
-      }
-    }
-    : () => { };
+            fs.writeSync(1, `${prefix} ${m}\n`);
+          }
+        }
+      : () => { };
 
     if (opts.count) {
       log(`Hiding the top <${opts.count}> items`);
 
       await 
-        topNew({ get, debug }, { count: opts.count }).
+        topNew({ get, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => Promise.all(results.map(result => hide({ log }, result.id))));
     } 
