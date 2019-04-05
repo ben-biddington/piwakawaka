@@ -30,10 +30,12 @@ const top = async (ports, opts = {}) => {
     return (await cache.get(id)) || ports.get(`${baseUrl}/item/${id}.json`).then(tap(reply => cache.set(id, reply)));
   };
 
-  const timedGetDetail = id => {
+  const timedGetDetail = (ports, id) => {
+    const { trace = () => {} } = ports;
+
     return timeAsync(() => getDetail(id)).
       then(timed => {
-        //console.log(`Request took <${timed.duration}.ms>`);
+        trace(`Request took <${timed.duration}.ms>`);
         return timed.result;
       });
   }
@@ -42,7 +44,7 @@ const top = async (ports, opts = {}) => {
     ports.get(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).
     then(tap(reply => debug(`${reply.statusCode}\n\n${reply.body}`))).
     then(reply     => JSON.parse(reply.body)).
-    then(ids       => ids.slice(0, opts.count).map(id => timedGetDetail(id))).
+    then(ids       => ids.slice(0, opts.count).map(id => timedGetDetail(ports, id))).
     then(tasks     => Promise.all(tasks)).
     then(replies   => replies.map(it => it.body)).
     then(result    => result.map(JSON.parse)).

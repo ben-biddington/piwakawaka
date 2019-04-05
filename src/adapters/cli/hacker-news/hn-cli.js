@@ -20,6 +20,26 @@ const topNew = async (ports = {}, opts = {}) => {
 }
 
 const cache = new DiskCache('.cache');
+const chalk = require('chalk');
+
+class TraceLog {
+  constructor(enabled = true) {
+    this._messages = [];
+    this._enabled  = enabled;
+  }
+
+  record(m) {
+    if (this._enabled === true) {
+      this._messages.push(m);
+    }
+  }
+
+  forEach(fn) {
+    this._messages.forEach(fn);
+  }
+}
+
+const traceLog = new TraceLog(process.env.TRACE == 1);
 
 program.
   version('0.0.1').
@@ -39,11 +59,9 @@ program.
       }
       : () => { };
 
-    const results = await topNew({ get, debug, cache }, { count: opts.count });
+    const results = await topNew({ get, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count });
 
     let index = 1;
-
-    const chalk = require('chalk');
 
     log(`\nShowing <${results.length}> stories\n`);
 
@@ -61,7 +79,9 @@ program.
       log(`   ${story.id}\n`);
     });
 
-    cache.count().then(count => log(chalk.grey(`Cache contains <${count}> articles`)));
+    cache.count().
+      then(count => log(chalk.grey(`Cache contains <${count}> articles`))).
+      then(()    => traceLog.forEach(m => log(chalk.grey(m))));
   });
 
 program.

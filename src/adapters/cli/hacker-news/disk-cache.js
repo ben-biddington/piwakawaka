@@ -29,7 +29,10 @@ class DiskCache {
   }
 
   async ensureDir() {
-    return exists(this._dir).then(okay => okay === true ? Promise.resolve() : mkdir(this._dir));
+    return exists(this._dir).
+      then(okay => okay === true 
+        ? Promise.resolve() 
+        : mkdir(this._dir)).catch();
   };
 
   fullPath(name) {
