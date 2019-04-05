@@ -96,6 +96,7 @@ program.
   option("-v --verbose"         , "Enable verbose logging").
   option("-s --save"            , "Whether to save or hide", false).
   option("-c --count <count>"   , "How many to hide", 0).
+  option("-d --domain <domain>" , "A domain to block").
   action(async (id, opts) => {
     const { add: hide } = require('./seen.js');
     
@@ -116,7 +117,14 @@ program.
         topNew({ get, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => Promise.all(results.map(result => hide({ log }, result.id))));
-    } 
+    } else if (opts.domain) {
+      log(`Blocking domain <${opts.domain}> items`);
+      
+      const { block } = require('./seen.js');
+      
+      return block({ log }, opts.domain).
+        then(list => log(`You have <${list.length}> blocked domains: ${list.map(it => it.domain).join(', ')}`));
+    }
     else {
       log(`Hiding item with id <${id}>`);
 

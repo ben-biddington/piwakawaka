@@ -33,7 +33,21 @@ const createSaved = (db) => {
   });
 };
 
-const applySchema = db => Promise.all([createSeen(db), createSaved(db)]);
+const createBlocked = (db) => {
+  return new Promise((accept, reject) => {
+    db.run(`
+      CREATE TABLE IF NOT EXISTS blocked (domain text PRIMARY KEY);`, (e, row) => {
+        if (e) {
+          reject(e);
+          return;
+        }
+
+        accept(row);
+      });
+  });
+};
+
+const applySchema = db => Promise.all([createSeen(db), createSaved(db), createBlocked(db)]);
 
 const connected = async fn => {
   const db = open();
@@ -71,10 +85,30 @@ const missing = (ports, id) => exists(ports, id).then(result => !result);
 const exists = (ports, id)  => get(`SELECT COUNT(1) as count FROM seen where id = ?`, id).
   then(row => row.count > 0);
 
+const block = (ports ={}, domain) => {
+  return run(`REPLACE INTO blocked (domain) VALUES (?)`, domain).
+    then(() => all(`SELECT domain as domain FROM blocked`)); 
+}
+
 const get = (query, args) => {
   return connected(db => {
     return new Promise((accept, reject) => {
       db.get(query, args, (e, row) => {
+        if (e) {
+          reject(e);
+          return;
+        }
+
+        accept(row);
+      })
+    });
+  });
+}
+
+const all = (query, args) => {
+  return connected(db => {
+    return new Promise((accept, reject) => {
+      db.all(query, args, (e, row) => {
         if (e) {
           reject(e);
           return;
@@ -106,3 +140,4 @@ module.exports.exists = exists;
 module.exports.missing = missing;
 module.exports.listSaved = listSaved;
 module.exports.listSeen = listSeen;
+module.exports.block = block;
