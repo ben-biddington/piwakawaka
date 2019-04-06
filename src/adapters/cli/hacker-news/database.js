@@ -25,8 +25,16 @@ class Database {
 
   // private
 
+  applySchema(db){
+    return Promise.all([
+      this.run('CREATE TABLE IF NOT EXISTS seen     (id     text PRIMARY KEY)'), 
+      this.run('CREATE TABLE IF NOT EXISTS saved    (id     text PRIMARY KEY);'), 
+      this.run('CREATE TABLE IF NOT EXISTS blocked  (domain text PRIMARY KEY);')]);
+  };
+
   get(query, args) { return this.ex('get', query, args); }
   all(query, args) { return this.ex('all', query, args); }
+  run(query, args) { return this.ex('run', query, args); }
 
   ex(name, query, args) {
     return this.connected(db => {
@@ -42,28 +50,6 @@ class Database {
       });
     });
   }
-  
-  run(query, args) {
-    return this.connected(db => {
-      return new Promise((accept, reject) => {
-        db.run(query, args, (e, row) => {
-          if (e) {
-            reject(e);
-            return;
-          }
-  
-          accept(row);
-        })
-      });
-    });
-  }
-
-  applySchema(db){
-    return Promise.all([
-      this.run('CREATE TABLE IF NOT EXISTS seen     (id     text PRIMARY KEY)'), 
-      this.run('CREATE TABLE IF NOT EXISTS saved    (id     text PRIMARY KEY);'), 
-      this.run('CREATE TABLE IF NOT EXISTS blocked  (domain text PRIMARY KEY);')]);
-  };
 
   connected(fn) {
     const db = this.open();
