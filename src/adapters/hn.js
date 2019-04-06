@@ -1,13 +1,17 @@
 const { timeAsync } = require('../core/time');
 const { tap }       = require('../core/sugar');
+const  util         = require('util');
 
-const mapItem = item => { 
+const mapItem = (ports = {}, item) => { 
   let result = {
     id:     item.id,
     title:  item.title,
     url:    '',
-    host:   ''
+    host:   '',
+    date: ''
   };
+
+  const { trace } = ports;
 
   if (item.url) {
     const url = require('url');
@@ -15,9 +19,13 @@ const mapItem = item => {
     result = {
       ...result,
       url: url.parse(item.url),
-      host: url.parse(item.url).host
+      host: url.parse(item.url).host,
+      date: new Date(parseInt(item.time) * 1000),
+      score: item.score
     };
   }
+  
+  trace(`Translated this:\n${util.inspect(item)}\n\n into this:\n\n${util.inspect(result)}`);
 
   return result;
 };
@@ -38,7 +46,7 @@ const top = async (ports, opts = {}) => {
   const timedGetDetail = (id) => {
     return timeAsync(() => getDetail(id)).
       then(timed => {
-        trace(`Request took <${timed.duration}.ms>`);
+        trace(`Request took <${timed.duration}.ms> and returned:\n${util.inspect(timed.result)}`);
         return timed.result;
       });
   }
@@ -51,7 +59,7 @@ const top = async (ports, opts = {}) => {
     then(tasks     => Promise.all(tasks)).
     then(replies   => replies.map(it => it.body)).
     then(result    => result.map(JSON.parse)).
-    then(items     => items.map(mapItem));
+    then(items     => items.map(item => mapItem({ trace }, item)));
 };
 
 const single = (ports, opts, id) => {

@@ -5,6 +5,7 @@ const { top, single } = require('../../hn');
 const { takeAsync } = require('../../../core/array');
 const DiskCache     = require('../../cli/hacker-news/disk-cache').DiskCache;
 const program = require('commander');
+const moment  = require('moment');
 
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
@@ -56,7 +57,7 @@ const render = (stories = [], format) => {
     
     const color = story.blocked ? chalk.green.dim : chalk.green;
 
-    log(color(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.green.dim(story.url.host) + '\n');
+    log(color(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.yellow.dim(`${moment.duration(moment().diff(moment(story.date))).humanize()} ago`) + ' ' + chalk.green.dim(story.url.host) + '\n');
     
     if (format == 'long') {
       log(`   ${story.id}, ${story.url.href}\n`);
