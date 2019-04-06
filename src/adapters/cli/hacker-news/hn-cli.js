@@ -126,7 +126,7 @@ program.
       await 
         topNew({ get, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
-        then(results => Promise.all(results.map(result => hide({ log }, result.id))));
+        then(results => hide({ log }, results.map(result => result.id), { save: false}));
     } else if (opts.domain) {
       log(`Blocking domain <${opts.domain}> items`);
       

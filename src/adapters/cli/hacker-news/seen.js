@@ -56,8 +56,8 @@ const connected = async fn => {
     finally(() => db.close());
 }
 
-const add = (ports = {}, id, opts = {}) => {
-  return run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, id).
+const add = (ports = {}, ids=[], opts = {}) => {
+  return run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, ids.join(',')).
     then(()  => get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
     then(row => row.count); 
 };
