@@ -46,11 +46,7 @@ const render = (stories = [], format) => {
 
   const { isBlocked } = require('./seen');
 
-  return Promise.all(stories.map(async story => {
-    const blocked = await isBlocked({ log }, story.url.host);
-
-    return { ...story, blocked };
-  })).
+  return Promise.all(stories.map(story => isBlocked({ log }, story.url.host).then(blocked => ({ ...story, blocked })))).
   then(stories => stories.forEach(story => {
     const label = `${index++}.`;
     
