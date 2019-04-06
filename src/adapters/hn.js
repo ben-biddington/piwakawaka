@@ -22,9 +22,14 @@ const mapItem = item => {
   return result;
 };
 
+class DevNullCache {
+  get(id) { return null; }
+  set(id) {  }
+}
+
 const top = async (ports, opts = {}) => {
   const { baseUrl = 'https://hacker-news.firebaseio.com/v0', count = 10 } = opts;
-  const { debug, cache, trace } = ports;
+  const { debug = () => {}, cache = new DevNullCache(), trace = () => {} } = ports;
 
   const getDetail = async id => {
     return (await cache.get(id)) || ports.get(`${baseUrl}/item/${id}.json`).then(tap(reply => cache.set(id, reply)));

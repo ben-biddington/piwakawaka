@@ -1,5 +1,4 @@
 const sqlite3 = require('sqlite3').verbose();
-const util = require('util');
 
 const open = () => {
   return new sqlite3.Database('hn.db', sqlite3.OPEN_READWRITE | sqlite3.OPEN_CREATE);
