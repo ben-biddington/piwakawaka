@@ -42,13 +42,11 @@ class TraceLog {
 const traceLog = new TraceLog(process.env.TRACE == 1);
 
 const render = (stories = [], format) => {
-  let index = 1;
-
   const { isBlocked } = require('./seen');
 
   return Promise.all(stories.map(story => isBlocked({ log }, story.url.host).then(blocked => ({ ...story, blocked })))).
-    then(stories => stories.forEach((story, i)=> {
-      const label = `${index++}.`;
+    then(stories => stories.forEach((story, index)=> {
+      const label = `${index + 1}.`;
     
       const color = story.blocked ? chalk.green.dim : chalk.green;
 
