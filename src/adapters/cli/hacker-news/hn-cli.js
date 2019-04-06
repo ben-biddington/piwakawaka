@@ -10,14 +10,13 @@ const moment  = require('moment');
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
   const { missing } = require('./seen.js');
-  const results     = await top(ports, { count: 50 });
+  const results     = await top(ports, { count: 50 }).then(results => results.map((result, index) => ({...result, index})));
 
   const fn = item => missing(ports, item.id).then(it => it === true ? item : null);
 
   ports.debug(count);
 
-  return takeAsync(results, count, item => fn(item)).
-    then(results => results.map(it => it.item));
+  return takeAsync(results, count, item => fn(item)).then(results => results.map(it => it.item));
 }
 
 const cache = new DiskCache('.cache');
@@ -57,7 +56,10 @@ const render = (stories = [], format) => {
     
     const color = story.blocked ? chalk.green.dim : chalk.green;
 
-    log(color(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.yellow.dim(`${moment.duration(moment().diff(moment(story.date))).humanize()} ago`) + ' ' + chalk.green.dim(story.url.host) + '\n');
+    log(
+      color(`${label.padEnd(3)} ${chalk.white.dim(`(${(story.index + 1).toString()})`.padEnd(4))} ${story.title.padEnd(80)}`) + ' ' + 
+      chalk.yellow.dim(`${moment.duration(moment().diff(moment(story.date))).humanize()} ago`.padEnd(15)) + ' ' + 
+      chalk.green.dim(story.url.host) + '\n');
     
     if (format == 'long') {
       log(`   ${story.id}, ${story.url.href}\n`);
