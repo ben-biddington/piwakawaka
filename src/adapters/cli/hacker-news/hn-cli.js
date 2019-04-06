@@ -56,7 +56,7 @@ const render = (stories = [], format) => {
     
     const color = story.blocked ? chalk.green.dim : chalk.green;
 
-    log(color(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.gray(story.url.host) + '\n');
+    log(color(`${label.padEnd(4)}${story.title}`) + ' ' + chalk.green.dim(story.url.host) + '\n');
     
     if (format == 'long') {
       log(`   ${story.id}, ${story.url.href}\n`);
