@@ -45,10 +45,11 @@ program.
 program.
   version('0.0.1').
   command("pop").
-  option("-v --verbose"   , "Enable verbose logging").
-  option("-t --trace"     , "Enable trace logging").
-  option("-s --enableSeen", "Enable seen filter").
-  option("-c --count <count>", "Count", 25).
+  option("-v --verbose"       , "Enable verbose logging").
+  option("-t --trace"         , "Enable trace logging").
+  option("-s --enableSeen"    , "Enable seen filter").
+  option("-m --magnet"        , "Show magnet links").
+  option("-c --count <count>" , "Count", 25).
   action(async   (opts) => {
     const debug = debugLog(opts);
 
@@ -109,7 +110,9 @@ program.
 
       const age = moment.duration(new moment(item.pubDate).diff(new moment()));  
       
-      log(`${index.toString().padEnd(2)} - ${age.humanize().padEnd(10)} ${item.title.padEnd(75)} ${item.torrent.infoHash}`);
+      log(
+        `${index.toString().padEnd(2)} - ${age.humanize().padEnd(10)} ${item.title.padEnd(75)}` + 
+        (opts.magnet ? ` ${item.torrent.magnetURI}` : ''));
     });
 
     log('');
