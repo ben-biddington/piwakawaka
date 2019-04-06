@@ -51,9 +51,11 @@ const top = async (ports, opts = {}) => {
       });
   }
 
+  const url = `${baseUrl}/topstories.json`;
+
   return await 
-    ports.get(`${baseUrl}/topstories.json`, { 'Accept': 'application/json' }).
-    then(tap(reply => debug(`${reply.statusCode}\n\n${reply.body}`))).
+    ports.get(url, { 'Accept': 'application/json' }).
+    then(tap(reply => debug(`Reply from <${url}> return status <${reply.statusCode}> and body:\n\n${reply.body}`))).
     then(reply     => JSON.parse(reply.body)).
     then(ids       => ids.slice(0, opts.count).map(id => timedGetDetail(id))).
     then(tasks     => Promise.all(tasks)).
