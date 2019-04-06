@@ -67,11 +67,11 @@ const render = (stories = [], format) => {
 program.
   version('0.0.1').
   command("pop").
-  option("-v --verbose", "Enable verbose logging").
-  option("-t --trace", "Enable trace logging").
+  option("-v --verbose"                 , "Enable verbose logging").
+  option("-t --trace"                   , "Enable trace logging").
   option("-l --logLabels <logLabels...>", "Log labels", []).
-  option("-c --count <count>", "Count", 25).
-  option("-f --format <format>", "Output formatting", 'short').
+  option("-c --count <count>"           , "Count"             , 25).
+  option("-f --format <format>"         , "Output formatting" , 'short').
   action(async (opts) => {
     debug = (process.env.DEBUG == 1 || opts.verbose === true)
       ? (m, label = null) => {
