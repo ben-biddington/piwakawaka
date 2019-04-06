@@ -11,8 +11,20 @@ const database = new Database(newTempFile());
 
 describe('The seen database', () => {
   it('can hide items', async () => {
-    await database.schema().then(() => database.add('abc'));
-  })
+    await database.schema().then(() => database.addSeen('abc'));
+    
+    const allSeen = await database.listSeen();
+
+    expect(allSeen.map(it => it.id)).to.contain('abc');
+  });
+
+  it('can save items', async () => {
+    await database.schema().then(() => database.addSaved('def'));
+    
+    const allSaved = await database.listSaved();
+
+    expect(allSaved.map(it => it.id)).to.contain('def');
+  });
 
   after(async () => {
     await database.delete();

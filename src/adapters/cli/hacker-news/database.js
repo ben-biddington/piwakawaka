@@ -9,11 +9,11 @@ class Database {
     return this.applySchema();
   };
 
-  add(id, opts = {}) {
-    return this.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, id).
-      then(()  => this.get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
-      then(row => row.count); 
-  };
+  addSeen(id) { return this.add(id); };
+  addSaved(id) { return this.add(id, { save: true }); };
+
+  listSeen()  { return this.all(`SELECT id from seen`) };
+  listSaved() { return this.all(`SELECT id from saved`) };
   
   delete() {
     const { unlink } = require('fs');
@@ -24,6 +24,12 @@ class Database {
   }
 
   // private
+  
+  add(id, opts = {}) {
+    return this.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, id).
+      then(()  => this.get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
+      then(row => row.count); 
+  };
 
   applySchema(db){
     return Promise.all([
