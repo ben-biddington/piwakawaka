@@ -47,19 +47,19 @@ const render = (stories = [], format) => {
   const { isBlocked } = require('./seen');
 
   return Promise.all(stories.map(story => isBlocked({ log }, story.url.host).then(blocked => ({ ...story, blocked })))).
-  then(stories => stories.forEach(story => {
-    const label = `${index++}.`;
+    then(stories => stories.forEach((story, i)=> {
+      const label = `${index++}.`;
     
-    const color = story.blocked ? chalk.green.dim : chalk.green;
+      const color = story.blocked ? chalk.green.dim : chalk.green;
 
-    log(
-      color(`${label.padEnd(3)} ${chalk.white.dim(`(${(story.index + 1).toString()})`.padEnd(4))} ${story.title.padEnd(80)}`) + ' ' + 
-      chalk.yellow.dim(`${moment.duration(moment().diff(moment(story.date))).humanize()} ago`.padEnd(15)) + ' ' + 
-      chalk.green.dim(story.url.host) + '\n');
-    
-    if (format == 'long') {
-      log(`   ${story.id}, ${story.url.href}\n`);
-    }
+      log(
+        color(`${label.padEnd(3)} ${chalk.white.dim(`(${(story.index + 1).toString()})`.padEnd(4))} ${story.title.padEnd(80)}`) + ' ' + 
+        chalk.yellow.dim(`${moment.duration(moment().diff(moment(story.date))).humanize()} ago`.padEnd(15)) + ' ' + 
+        chalk.green.dim(story.url.host) + '\n');
+      
+      if (format == 'long') {
+        log(`   ${story.id}, ${story.url.href}\n`);
+      }
   }));
 };
 
