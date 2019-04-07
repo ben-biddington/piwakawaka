@@ -21,46 +21,48 @@ const withNew = fn => {
 }
 
 describe('The seen database', () => {
-  it('can hide items', async () => {
-    await database.schema().then(() => database.addSeen('abc'));
-    
-    const allSeen = await database.listSeen();
-
-    expect(allSeen.map(it => it.id)).to.contain('abc');
-  });
-
-  it('can hide multiple items', async () => {
-    await database.schema().then(() => database.addSeen(['abc', 'def', 'ghi']));
-    
-    const allSeen = await database.listSeen();
-
-    expect(allSeen.map(it => it.id)).to.contain('abc');
-    expect(allSeen.map(it => it.id)).to.contain('def');
-    expect(allSeen.map(it => it.id)).to.contain('ghi');
-  });
-
-  it('cannot hide multiple items like this', async () => {
-    return withNew(async database => {
-      let error = null;
+  describe('Hiding/saving', () => {
+    it('can hide items', async () => {
+      await database.schema().then(() => database.addSeen('abc'));
       
-      await Promise.all([
-        database.addSeen('abc').catch(e => error = e),
-        database.addSeen('def').catch(e => error = e),
-        database.addSeen('ghi').catch(e => error = e),
-        database.addSeen('jkl').catch(e => error = e),
-        database.addSeen('mno').catch(e => error = e),
-        database.addSeen('pqr').catch(e => error = e) ])
-    
-      expect(error).to.match(/SQLITE_BUSY: database is locked/);
+      const allSeen = await database.listSeen();
+  
+      expect(allSeen.map(it => it.id)).to.contain('abc');
     });
-  });
 
-  it('can save items', async () => {
-    await database.schema().then(() => database.addSaved('def'));
-    
-    const allSaved = await database.listSaved();
+    it('can hide multiple items', async () => {
+      await database.schema().then(() => database.addSeen(['abc', 'def', 'ghi']));
+      
+      const allSeen = await database.listSeen();
+  
+      expect(allSeen.map(it => it.id)).to.contain('abc');
+      expect(allSeen.map(it => it.id)).to.contain('def');
+      expect(allSeen.map(it => it.id)).to.contain('ghi');
+    });
+  
+    it('cannot hide multiple items like this', async () => {
+      return withNew(async database => {
+        let error = null;
+        
+        await Promise.all([
+          database.addSeen('abc').catch(e => error = e),
+          database.addSeen('def').catch(e => error = e),
+          database.addSeen('ghi').catch(e => error = e),
+          database.addSeen('jkl').catch(e => error = e),
+          database.addSeen('mno').catch(e => error = e),
+          database.addSeen('pqr').catch(e => error = e) ])
+      
+        expect(error).to.match(/SQLITE_BUSY: database is locked/);
+      });
+    });
 
-    expect(allSaved.map(it => it.id)).to.contain('def');
+    it('can save items', async () => {
+      await database.schema().then(() => database.addSaved('def'));
+      
+      const allSaved = await database.listSaved();
+  
+      expect(allSaved.map(it => it.id)).to.contain('def');
+    });
   });
 
   describe('Blocking', () => {
