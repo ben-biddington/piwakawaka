@@ -40,17 +40,12 @@ describe('The seen database', () => {
       expect(allSeen.map(it => it.id)).to.contain('ghi');
     });
   
+    // [!] hmm, does not fail on Windows
     it('cannot hide multiple items like this', async () => {
       return withNew(async database => {
         let error = null;
         
-        await Promise.all([
-          database.addSeen('abc').catch(e => error = e),
-          database.addSeen('def').catch(e => error = e),
-          database.addSeen('ghi').catch(e => error = e),
-          database.addSeen('jkl').catch(e => error = e),
-          database.addSeen('mno').catch(e => error = e),
-          database.addSeen('pqr').catch(e => error = e) ])
+        await Promise.all(Array(50).map(() => database.addSeen('abc').catch(e => error = e)));
       
         expect(error).to.match(/SQLITE_BUSY: database is locked/);
       });
