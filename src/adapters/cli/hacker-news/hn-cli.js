@@ -7,6 +7,16 @@ const DiskCache     = require('../../cli/hacker-news/disk-cache').DiskCache;
 const program = require('commander');
 const moment  = require('moment');
 
+const select = (opts) => (process.env.DEBUG == 1 || opts.verbose === true)
+  ? (m, label = null) => {
+    if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
+      const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
+
+      fs.writeSync(1, `${prefix} ${m}\n`);
+    }
+  }
+  : () => { };
+  
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
   const { missing } = require('./seen.js');
@@ -70,17 +80,7 @@ program.
   option("-c --count <count>"           , "Count"             , 25).
   option("-f --format <format>"         , "Output formatting" , 'short').
   action(async (opts) => {
-    debug = (process.env.DEBUG == 1 || opts.verbose === true)
-      ? (m, label = null) => {
-        if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-          const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
-
-          fs.writeSync(1, `${prefix} ${m}\n`);
-        }
-      }
-      : () => { };
-
-    const results = await topNew({ get, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count });
+    const results = await topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count });
 
     log(`\nShowing <${results.length}> stories\n`);
 
@@ -106,21 +106,11 @@ program.
   action(async (id, opts) => {
     const { add: hide } = require('./seen.js');
     
-    const debug = (process.env.DEBUG == 1 || opts.verbose === true)
-      ? (m, label = null) => {
-          if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-            const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
-
-            fs.writeSync(1, `${prefix} ${m}\n`);
-          }
-        }
-      : () => { };
-
     if (opts.count) {
       log(`Hiding the top <${opts.count}> items`);
 
       await 
-        topNew({ get, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count }).
+        topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => hide({ log }, results.map(result => result.id), { save: false}));
     } else if (opts.domain) {
@@ -140,7 +130,7 @@ program.
     }
   });
 
-  program.
+program.
   version('0.0.1').
   command("unhide").
   option("-v --verbose"         , "Enable verbose logging").
@@ -161,16 +151,6 @@ program.
   command("saved").
   option("-v --verbose", "Enable verbose logging").
   action(async (opts) => {
-    const debug = (process.env.DEBUG == 1 || opts.verbose === true)
-      ? (m, label = null) => {
-        if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-          const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
-
-          fs.writeSync(1, `${prefix} ${m}\n`);
-        }
-      }
-      : () => { };
-
     const { listSaved } = require('./seen.js');
 
     const allSaved = await
