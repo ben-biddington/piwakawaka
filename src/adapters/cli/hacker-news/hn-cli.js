@@ -86,10 +86,9 @@ program.
 
     const { exists } = require('./seen.js');
 
-    const filtered = await Promise.all(results.map(async item => {
-      const isSeen = await exists({ log }, item.id);
-      return { ...item, isSeen };
-    })).then(result => result.filter(it => false === it.isSeen && it.url));
+    const filtered = await Promise.all(
+        results.map(item => exists({ log }, item.id).then(isSeen => ({ ...item, isSeen })))).
+      then(result => result.filter(it => false === it.isSeen && it.url));
 
     return render(filtered, opts.format).
       then(() => cache.count().
