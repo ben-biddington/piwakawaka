@@ -63,20 +63,22 @@ describe('The seen database', () => {
     expect(allSaved.map(it => it.id)).to.contain('def');
   });
 
-  it('can block domains', async () => {
-    return withNew(async database => {
-      const allBlocked = await database.block('nytimes.com');
-
-      expect(allBlocked.map(it => it.domain)).to.contain('nytimes.com');
+  describe('Blocking', () => {
+    it('can block domains', async () => {
+      return withNew(async database => {
+        const allBlocked = await database.block('nytimes.com');
+  
+        expect(allBlocked.map(it => it.domain)).to.contain('nytimes.com');
+      });
     });
-  });
-
-  it('can unblock domains', async () => {
-    return withNew(async database => {
-      const allBlocked = await database.block('nytimes.com').
-        then(() => database.unblock('nytimes.com'));
-
-      expect(allBlocked.length).to.equal(0);
+  
+    it('can unblock domains', async () => {
+      return withNew(async database => {
+        const allBlocked = await database.block('nytimes.com').
+          then(() => database.unblock('nytimes.com'));
+  
+        expect(allBlocked.length).to.equal(0);
+      });
     });
   });
 
