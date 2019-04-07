@@ -31,11 +31,10 @@ class Database {
       then(row => row.count); 
   };
 
-  applySchema(db){
-    return Promise.all([
-      this.run('CREATE TABLE IF NOT EXISTS seen     (id     text PRIMARY KEY)'), 
-      this.run('CREATE TABLE IF NOT EXISTS saved    (id     text PRIMARY KEY);'), 
-      this.run('CREATE TABLE IF NOT EXISTS blocked  (domain text PRIMARY KEY);')]);
+  applySchema() {
+    return this.run(      'CREATE TABLE IF NOT EXISTS seen     (id     text PRIMARY KEY)').
+      then(() => this.run('CREATE TABLE IF NOT EXISTS saved    (id     text PRIMARY KEY);')).
+      then(() => this.run('CREATE TABLE IF NOT EXISTS blocked  (domain text PRIMARY KEY);'));
   };
 
   get(query, args) { return this.ex('get', query, args); }
