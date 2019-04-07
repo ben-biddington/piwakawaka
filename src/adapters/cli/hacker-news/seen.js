@@ -59,9 +59,7 @@ const connected = async fn => {
 const add = (ports = {}, ids=[], opts = {}) => {
   ids = ids.join ? ids : [ids];
 
-  const sql = run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES ${ids.map(id => `(${id})`).join(',')}`)
-
-  return sql.
+  return run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES ${ids.map(id => `(${id})`).join(',')}`).
     then(()  => get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
     then(row => row.count); 
 };
