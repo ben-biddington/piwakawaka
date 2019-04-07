@@ -12,8 +12,9 @@ class Database {
   addSeen(ids) { return this.add(ids); };
   addSaved(id) { return this.add(id, { save: true }); };
 
-  listSeen()  { return this.all(`SELECT id from seen`) };
-  listSaved() { return this.all(`SELECT id from saved`) };
+  listSeen()    { return this.all(`SELECT id from seen`) };
+  listSaved()   { return this.all(`SELECT id from saved`) };
+  listBlocked() { return this.all(`SELECT domain from blocked`) };
   
   delete() {
     const { unlink } = require('fs');
@@ -22,7 +23,7 @@ class Database {
     
     return del(this._fileName);
   }
-  
+
   add(ids, opts = {}) {
     ids = ids.map ? ids : [ids];
     
@@ -30,6 +31,11 @@ class Database {
       then(()  => this.get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
       then(row => row.count); 
   };
+
+  block(domain) {
+    return this.run(`REPLACE INTO blocked (domain) VALUES (?)`, domain).
+      then(() => this.all(`SELECT domain as domain FROM blocked`)); 
+  }
 
   // private
 

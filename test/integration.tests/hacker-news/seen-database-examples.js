@@ -55,6 +55,14 @@ describe('The seen database', () => {
     expect(allSaved.map(it => it.id)).to.contain('def');
   });
 
+  it('can block domains', async () => {
+    await database.schema().then(() => database.block('nytimes.com'));
+    
+    const allBlocked = await database.listBlocked();
+
+    expect(allBlocked.map(it => it.domain)).to.contain('nytimes.com');
+  });
+
   after(() => {    
     return Promise.all(databases.map(d => d.delete()));  
   });
