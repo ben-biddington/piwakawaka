@@ -37,6 +37,11 @@ class Database {
       then(() => this.all(`SELECT domain as domain FROM blocked`)); 
   }
 
+  unblock(domain) {
+    return this.run(`DELETE FROM blocked WHERE domain = ?`, domain).
+      then(() => this.all(`SELECT domain as domain FROM blocked`)); 
+  }
+
   // private
 
   applySchema() {

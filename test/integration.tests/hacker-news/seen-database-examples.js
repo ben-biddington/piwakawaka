@@ -12,6 +12,14 @@ const database = new Database(newTempFile());
 
 databases.push(database);
 
+const withNew = fn => {
+  const database = new Database(newTempFile());
+
+  databases.push(database);
+
+  return database.schema().then(() => fn(database));
+}
+
 describe('The seen database', () => {
   it('can hide items', async () => {
     await database.schema().then(() => database.addSeen('abc'));
@@ -32,19 +40,19 @@ describe('The seen database', () => {
   });
 
   it('cannot hide multiple items like this', async () => {
-    const database = new Database(newTempFile());
-    databases.push(database);
+    return withNew(async database => {
+      let error = null;
+      
+      await Promise.all([
+        database.addSeen('abc').catch(e => error = e),
+        database.addSeen('def').catch(e => error = e),
+        database.addSeen('ghi').catch(e => error = e),
+        database.addSeen('jkl').catch(e => error = e),
+        database.addSeen('mno').catch(e => error = e),
+        database.addSeen('pqr').catch(e => error = e) ])
     
-    let error = null;
-
-    await database.schema().
-      then(() => {
-        return Promise.all([
-          database.addSeen('abc').catch(e => error = e),
-          database.addSeen('def').catch(e => error = e),
-          database.addSeen('ghi').catch(e => error = e) ])});
-    
-    expect(error).to.match(/SQLITE_BUSY: database is locked/);
+      expect(error).to.match(/SQLITE_BUSY: database is locked/);
+    });
   });
 
   it('can save items', async () => {
@@ -56,11 +64,20 @@ describe('The seen database', () => {
   });
 
   it('can block domains', async () => {
-    await database.schema().then(() => database.block('nytimes.com'));
-    
-    const allBlocked = await database.listBlocked();
+    return withNew(async database => {
+      const allBlocked = await database.block('nytimes.com');
 
-    expect(allBlocked.map(it => it.domain)).to.contain('nytimes.com');
+      expect(allBlocked.map(it => it.domain)).to.contain('nytimes.com');
+    });
+  });
+
+  it('can unblock domains', async () => {
+    return withNew(async database => {
+      const allBlocked = await database.block('nytimes.com').
+        then(() => database.unblock('nytimes.com'));
+
+      expect(allBlocked.length).to.equal(0);
+    });
   });
 
   after(() => {    
