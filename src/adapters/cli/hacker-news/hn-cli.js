@@ -20,7 +20,7 @@ const select = (opts) => (process.env.DEBUG == 1 || opts.verbose === true)
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
   const { missing } = require('./seen.js');
-  const results     = await top(ports, { count: 50 }).then(results => results.map((result, index) => ({...result, index})));
+  const results     = await top(ports, { count: 100 }).then(results => results.map((result, index) => ({...result, index})));
 
   const fn = item => missing(ports, item.id).then(it => it === true ? item : null);
 
@@ -80,15 +80,13 @@ program.
   option("-c --count <count>"           , "Count"             , 25).
   option("-f --format <format>"         , "Output formatting" , 'short').
   action(async (opts) => {
-    const results = await topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count });
+    const debug = select(opts);
+
+    const results = await topNew({ get, log, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count });
 
     log(`\nShowing <${results.length}> stories\n`);
 
-    const { exists } = require('./seen.js');
-
-    const filtered = await Promise.all(
-        results.map(item => exists({ log }, item.id).then(isSeen => ({ ...item, isSeen })))).
-      then(result => result.filter(it => false === it.isSeen && it.url));
+    const filtered = results.filter(it => it.url);
 
     return render(filtered, opts.format).
       then(() => cache.count().
@@ -112,7 +110,8 @@ program.
       await 
         topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
-        then(results => hide({ log }, results.map(result => result.id), { save: false}));
+        then(results => hide({ log }, results.map(result => result.id))).
+        then(count   => log(`You have <${count}> ${opts.save ? 'saved' : 'seen'} items`));
     } else if (opts.domain) {
       log(`Blocking domain <${opts.domain}> items`);
       
@@ -152,16 +151,37 @@ program.
   option("-v --verbose", "Enable verbose logging").
   action(async (opts) => {
     const { listSaved } = require('./seen.js');
-
+    
     const allSaved = await
       listSaved({ log }).
-        then(items    => items.map(item => item.id)).
+        then(items    => { log(`items: ${items}`); return items;}).
+        then(items    => items.map(item => item)).
         then(ids      => ids.map(id => single({ get }, {}, id))).
         then(promises => Promise.all(promises)).
         then(replies  => replies.map(it => it.body)).
         then(result   => result.map(JSON.parse));
 
     allSaved.forEach(story => {
+      log(`${story.id} - ${story.title}`);
+    });
+  });
+
+program.
+  version('0.0.1').
+  command("seen").
+  option("-v --verbose", "Enable verbose logging").
+  action(async (opts) => {
+    const { listSeen } = require('./seen.js');
+    
+    const allSeen = await
+      listSeen({ log }).
+        then(items    => items.map(item => item.id)).
+        then(ids      => ids.map(id => single({ get }, {}, id))).
+        then(promises => Promise.all(promises)).
+        then(replies  => replies.map(it => it.body)).
+        then(result   => result.map(JSON.parse));
+
+    allSeen.forEach(story => {
       log(`${story.id} - ${story.title}`);
     });
   });

@@ -57,7 +57,11 @@ const connected = async fn => {
 }
 
 const add = (ports = {}, ids=[], opts = {}) => {
-  return run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, ids.join(',')).
+  ids = ids.join ? ids : [ids];
+
+  const sql = run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES ${ids.map(id => `(${id})`).join(',')}`)
+
+  return sql.
     then(()  => get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
     then(row => row.count); 
 };
@@ -81,8 +85,16 @@ const list = (table) => {
 };
 
 const missing = (ports, id) => exists(ports, id).then(result => !result);
-const exists = (ports, id)  => get(`SELECT COUNT(1) as count FROM seen where id = ?`, id).
-  then(row => row.count > 0);
+const exists = (ports, id)  => {
+  const { log = () => {}, debug } = ports;
+
+  return get(`SELECT COUNT(1) as count FROM seen where id = ?`, id).
+    then(row => {
+      debug(`Checking id <${id}>, result: ${JSON.stringify(row, null, 2)}`);
+      return row;
+    }).
+    then(row => row.count > 0)
+};
 
 const block = (ports ={}, domain) => {
   return run(`REPLACE INTO blocked (domain) VALUES (?)`, domain).
