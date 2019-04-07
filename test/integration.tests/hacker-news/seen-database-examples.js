@@ -6,7 +6,11 @@ const newTempFile = () => {
   return `.tmp-${uuidv1()}.db`;
 }
 
+const databases = [];
+
 const database = new Database(newTempFile());
+
+databases.push(database);
 
 describe('The seen database', () => {
   it('can hide items', async () => {
@@ -27,6 +31,22 @@ describe('The seen database', () => {
     expect(allSeen.map(it => it.id)).to.contain('ghi');
   });
 
+  it('cannot hide multiple items like this', async () => {
+    const database = new Database(newTempFile());
+    databases.push(database);
+    
+    let error = null;
+
+    await database.schema().
+      then(() => {
+        return Promise.all([
+          database.addSeen('abc').catch(e => error = e),
+          database.addSeen('def').catch(e => error = e),
+          database.addSeen('ghi').catch(e => error = e) ])});
+    
+    expect(error).to.match(/SQLITE_BUSY: database is locked/);
+  });
+
   it('can save items', async () => {
     await database.schema().then(() => database.addSaved('def'));
     
@@ -35,7 +55,7 @@ describe('The seen database', () => {
     expect(allSaved.map(it => it.id)).to.contain('def');
   });
 
-  after(async () => {
-    await database.delete();
+  after(() => {    
+    return Promise.all(databases.map(d => d.delete()));  
   });
 });
