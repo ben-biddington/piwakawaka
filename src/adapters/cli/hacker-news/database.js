@@ -9,7 +9,7 @@ class Database {
     return this.applySchema();
   };
 
-  addSeen(id) { return this.add(id); };
+  addSeen(ids) { return this.add(ids); };
   addSaved(id) { return this.add(id, { save: true }); };
 
   listSeen()  { return this.all(`SELECT id from seen`) };
@@ -22,14 +22,16 @@ class Database {
     
     return del(this._fileName);
   }
-
-  // private
   
-  add(id, opts = {}) {
-    return this.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES (?)`, id).
+  add(ids, opts = {}) {
+    ids = ids.map ? ids : [ids];
+    
+    return this.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES ${ids.map(id => `('${id}')`).join(',')}`).
       then(()  => this.get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
       then(row => row.count); 
   };
+
+  // private
 
   applySchema() {
     return this.run(      'CREATE TABLE IF NOT EXISTS seen     (id     text PRIMARY KEY)').
