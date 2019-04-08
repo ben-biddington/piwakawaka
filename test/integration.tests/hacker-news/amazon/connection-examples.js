@@ -9,11 +9,11 @@ const check = config ? it : (name) => xit(`'${name}' -- skipped because the <${f
 
 const Database = require('../../../../src/adapters/cli/hacker-news/mysql/database').Database;
 
-describe('Connecting to mysql database', async () => {
+describe('Connecting to mysql database', () => {
   check('can list all seen items', async () => {
     const database  = new Database(config);
     
-    database.listSeen().finally(() => database.close());
+    return database.listSeen().finally(() => database.close());
   });
 
   check('can add seen items', async () => {
