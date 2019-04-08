@@ -25,6 +25,12 @@ class Database {
       finally(() => this.close());
   }
 
+  async clearSeen() {
+    return this.connect().
+      then(   () => this.query('DELETE from seen')).
+      finally(() => this.close());
+  }
+
   async connect() {
     if (this._connection)
       return Promise.resolve();
@@ -78,6 +84,18 @@ describe('Connecting to mysql database', async () => {
     await database.applySchema();
 
     const seen      = await database.listSeen().finally(() => database.close());
+
+    expect(seen.length).to.equal(0);
+  });
+
+  check('can clear seen items', async () => {
+    const database  = new Database(config);
+    
+    await database.applySchema();
+
+    const seen = await database.clearSeen().
+      then(() => database.listSeen()).
+      finally(() => database.close());
 
     expect(seen.length).to.equal(0);
   });
