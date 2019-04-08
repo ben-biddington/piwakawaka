@@ -1,16 +1,14 @@
 const expect    = require('chai').expect;
-const read = require("util").promisify(require('fs').readFile);
+const read      = require('fs').readFileSync;
+const exists    = require('fs').existsSync;
+const filename  = './.conf/.mysql'
 
-const readConfig = async () => await read('./.conf/.mysql', 'utf8').then(JSON.parse);
-let config;
+const config = exists(filename) ? JSON.parse(read(filename)) : null;
+
+const check = config ? it : (name) => xit(`'${name}' -- skipped because the <${filename}> file does not exist`);
 
 describe('Connecting to mysql database', async () => {
-  before(async () => {
-    config = await readConfig();
-  })
-
-  it('allows connection', async () => {
-
+  check('allows connection', async () => {
     let connection = null;
     
     try {
