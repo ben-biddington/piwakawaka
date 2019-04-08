@@ -76,7 +76,7 @@ program.
   option("-c --count <count>"   , "How many to hide", 0).
   option("-d --domain <domain>" , "A domain to block").
   action(async (id, opts) => {
-    const hide = opts.save ? database.addSaved : database.addSeen;
+    const hide = opts.save ? ids => database.addSaved(ids) : ids => database.addSeen(ids);
     
     if (opts.count) {
       log(`Hiding the top <${opts.count}> items`);
@@ -89,7 +89,7 @@ program.
     } else if (opts.domain) {
       log(`Blocking domain <${opts.domain}>`);
       
-      return database.block({ log }, opts.domain).
+      return database.block(opts.domain).
         then(list => log(`You have <${list.length}> blocked domains: ${list.map(it => it.domain).join(', ')}`));
     }
     else {

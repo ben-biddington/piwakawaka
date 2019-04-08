@@ -9,7 +9,7 @@ class Database {
     return this.applySchema();
   };
 
-  addSeen(ids)  { return this.add(ids); };
+  addSeen(ids)  { return this.add(ids, { save: false }); };
   addSaved(ids) { return this.add(ids, { save: true }); };
 
   listSeen()    { return this.all(`SELECT id from seen`) };
@@ -28,7 +28,7 @@ class Database {
 
   block(domain) {
     return this.run(`REPLACE INTO blocked (domain) VALUES (?)`, domain).
-      then(() => this.all(`SELECT domain as domain FROM blocked`)); 
+      then(() => this.all(`SELECT domain FROM blocked`)); 
   }
 
   isBlocked(id) { return this.get(`SELECT 1 as isBlocked from blocked where domain=?`, id).then(row => (row || { }).isBlocked === 1); };
@@ -42,9 +42,11 @@ class Database {
 
   add(ids, opts = {}) {
     ids = ids.map ? ids : [ids];
-    
-    return this.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES ${ids.map(id => `('${id}')`).join(',')}`).
-      then(()  => this.get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
+
+    const tableName = opts.save ? 'saved' : 'seen';
+
+    return this.run(`REPLACE INTO ${tableName} (id) VALUES ${ids.map(id => `('${id}')`).join(',')}`).
+      then(()  => this.get(`SELECT COUNT(1) as count FROM  ${tableName}`)).
       then(row => row.count); 
   };
 
