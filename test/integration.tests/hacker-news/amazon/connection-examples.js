@@ -33,4 +33,13 @@ describe('Connecting to mysql database', () => {
 
     expect(seen.map(it => it.id)).to.contain(99);
   });
+
+  check('can block domains', async () => {
+    const blocked = await new Database(config).run(database => {
+      return database.removeBlocked('nytimes.com').
+        then(   () => database.addBlocked('nytimes.com')).
+        then(   () => database.listBlocked()) });
+
+    expect(blocked.map(it => it.domain)).to.contain('nytimes.com');
+  });
 });

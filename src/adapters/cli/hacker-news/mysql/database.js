@@ -10,11 +10,11 @@ class Database {
   }
 
   async applySchema() {
-    const sql = 'CREATE TABLE IF NOT EXISTS seen (id INT, timestamp DATE, saved BIT(0), PRIMARY KEY (id))';
-
     return this.connect().
-      then(() => this.query('DROP TABLE seen')).
-      then(() => this.query(sql));
+      then(() => this.query('DROP TABLE IF EXISTS seen')).
+      then(() => this.query('CREATE TABLE seen (id INT, timestamp DATE, saved BIT, PRIMARY KEY (id))')).
+      then(() => this.query('DROP TABLE IF EXISTS blocked')).
+      then(() => this.query('CREATE TABLE blocked (domain VARCHAR(255), timestamp DATE, PRIMARY KEY (domain))'));
   }
 
   async addSeen(id) {
@@ -59,9 +59,21 @@ class Database {
       finally(() => this.close());
   }
 
-  async clearSeen() {
+  async addBlocked(domain) {
     return this.connect().
-      then(   () => this.query('DELETE from seen')).
+      then(   () => this.query('INSERT into blocked SET ?', { domain, timestamp: new Date() })).
+      finally(() => this.close());
+  }
+
+  async removeBlocked(domain) {
+    return this.connect().
+      then(   () => this.query('DELETE FROM blocked WHERE domain=?', domain)).
+      finally(() => this.close());
+  }
+
+  async listBlocked() {
+    return this.connect().
+      then(   () => this.query('SELECT domain from blocked')).
       finally(() => this.close());
   }
 
