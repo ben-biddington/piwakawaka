@@ -28,6 +28,9 @@ describe('The seen database', () => {
       const allSeen = await database.listSeen();
   
       expect(allSeen.map(it => it.id)).to.contain('abc');
+
+      expect(await database.isSeen('abc')).to.equal(true);
+      expect(await database.isSeen('xxx-does-not-exist-xxx')).to.equal(false);
     });
 
     it('can hide multiple items', async () => {
@@ -40,8 +43,11 @@ describe('The seen database', () => {
       expect(allSeen.map(it => it.id)).to.contain('ghi');
     });
   
-    // [!] hmm, does not fail on Windows
-    it('cannot hide multiple items like this', async () => {
+    const nonWindowsOnly = () => {
+      return process.platform === "win32" ? () => it.skip(`Skipping due to os being <${process.platform}>`) : () => it;
+    };
+
+    nonWindowsOnly()('cannot hide multiple items like this', async () => {
       return withNew(async database => {
         let error = null;
         

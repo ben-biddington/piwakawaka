@@ -13,6 +13,7 @@ class Database {
   addSaved(id) { return this.add(id, { save: true }); };
 
   listSeen()    { return this.all(`SELECT id from seen`) };
+  isSeen(id)    { return this.get(`SELECT 1 as isSeen from seen where id=?`, id).then(row => (row || {}).isSeen === 1); };
   listSaved()   { return this.all(`SELECT id from saved`) };
   listBlocked() { return this.all(`SELECT domain from blocked`) };
   
@@ -23,14 +24,6 @@ class Database {
     
     return del(this._fileName);
   }
-
-  add(ids, opts = {}) {
-    ids = ids.map ? ids : [ids];
-    
-    return this.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES ${ids.map(id => `('${id}')`).join(',')}`).
-      then(()  => this.get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
-      then(row => row.count); 
-  };
 
   block(domain) {
     return this.run(`REPLACE INTO blocked (domain) VALUES (?)`, domain).
@@ -43,6 +36,14 @@ class Database {
   }
 
   // private
+
+  add(ids, opts = {}) {
+    ids = ids.map ? ids : [ids];
+    
+    return this.run(`REPLACE INTO ${opts.save ? 'saved' : 'seen'} (id) VALUES ${ids.map(id => `('${id}')`).join(',')}`).
+      then(()  => this.get(`SELECT COUNT(1) as count FROM  ${opts.save ? 'saved' : 'seen'}`)).
+      then(row => row.count); 
+  };
 
   applySchema() {
     return this.run(      'CREATE TABLE IF NOT EXISTS seen     (id     text PRIMARY KEY)').
