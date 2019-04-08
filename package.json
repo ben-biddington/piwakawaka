@@ -6,7 +6,7 @@
   "scripts": {
     "test.unit": "mocha test/unit.tests/**/*-test.js test/unit.tests/**/*examples.js --timeout 10000",
     "install": "bash install.sh",
-    "test.integration": "mocha test/integration.tests/**/*-test.js test/integration.tests/**/*examples.js --timeout 10000",
+    "test.integration": "mocha test/integration.tests/**/*-test.js test/integration.tests/**/**/*examples.js --timeout 10000",
     "test.acceptance": "mocha test/acceptance.tests/**/*-test.js test/acceptance.tests/**/*examples.js --timeout 10000",
     "server": "node src/adapters/web/server.js",
     "build": "webpack --config ./src/adapters/web/application.webpack.config.js && webpack --config ./src/adapters/web/adapters.webpack.config.js && webpack --config ./src/adapters/web/hn-application.webpack.config.js"

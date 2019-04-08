@@ -10,9 +10,11 @@ class Database {
   }
 
   async applySchema() {
-    const sql = 'CREATE TABLE IF NOT EXISTS seen (id INT, timestamp DATE, PRIMARY KEY (id))';
-    
-    return this.connect().then(() => this.query(sql));
+    const sql = 'CREATE TABLE IF NOT EXISTS seen (id INT, timestamp DATE, saved BIT(0), PRIMARY KEY (id))';
+
+    return this.connect().
+      then(() => this.query('DROP TABLE seen')).
+      then(() => this.query(sql));
   }
 
   async addSeen(id) {
@@ -30,6 +32,30 @@ class Database {
   async listSeen() {
     return this.connect().
       then(   () => this.query('SELECT id from seen')).
+      finally(() => this.close());
+  }
+
+  async clearSeen() {
+    return this.connect().
+      then(   () => this.query('DELETE from seen')).
+      finally(() => this.close());
+  }
+
+  async addSaved(id) {
+    return this.connect().
+      then(   () => this.query('INSERT into seen SET ?', { id, timestamp: new Date(), saved: true })).
+      finally(() => this.close());
+  }
+
+  async removeSaved(id) {
+    return this.connect().
+      then(   () => this.query('DELETE FROM seen WHERE id=?', id)).
+      finally(() => this.close());
+  }
+
+  async listSaved() {
+    return this.connect().
+      then(   () => this.query('SELECT id from seen WHERE ?', { saved: true })).
       finally(() => this.close());
   }
 
