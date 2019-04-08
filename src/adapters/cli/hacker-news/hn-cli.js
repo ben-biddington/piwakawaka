@@ -1,30 +1,21 @@
 const { get }         = require('../../internet');
-const log             = m => fs.writeSync(1, `${m}\n`);
 const { top, single } = require('../../hn');
 const { takeAsync }   = require('../../../core/array');
 const DiskCache       = require('../../cli/hacker-news/disk-cache').DiskCache;
 const TraceLog        = require('./trace-log').TraceLog;
 const Database        = require('./database').Database;
+const { selectDebug, info: log } = require('./log');
 
-const fs      = require('fs');
 const program = require('commander');
 const moment  = require('moment');
 const chalk   = require('chalk');
 
 const traceLog = new TraceLog(process.env.TRACE == 1);
 
-const select = (opts) => (process.env.DEBUG == 1 || opts.verbose === true)
-  ? (m, label = null) => {
-    if (opts.logLabels.length === 0 || opts.logLabels.includes(label)) {
-      const prefix = label ? `[DEBUG, ${label}]` : '[DEBUG]';
+const select = selectDebug;
 
-      fs.writeSync(1, `${prefix} ${m}\n`);
-    }
-  }
-  : () => { };
-
-const database = new Database('hn.db');
-const cache = new DiskCache('.cache');
+const database  = new Database('hn.db');
+const cache     = new DiskCache('.cache');
 
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
@@ -37,9 +28,8 @@ const topNew = async (ports = {}, opts = {}) => {
   return takeAsync(results, count, item => fn(item)).then(results => results.map(it => it.item));
 }
 
-const render = (stories = [], format) => {
-
-  return Promise.all(stories.map(story => database.isBlocked(story.url.host).then(blocked => ({ ...story, blocked })))).
+const render = (stories = [], format) => 
+  Promise.all(stories.map(story => database.isBlocked(story.url.host).then(blocked => ({ ...story, blocked })))).
     then(stories => stories.forEach((story, index)=> {
       const label = `${index + 1}.`;
     
@@ -54,7 +44,6 @@ const render = (stories = [], format) => {
         log(`   ${story.id}, ${story.url.href}\n`);
       }
   }));
-};
 
 program.
   version('0.0.1').
