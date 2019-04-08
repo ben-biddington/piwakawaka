@@ -1,9 +1,11 @@
 const expect    = require('chai').expect;
 const read = require("util").promisify(require('fs').readFile);
 
+const readConfig = async () => await read('./.conf/.mysql', 'utf8').then(JSON.parse);
+
 describe('Connecting to mysql database', async () => {
   it('allows connection', async () => {
-    const config = await read('./.conf/.mysql', 'utf8').then(JSON.parse);
+    const config = await readConfig();
 
     let connection = null;
     
