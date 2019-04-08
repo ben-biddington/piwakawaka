@@ -13,10 +13,26 @@ class Database {
     this._connection = null;
   }
 
+  async run(fn) {
+    return fn(this).finally(() => this.close());
+  }
+
   async applySchema() {
     const sql = 'CREATE TABLE IF NOT EXISTS seen (id INT, timestamp DATE, PRIMARY KEY (id))';
     
     return this.connect().then(() => this.query(sql));
+  }
+
+  async addSeen(id) {
+    return this.connect().
+      then(   () => this.query('INSERT into seen SET ?', { id, timestamp: new Date() })).
+      finally(() => this.close());
+  }
+
+  async removeSeen(id) {
+    return this.connect().
+      then(   () => this.query('DELETE FROM seen WHERE id=?', id)).
+      finally(() => this.close());
   }
 
   async listSeen() {
@@ -83,21 +99,18 @@ describe('Connecting to mysql database', async () => {
     
     await database.applySchema();
 
-    const seen      = await database.listSeen().finally(() => database.close());
-
-    expect(seen.length).to.equal(0);
+    return database.listSeen().finally(() => database.close());
   });
 
-  check('can clear seen items', async () => {
-    const database  = new Database(config);
-    
-    await database.applySchema();
+  check('can add seen items', async () => {
+    const seen = await new Database(config).run(database => {
+      return database.applySchema().
+        then(   () => database.removeSeen(1337)).
+        then(   () => database.addSeen(1337)).
+        then(   () => database.listSeen())
+    });
 
-    const seen = await database.clearSeen().
-      then(() => database.listSeen()).
-      finally(() => database.close());
-
-    expect(seen.length).to.equal(0);
+    expect(seen.map(it => it.id)).to.contain(1337);
   });
 
   check('allows connection', async () => {
