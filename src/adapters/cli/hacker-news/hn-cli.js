@@ -4,6 +4,7 @@ const log = m => fs.writeSync(1, `${m}\n`);
 const { top, single } = require('../../hn');
 const { takeAsync } = require('../../../core/array');
 const DiskCache     = require('../../cli/hacker-news/disk-cache').DiskCache;
+const TraceLog      = require('./trace-log').TraceLog;
 const program = require('commander');
 const moment  = require('moment');
 
@@ -31,23 +32,6 @@ const topNew = async (ports = {}, opts = {}) => {
 
 const cache = new DiskCache('.cache');
 const chalk = require('chalk');
-
-class TraceLog {
-  constructor(enabled = true) {
-    this._messages = [];
-    this._enabled  = enabled;
-  }
-
-  record(m) {
-    if (this._enabled === true) {
-      this._messages.push(m);
-    }
-  }
-
-  forEach(fn) {
-    this._messages.forEach(fn);
-  }
-}
 
 const traceLog = new TraceLog(process.env.TRACE == 1);
 
