@@ -81,12 +81,13 @@ program.
     if (opts.count) {
       log(`Hiding the top <${opts.count}> items`);
 
-      await 
+      return await 
         topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => hide(results.map(result => result.id))).
         then(count   => log(`You have <${count}> ${opts.save ? 'saved' : 'seen'} items`));
-    } else if (opts.domain) {
+    } 
+    else if (opts.domain) {
       log(`Blocking domain <${opts.domain}>`);
       
       return database.block(opts.domain).
