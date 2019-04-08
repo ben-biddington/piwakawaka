@@ -1,13 +1,17 @@
-const { get } = require('../../internet');
-const fs = require('fs');
-const log = m => fs.writeSync(1, `${m}\n`);
+const { get }         = require('../../internet');
+const log             = m => fs.writeSync(1, `${m}\n`);
 const { top, single } = require('../../hn');
-const { takeAsync } = require('../../../core/array');
-const DiskCache     = require('../../cli/hacker-news/disk-cache').DiskCache;
-const TraceLog      = require('./trace-log').TraceLog;
-const Database      = require('./database').Database;
+const { takeAsync }   = require('../../../core/array');
+const DiskCache       = require('../../cli/hacker-news/disk-cache').DiskCache;
+const TraceLog        = require('./trace-log').TraceLog;
+const Database        = require('./database').Database;
+
+const fs      = require('fs');
 const program = require('commander');
 const moment  = require('moment');
+const chalk   = require('chalk');
+
+const traceLog = new TraceLog(process.env.TRACE == 1);
 
 const select = (opts) => (process.env.DEBUG == 1 || opts.verbose === true)
   ? (m, label = null) => {
@@ -20,6 +24,7 @@ const select = (opts) => (process.env.DEBUG == 1 || opts.verbose === true)
   : () => { };
 
 const database = new Database('hn.db');
+const cache = new DiskCache('.cache');
 
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
@@ -32,15 +37,9 @@ const topNew = async (ports = {}, opts = {}) => {
   return takeAsync(results, count, item => fn(item)).then(results => results.map(it => it.item));
 }
 
-const cache = new DiskCache('.cache');
-const chalk = require('chalk');
-
-const traceLog = new TraceLog(process.env.TRACE == 1);
-
 const render = (stories = [], format) => {
-  const { isBlocked } = require('./seen');
 
-  return Promise.all(stories.map(story => isBlocked({ log }, story.url.host).then(blocked => ({ ...story, blocked })))).
+  return Promise.all(stories.map(story => database.isBlocked(story.url.host).then(blocked => ({ ...story, blocked })))).
     then(stories => stories.forEach((story, index)=> {
       const label = `${index + 1}.`;
     
@@ -88,7 +87,7 @@ program.
   option("-c --count <count>"   , "How many to hide", 0).
   option("-d --domain <domain>" , "A domain to block").
   action(async (id, opts) => {
-    const { add: hide } = require('./seen.js');
+    const hide = opts.save ? database.addSaved : database.addSeen;
     
     if (opts.count) {
       log(`Hiding the top <${opts.count}> items`);
@@ -96,14 +95,12 @@ program.
       await 
         topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
-        then(results => hide({ log }, results.map(result => result.id))).
+        then(results => hide(results.map(result => result.id))).
         then(count   => log(`You have <${count}> ${opts.save ? 'saved' : 'seen'} items`));
     } else if (opts.domain) {
-      log(`Blocking domain <${opts.domain}> items`);
+      log(`Blocking domain <${opts.domain}>`);
       
-      const { block } = require('./seen.js');
-      
-      return block({ log }, opts.domain).
+      return database.block({ log }, opts.domain).
         then(list => log(`You have <${list.length}> blocked domains: ${list.map(it => it.domain).join(', ')}`));
     }
     else {
@@ -124,9 +121,7 @@ program.
     if (opts.domain) {
       log(`Unblocking domain <${opts.domain}> items`);
       
-      const { unblock } = require('./seen.js');
-      
-      return unblock({ log }, opts.domain).
+      return database.unblock(opts.domain).
         then(list => log(`You have <${list.length}> blocked domains: ${list.map(it => it.domain).join(', ')}`));
     }
   });
@@ -136,10 +131,8 @@ program.
   command("saved").
   option("-v --verbose", "Enable verbose logging").
   action(async (opts) => {
-    const { listSaved } = require('./seen.js');
-    
     const allSaved = await
-      listSaved({ log }).
+      database.listSaved().
         then(items    => { log(`items: ${items}`); return items;}).
         then(items    => items.map(item => item)).
         then(ids      => ids.map(id => single({ get }, {}, id))).
@@ -157,17 +150,16 @@ program.
   command("seen").
   option("-v --verbose", "Enable verbose logging").
   action(async (opts) => {
-    const { listSeen } = require('./seen.js');
     
     const allSeen = await
-      listSeen({ log }).
+      database.listSeen().
         then(items    => items.map(item => item.id)).
         then(ids      => ids.map(id => single({ get }, {}, id))).
         then(promises => Promise.all(promises)).
         then(replies  => replies.map(it => it.body)).
         then(result   => result.map(JSON.parse));
 
-    allSeen.forEach(story => {
+    allSeen.filter(it => it != null).forEach(story => {
       log(`${story.id} - ${story.title}`);
     });
   });

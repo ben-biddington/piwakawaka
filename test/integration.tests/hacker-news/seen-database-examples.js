@@ -75,6 +75,9 @@ describe('The seen database', () => {
         const allBlocked = await database.block('nytimes.com');
   
         expect(allBlocked.map(it => it.domain)).to.contain('nytimes.com');
+
+        expect(await database.isBlocked('nytimes.com')).to.equal(true);
+        expect(await database.isBlocked('xxx-not-blocked-xxx')).to.equal(false);
       });
     });
   

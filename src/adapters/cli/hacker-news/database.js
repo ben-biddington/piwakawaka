@@ -9,12 +9,12 @@ class Database {
     return this.applySchema();
   };
 
-  addSeen(ids) { return this.add(ids); };
-  addSaved(id) { return this.add(id, { save: true }); };
+  addSeen(ids)  { return this.add(ids); };
+  addSaved(ids) { return this.add(ids, { save: true }); };
 
   listSeen()    { return this.all(`SELECT id from seen`) };
   isUnseen(id)  { return this.isSeen(id).then(result => result === false); };  
-  isSeen(id)    { return this.get(`SELECT 1 as isSeen from seen where id=?`, id).then(row => (row || { isSeen: 0 }).isSeen === 1); };
+  isSeen(id)    { return this.get(`SELECT 1 as isSeen from seen where id=?`, id).then(row => (row || { }).isSeen === 1); };
   listSaved()   { return this.all(`SELECT id from saved`) };
   listBlocked() { return this.all(`SELECT domain from blocked`) };
   
@@ -30,6 +30,8 @@ class Database {
     return this.run(`REPLACE INTO blocked (domain) VALUES (?)`, domain).
       then(() => this.all(`SELECT domain as domain FROM blocked`)); 
   }
+
+  isBlocked(id) { return this.get(`SELECT 1 as isBlocked from blocked where domain=?`, id).then(row => (row || { }).isBlocked === 1); };
 
   unblock(domain) {
     return this.run(`DELETE FROM blocked WHERE domain = ?`, domain).
