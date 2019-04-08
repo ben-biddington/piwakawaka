@@ -13,7 +13,8 @@ class Database {
   addSaved(id) { return this.add(id, { save: true }); };
 
   listSeen()    { return this.all(`SELECT id from seen`) };
-  isSeen(id)    { return this.get(`SELECT 1 as isSeen from seen where id=?`, id).then(row => (row || {}).isSeen === 1); };
+  isUnseen(id)  { return this.isSeen(id).then(result => result === false); };  
+  isSeen(id)    { return this.get(`SELECT 1 as isSeen from seen where id=?`, id).then(row => (row || { isSeen: 0 }).isSeen === 1); };
   listSaved()   { return this.all(`SELECT id from saved`) };
   listBlocked() { return this.all(`SELECT domain from blocked`) };
   

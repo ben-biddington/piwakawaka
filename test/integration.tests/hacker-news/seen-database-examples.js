@@ -30,7 +30,10 @@ describe('The seen database', () => {
       expect(allSeen.map(it => it.id)).to.contain('abc');
 
       expect(await database.isSeen('abc')).to.equal(true);
+      expect(await database.isUnseen('abc')).to.equal(false);
+
       expect(await database.isSeen('xxx-does-not-exist-xxx')).to.equal(false);
+      expect(await database.isUnseen('xxx-does-not-exist-xxx')).to.equal(true);
     });
 
     it('can hide multiple items', async () => {

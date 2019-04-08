@@ -5,6 +5,7 @@ const { top, single } = require('../../hn');
 const { takeAsync } = require('../../../core/array');
 const DiskCache     = require('../../cli/hacker-news/disk-cache').DiskCache;
 const TraceLog      = require('./trace-log').TraceLog;
+const Database      = require('./database').Database;
 const program = require('commander');
 const moment  = require('moment');
 
@@ -17,13 +18,14 @@ const select = (opts) => (process.env.DEBUG == 1 || opts.verbose === true)
     }
   }
   : () => { };
-  
+
+const database = new Database('hn.db');
+
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
-  const { missing } = require('./seen.js');
   const results     = await top(ports, { count: 100 }).then(results => results.map((result, index) => ({...result, index})));
 
-  const fn = item => missing(ports, item.id).then(it => it === true ? item : null);
+  const fn = item => database.isUnseen(item.id).then(it => it === true ? item : null);
 
   ports.debug(count);
 
