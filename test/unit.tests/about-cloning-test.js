@@ -14,8 +14,8 @@ class Person extends Cloneable {
   }
 }
 
-describe('that cloning preserves values', () => {
-  it('for example', () => {
+describe('Cloning', () => {
+  it('preserves values', () => {
     var tim       = new Person("Tim", 11);
     var olderTim  = tim.aged(12);
 
