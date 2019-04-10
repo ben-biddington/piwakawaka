@@ -65,8 +65,13 @@
     const isUnplugged   = urlParams.get('unplugged') === 'true';
     const log           = adapters.log;
     const topHackerNews   = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
-    const get           = (url, headers) => fetch(url).then(reply => reply.text());
-    const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5 };
+    
+    const get = (url, headers) => fetch(url).
+      then(reply => 
+        reply.text().
+          then(body => ({ statusCode: reply.status, body })));
+    
+    const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5, debug: true };
 
     const ports = { log, news: () => topHackerNews({ get, log }, opts)};
 
