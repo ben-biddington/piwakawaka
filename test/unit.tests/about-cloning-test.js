@@ -19,9 +19,9 @@ describe('Cloning', () => {
     var tim       = new Person("Tim", 11);
     var olderTim  = tim.aged(12);
 
-    expect(tim.name).to.equal("Tim");
+    expect(tim.name     ).to.equal("Tim");
     expect(olderTim.name).to.equal("Tim");
-    expect(olderTim.age).to.equal(12);
+    expect(olderTim.age ).to.equal(12);
   });
 });
 
@@ -41,8 +41,6 @@ describe('Eval-ing', () => {
   });
 
   it('works with function ctor', () => { 
-    const fun = () => 1 + 1;
-    
     const func = new Function("return 1+1");
 
     const result = func();
