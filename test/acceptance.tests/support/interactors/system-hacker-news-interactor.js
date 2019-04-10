@@ -71,4 +71,5 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
   }
 }
 
-module.exports.newSystemHackerNewsInteractor = (url, settings) => new SystemHackerNewsInteractor(url, settings);
+module.exports.newSystemHackerNewsInteractor  = (url, settings) => new SystemHackerNewsInteractor(url, settings);
+module.exports.SystemHackerNewsInteractor     = SystemHackerNewsInteractor

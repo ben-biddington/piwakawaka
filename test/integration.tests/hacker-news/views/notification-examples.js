@@ -1,12 +1,12 @@
-const expect                            = require('chai').expect
-const settings                          = require('../../../acceptance.tests/support/settings');
-const { newSystemHackerNewsInteractor } = require('../../../acceptance.tests/support/interactors/system-hacker-news-interactor');
+const expect                      = require('chai').expect
+const settings                    = require('../../../acceptance.tests/support/settings');
+const SystemHackerNewsInteractor  = require('../../../acceptance.tests/support/interactors/system-hacker-news-interactor').SystemHackerNewsInteractor;
 
 let interactor;
 
 describe('[WIP] Saving hacker news items', () => {
   it('notifies with <save> action', async () => {
-    interactor = newSystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
+    interactor = new SystemHackerNewsInteractor('http://localhost:1080/vanilla/hn.html', settings);
     const stubTop = () => Promise.resolve([{
       "id":     19415983,
       "title":  "Sample",
