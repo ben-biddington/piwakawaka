@@ -9,11 +9,7 @@
   <script language="javascript" defer>
     const log       = adapters.log;
     const realTime  = adapters.realTime;
-    
-    const get = (url, headers) => fetch(url).
-      then(reply => 
-        reply.text().
-          then(body => ({ statusCode: reply.status, body })));
+    const get       = adapters.get;
 
     const urlParams = new URLSearchParams(window.location.search);
 

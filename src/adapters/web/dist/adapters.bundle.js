@@ -240,7 +240,7 @@ eval("module.exports = function(module) {\n\tif (!module.webpackPolyfill) {\n\t\
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const { Storage : LocalStorage }  = __webpack_require__(/*! ../adapters/local/storage */ \"./src/adapters/local/storage.js\");\nconst { realTime }                = __webpack_require__(/*! ./metlink */ \"./src/adapters/metlink.js\");\nconst { top }                     = __webpack_require__(/*! ../adapters/hn */ \"./src/adapters/hn.js\");\n\nconst log = m => console.log(`[LOG.ADAPTER] ${m}`);\nconst newLocalStorage = () => new LocalStorage();\n\nmodule.exports = { log, newLocalStorage, realTime, top }\n\n\n//# sourceURL=webpack://adapters/./src/adapters/adapters.js?");
+eval("const { Storage : LocalStorage }  = __webpack_require__(/*! ../adapters/local/storage */ \"./src/adapters/local/storage.js\");\nconst { realTime }                = __webpack_require__(/*! ./metlink */ \"./src/adapters/metlink.js\");\nconst { top }                     = __webpack_require__(/*! ../adapters/hn */ \"./src/adapters/hn.js\");\n\nconst log = m => console.log(`[LOG.ADAPTER] ${m}`);\nconst newLocalStorage = () => new LocalStorage();\n\nconst get = (url, headers) => fetch(url).\n  then(reply => reply.text().then(body => ({ statusCode: reply.status, body })));\n\nmodule.exports = { get, log, newLocalStorage, realTime, top }\n\n\n//# sourceURL=webpack://adapters/./src/adapters/adapters.js?");
 
 /***/ }),
 

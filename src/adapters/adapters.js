@@ -5,4 +5,7 @@ const { top }                     = require('../adapters/hn');
 const log = m => console.log(`[LOG.ADAPTER] ${m}`);
 const newLocalStorage = () => new LocalStorage();
 
-module.exports = { log, newLocalStorage, realTime, top }
+const get = (url, headers) => fetch(url).
+  then(reply => reply.text().then(body => ({ statusCode: reply.status, body })));
+
+module.exports = { get, log, newLocalStorage, realTime, top }
