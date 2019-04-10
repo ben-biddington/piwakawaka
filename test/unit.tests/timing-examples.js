@@ -15,4 +15,18 @@ describe('Timing', () => {
 
     expect(result).to.equal('example');
   });
+
+  it('times errors, too', async () => {
+    const timed = await timeAsync(() => {
+      return new Promise((_, reject) => {
+        setTimeout(() => reject('An error thrown on purpose'), 500);
+      });
+    }).catch(error => error);  
+
+    const { duration, error } = timed;
+
+    expect(duration).to.be.gt(500);
+
+    expect(error).to.equal('An error thrown on purpose');
+  });
 });
