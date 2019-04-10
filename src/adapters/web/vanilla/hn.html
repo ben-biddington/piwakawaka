@@ -64,22 +64,13 @@
     
     const isUnplugged   = urlParams.get('unplugged') === 'true';
     const log           = adapters.log;
-    const topHackerNews   = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
-    
-    const get = (url, headers) => fetch(url).
-      then(reply => 
-        reply.text().
-          then(body => ({ statusCode: reply.status, body })));
-    
+    const get           = adapters.get;
+    const topHackerNews = isUnplugged ? _ => Promise.resolve([]) : adapters.top;
     const opts          = { baseUrl: '/hn/api/', count: urlParams.get('count') || 5, debug: true };
-
-    const ports = { log, news: () => topHackerNews({ get, log }, opts)};
-
+    const ports         = { log, news: () => topHackerNews({ get, log }, opts)};
     const core          = application.newHackerNewsApplication(ports);
 
-    const save = (id) => {
-      core.save({ id });
-    }
+    const save = (id) => core.save({ id });
 
     core.onSaved(result   => showStatus(`Saved item <${result.id}>`));
     core.onFetching(()    => showStatus(`Fetching news`));
