@@ -9,5 +9,6 @@ module.exports = {
     libraryTarget: 'umd',
     globalObject: 'this',
     library: 'application'
-  }
+  },
+  stats: 'errors-only'
 };

@@ -8,6 +8,7 @@ module.exports = {
     filename: 'adapters.bundle.js',
     libraryTarget: 'umd',
     globalObject: 'this',
-    library: 'adapters'
-  }
+    library: 'adapters',
+  },
+  stats: 'errors-only'
 };
