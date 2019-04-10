@@ -240,7 +240,7 @@ eval("module.exports = function(module) {\n\tif (!module.webpackPolyfill) {\n\t\
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const { Storage : LocalStorage }  = __webpack_require__(/*! ../adapters/local/storage */ \"./src/adapters/local/storage.js\");\nconst { realTime }                = __webpack_require__(/*! ./metlink */ \"./src/adapters/metlink.js\");\nconst { top }                     = __webpack_require__(/*! ../adapters/hn */ \"./src/adapters/hn.js\");\n\nconst log = m => console.log(`[LOG.ADAPTER] ${m}`);\nconst newLocalStorage = () => new LocalStorage();\n\nconst get = (url, headers) => fetch(url).\n  then(reply => reply.text().then(body => ({ statusCode: reply.status, body })));\n\nmodule.exports = { get, log, newLocalStorage, realTime, top }\n\n\n//# sourceURL=webpack://adapters/./src/adapters/adapters.js?");
+eval("const { Storage : LocalStorage }  = __webpack_require__(/*! ../adapters/web/local/storage */ \"./src/adapters/web/local/storage.js\");\nconst { realTime }                = __webpack_require__(/*! ./metlink */ \"./src/adapters/metlink.js\");\nconst { top }                     = __webpack_require__(/*! ../adapters/hn */ \"./src/adapters/hn.js\");\n\nconst log             = m => console.log(`[LOG.ADAPTER] ${m}`);\nconst newLocalStorage = () => new LocalStorage();\nconst get             = (url, headers) => fetch(url).then(reply => reply.text().then(body => ({ statusCode: reply.status, body })));\n\nmodule.exports = { get, log, newLocalStorage, realTime, top }\n\n\n//# sourceURL=webpack://adapters/./src/adapters/adapters.js?");
 
 /***/ }),
 
@@ -255,17 +255,6 @@ eval("const { timeAsync } = __webpack_require__(/*! ../core/time */ \"./src/core
 
 /***/ }),
 
-/***/ "./src/adapters/local/storage.js":
-/*!***************************************!*\
-  !*** ./src/adapters/local/storage.js ***!
-  \***************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("class Storage {\n  constructor() {\n    this._storage = window.localStorage;\n  }\n\n  save(key, what) {\n    this._storage.setItem(key, JSON.stringify(what));\n  }\n\n  get(key) {\n    return JSON.parse(this._storage.getItem(key));\n  }\n\n  clear() {\n    return this._storage.clear();\n  }\n}\n\nmodule.exports.Storage = Storage;\n\n//# sourceURL=webpack://adapters/./src/adapters/local/storage.js?");
-
-/***/ }),
-
 /***/ "./src/adapters/metlink.js":
 /*!*********************************!*\
   !*** ./src/adapters/metlink.js ***!
@@ -274,6 +263,17 @@ eval("class Storage {\n  constructor() {\n    this._storage = window.localStorag
 /***/ (function(module, exports) {
 
 eval("const parse = (text) => {\n  try {\n    return JSON.parse(text);\n  } catch (error) {\n    throw `Failed to parse this text to json:\\n\\n${JSON.stringify(text)}`;\n  }\n}\n\nconst defaultHeaders = { 'X-Author': 'ben.biddington@gmail.com' };\n\nconst realTime = async (ports = {}, opts = {}) => { \n  const { get, log = _ => {} } = ports;\n  const { baseUrl = 'https://www.metlink.org.nz/api/v1/StopDepartures', stopNumber, enableDebug = false } = opts;\n  let { routeNumbers, routeNumber } = opts;\n\n  routeNumbers = routeNumbers || routeNumber || []; \n\n  if (routeNumbers && false === Array.isArray(routeNumbers))\n    routeNumbers = [routeNumbers];\n\n  const debug = enableDebug === true ? (m) => log(`[DEBUG] ${m}`) : _ => {};\n\n  if (!get)\n    throw \"You need to supply ports with a `get` function\";\n\n  if (!stopNumber)\n    throw \"You need to supply options with `stopNumber`\";\n\n  const url  = `${baseUrl}/${stopNumber}`;\n\n  debug(`URL: ${url}, headers: ${JSON.stringify(defaultHeaders)}, routeNumbers: ${routeNumbers}`);\n\n  const reply = await get(url, defaultHeaders).\n    then(reply => parse(reply.body)).\n    then(reply => { debug(`Full reply from <${url}>:\\n${JSON.stringify(reply, null, 2)}`); return reply; });\n\n  const arrivals = reply.Services.\n    slice(0, opts.limit).\n    filter(service => routeNumbers.length > 0 ? routeNumbers.indexOf(service.Service.Code) > -1 : true ).\n    map(   service => ( \n      { \n        code:               service.Service.Code,\n        destination:        service.DestinationStopName,\n        aimedArrival:       new Date(service.AimedArrival),\n        aimedDeparture:     new Date(service.AimedArrival),\n        departureInSeconds: service.DisplayDepartureSeconds,\n        status:             service.DepartureStatus,\n        isRealtime:         service.IsRealtime,\n      }));\n\n  return { stop: { name: reply.Stop.Name, sms: reply.Stop.Sms}, arrivals };\n}\n\nconst stops = async (ports = {}, opts = {}, ...stopNumbers) => {\n  const { get, log = _ => {} } = ports;\n  const { baseUrl = 'https://www.metlink.org.nz/api/v1/Stop', enableDebug = false } = opts;\n  \n  const debug = enableDebug === true ? (m) => log(`[DEBUG] ${m}`) : _ => {};\n\n  if (!get)\n    throw \"You need to supply ports with a `get` function\";\n  \n  debug(`stopNumbers: ${stopNumbers}`);\n\n  const result = await Promise.all(stopNumbers.map(async stopNumber => {\n    const url  = `${baseUrl}/${stopNumber}`;\n    \n    debug(`URL: ${url}, stopNumber: ${stopNumber}`);\n    \n    const reply = await get(url, defaultHeaders).\n      catch(_ => {\n        throw `Failed to get ${url}`;\n      });\n\n      if (reply.statusCode != 200)\n        return Promise.resolve({ name: 'UNKNOWN STOP', sms: stopNumber });\n\n      return Promise.resolve(reply).\n        then(reply => parse(reply.body)).\n        then(body  => { debug(`Full reply from <${url}>:\\n${JSON.stringify(body, null, 2)}`); return body; }).\n        then(thirdPartyStop => ({\n          name: thirdPartyStop.Name,\n          sms : thirdPartyStop.Sms\n        }));\n  }));\n\n  debug(result);\n\n  return result;\n}\n\nmodule.exports.realTime = realTime;\nmodule.exports.stops    = stops;\n\n//# sourceURL=webpack://adapters/./src/adapters/metlink.js?");
+
+/***/ }),
+
+/***/ "./src/adapters/web/local/storage.js":
+/*!*******************************************!*\
+  !*** ./src/adapters/web/local/storage.js ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("class Storage {\n  constructor() {\n    this._storage = window.localStorage;\n  }\n\n  save(key, what) {\n    this._storage.setItem(key, JSON.stringify(what));\n  }\n\n  get(key) {\n    return JSON.parse(this._storage.getItem(key));\n  }\n\n  clear() {\n    return this._storage.clear();\n  }\n}\n\nmodule.exports.Storage = Storage;\n\n//# sourceURL=webpack://adapters/./src/adapters/web/local/storage.js?");
 
 /***/ }),
 
