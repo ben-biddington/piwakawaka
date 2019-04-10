@@ -1,4 +1,4 @@
-const Cloneable = require('./internal/cloneable').Cloneable;
+const Cloneable = require('./cloneable').Cloneable;
 
 class FeatureToggle extends Cloneable {
   constructor(name, on = false) {

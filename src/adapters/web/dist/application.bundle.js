@@ -212,6 +212,17 @@ eval("const Options = __webpack_require__(/*! ./options */ \"./src/core/options.
 
 /***/ }),
 
+/***/ "./src/core/cloneable.js":
+/*!*******************************!*\
+  !*** ./src/core/cloneable.js ***!
+  \*******************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+eval("class Cloneable {\n  clone(fun) {\n    const clone = Object.create(this);\n    fun(clone);\n    return clone;\n  }\n}\n\nmodule.exports.Cloneable = Cloneable;\n\n//# sourceURL=webpack://application/./src/core/cloneable.js?");
+
+/***/ }),
+
 /***/ "./src/core/feature-toggles.js":
 /*!*************************************!*\
   !*** ./src/core/feature-toggles.js ***!
@@ -219,18 +230,7 @@ eval("const Options = __webpack_require__(/*! ./options */ \"./src/core/options.
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-eval("const Cloneable = __webpack_require__(/*! ./internal/cloneable */ \"./src/core/internal/cloneable.js\").Cloneable;\n\nclass FeatureToggle extends Cloneable {\n  constructor(name, on = false) {\n    super();\n    this.name = name;\n    this.on   = on === true;\n  }\n\n  with(onOrOff) {\n    return this.clone(it => {\n      it.on = onOrOff;\n    });\n  }\n}\n\nclass FeatureToggles extends Cloneable {\n  constructor() {\n    super();\n    this.enableSave         = new FeatureToggle(\"ENABLE_SAVE\");\n    this.enableVerboseLogs  = new FeatureToggle(\"ENABLE_VERBOSE_LOGS\");\n  }\n\n  default() {\n    return new FeatureToggles();\n  }\n\n  all() { return [ this.enableSave, this.enableVerboseLogs ] };\n\n  forEach(fun) {\n    const all = this.all();\n\n    for (let index = 0; index < all.length; index++) {\n      fun(all[index]);\n    }\n  }\n\n  withEnableSave(on) {\n    return this.clone(it => it.enableSave = this.enableSave.with(on));\n  }\n}\n\nmodule.exports.FeatureToggle  = FeatureToggle;\nmodule.exports.FeatureToggles = FeatureToggles;\n\n//# sourceURL=webpack://application/./src/core/feature-toggles.js?");
-
-/***/ }),
-
-/***/ "./src/core/internal/cloneable.js":
-/*!****************************************!*\
-  !*** ./src/core/internal/cloneable.js ***!
-  \****************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-eval("class Cloneable {\n  clone(fun) {\n    const clone = Object.create(this);\n    fun(clone);\n    return clone;\n  }\n}\n\nmodule.exports.Cloneable = Cloneable;\n\n//# sourceURL=webpack://application/./src/core/internal/cloneable.js?");
+eval("const Cloneable = __webpack_require__(/*! ./cloneable */ \"./src/core/cloneable.js\").Cloneable;\n\nclass FeatureToggle extends Cloneable {\n  constructor(name, on = false) {\n    super();\n    this.name = name;\n    this.on   = on === true;\n  }\n\n  with(onOrOff) {\n    return this.clone(it => {\n      it.on = onOrOff;\n    });\n  }\n}\n\nclass FeatureToggles extends Cloneable {\n  constructor() {\n    super();\n    this.enableSave         = new FeatureToggle(\"ENABLE_SAVE\");\n    this.enableVerboseLogs  = new FeatureToggle(\"ENABLE_VERBOSE_LOGS\");\n  }\n\n  default() {\n    return new FeatureToggles();\n  }\n\n  all() { return [ this.enableSave, this.enableVerboseLogs ] };\n\n  forEach(fun) {\n    const all = this.all();\n\n    for (let index = 0; index < all.length; index++) {\n      fun(all[index]);\n    }\n  }\n\n  withEnableSave(on) {\n    return this.clone(it => it.enableSave = this.enableSave.with(on));\n  }\n}\n\nmodule.exports.FeatureToggle  = FeatureToggle;\nmodule.exports.FeatureToggles = FeatureToggles;\n\n//# sourceURL=webpack://application/./src/core/feature-toggles.js?");
 
 /***/ }),
 

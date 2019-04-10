@@ -1,5 +1,5 @@
 const expect    = require('chai').expect;
-const Cloneable = require('.././../src/core/internal/cloneable').Cloneable; //@todo: it's not iternal if there are tests on it.
+const Cloneable = require('../../src/core/cloneable').Cloneable;
 const util      = require('util');
 
 class Person extends Cloneable {
