@@ -55,7 +55,7 @@ class SystemInteractor {
     
     return this._browserConsoleMessages.
       filter(it => it._text.indexOf('[TEST-') === 0).
-      map(it => it._text);
+      map(it => it._text) || [];
   }
 
   mustNotHaveErrors() {

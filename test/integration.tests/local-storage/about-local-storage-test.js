@@ -17,6 +17,9 @@ describe('local storage', () => {
 
     const tests = interactor.collectTests();
 
+    if (tests.length === 0)
+      throw `Expected at least one test.`;
+
     console.log(`${tests.map(m => `    ${m}`).join('\n')}`);
   });
 
