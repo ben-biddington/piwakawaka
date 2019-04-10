@@ -2,8 +2,6 @@ const expect                            = require('chai').expect
 const settings                          = require('../../../acceptance.tests/support/settings');
 const { newSystemHackerNewsInteractor } = require('../../../acceptance.tests/support/interactors/system-hacker-news-interactor');
 
-// [i] Use `DISABLE_SERVER=1` if server is already running
-// [i] Run server with `npm run server`
 let interactor;
 
 describe('[WIP] Saving hacker news items', () => {

@@ -4,9 +4,6 @@ const { choose: chooseInteractor }      = require('./support/interactors/interac
 
 const interactor = chooseInteractor(settings);
 
-// [i] Use `DISABLE_SERVER=1` if server is already running
-// [i] Run server with `npm run server`
-
 describe('listing arrivals', () => {
   it('shows filtered bus numbers only', async () => {
     await interactor.list({ stopNumber: '4130', routeNumber: '14' });

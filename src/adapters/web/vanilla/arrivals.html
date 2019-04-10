@@ -10,7 +10,10 @@
     const log       = adapters.log;
     const realTime  = adapters.realTime;
     
-    const get = (url, headers) => fetch(url).then(reply => reply.text());
+    const get = (url, headers) => fetch(url).
+      then(reply => 
+        reply.text().
+          then(body => ({ statusCode: reply.status, body })));
 
     const urlParams = new URLSearchParams(window.location.search);
 

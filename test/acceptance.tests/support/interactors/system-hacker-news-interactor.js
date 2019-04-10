@@ -6,7 +6,6 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
     super(url, settings.browserOptions, settings.log, settings.features);
     this._settings  = settings;
     this._log       = settings.log;
-    this.startServer();
   }
 
   async supplyPorts(ports = {}) {
@@ -39,25 +38,6 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
     await this._page.goto(fullUrl);
   }
 
-  startServer() {
-    if (this._settings.features.enableServer) {
-      // [i] https://nodejs.org/api/child_process.html#child_process_event_message
-      const { spawn } = require('child_process');
-      this._server    = spawn('node', ['src/adapters/web/server.js']);
-
-      this._server.stdout.on('data', (data) => {
-        this._settings.log(`stdout: ${data}`);
-      });
-    }
-  }
-
-  stopServer() {
-    if (this._server) {
-      this._log('Stopping server...');
-      this._server.kill();
-    }
-  }
-
   async save(id) {
     this._page = await this.page();
 
@@ -87,8 +67,6 @@ class SystemHackerNewsInteractor extends BrowserInteractor {
   }
 
   quit() {
-    this.stopServer();
-
     BrowserInteractor.prototype.quit.call(this);
   }
 }
