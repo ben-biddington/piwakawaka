@@ -12,7 +12,7 @@ class Database {
   addSeen(ids)  { return this.add(ids, { save: false }); };
   addSaved(ids) { return this.add(ids, { save: true }); };
 
-  listSeen()    { return this.all(`SELECT id from seen`) };
+  listSeen()    { return this.all(`SELECT id,date from seen order by date DESC`) };
   isUnseen(id)  { return this.isSeen(id).then(result => result === false); };  
   isSeen(id)    { return this.get(`SELECT 1 as isSeen from seen where id=?`, id).then(row => (row || { }).isSeen === 1); };
   listSaved()   { return this.all(`SELECT id from saved`) };
@@ -53,7 +53,8 @@ class Database {
   applySchema() {
     return this.run(      'CREATE TABLE IF NOT EXISTS seen     (id     text PRIMARY KEY)').
       then(() => this.run('CREATE TABLE IF NOT EXISTS saved    (id     text PRIMARY KEY);')).
-      then(() => this.run('CREATE TABLE IF NOT EXISTS blocked  (domain text PRIMARY KEY);'));
+      then(() => this.run('CREATE TABLE IF NOT EXISTS blocked  (domain text PRIMARY KEY);')).
+      then(() => this.run('ALTER TABLE seen ADD COLUMN date dateTime'));
   };
 
   get(query, args) { return this.ex('get', query, args); }

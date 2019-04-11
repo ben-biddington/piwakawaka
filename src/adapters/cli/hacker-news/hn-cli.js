@@ -154,4 +154,10 @@ program.
     });
   });
 
+program.
+  version('0.0.1').
+  command("db").
+  option("-v --verbose", "Enable verbose logging").
+  action(async (opts) => database.applySchema());
+
 program.parse(process.argv);
