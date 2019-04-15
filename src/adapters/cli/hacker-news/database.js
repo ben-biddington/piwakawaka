@@ -2,11 +2,15 @@ const sqlite3 = require('sqlite3').verbose();
 
 class Database {
   constructor(fileName) {
-    this._fileName = fileName;
+    this._fileName          = fileName;
+    this._hasAppliedSchema  = false;
   }
 
   schema() {
-    return this.applySchema();
+    if (false === this._hasAppliedSchema)
+      return this.applySchema().then(() => this._hasAppliedSchema = true);
+
+    return Promise.resolve();
   };
 
   addSeen(ids)  { return this.add(ids, { save: false }); };
