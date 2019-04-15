@@ -27,7 +27,7 @@ describe('Timing', () => {
 
     const { duration, error } = timed;
 
-    expect(duration).to.be.gt(500);
+    expect(duration).to.be.gte(500);
 
     expect(error).to.equal('An error thrown on purpose');
   });
