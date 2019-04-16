@@ -9,7 +9,7 @@ const parse = xml => {
   return parser.parseString(xml);
 }
 
-describe('Querying lobste.rs for top stories', () => {
+describe('Querying lobste.rs for top stories by rss', () => {
   it('for example', async () => {
     const ports = { get, log: settings.log, debug: settings.debug, trace: () => {} };
     

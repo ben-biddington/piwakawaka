@@ -32,4 +32,12 @@ const mapItem = item => {
   };
 }
 
+const hottest = (ports = { }, opts = {}) => {
+  const { url = 'https://lobste.rs/hottest', count = 50 } = opts;
+  const { get, trace = () => {} }          = ports;
+  
+  return get(url).then(reply => reply.body).then(JSON.parse);
+}
+
 module.exports.rs = rs;
+module.exports.hottest = hottest;
