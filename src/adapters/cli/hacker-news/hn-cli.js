@@ -60,7 +60,7 @@ program.
   option("-l --logLabels <logLabels...>", "Log labels", []).
   option("-c --count <count>"           , "Count"             , 25).
   option("-f --format <format>"         , "Output formatting" , 'short').
-  option("-r --rs <type>"               , "Use lobste.rs instead").
+  option("-r --rs"                      , "Use lobste.rs instead").
   action(async (opts) => {
     const debug = select(opts);
 
