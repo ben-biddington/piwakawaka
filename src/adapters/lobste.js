@@ -7,9 +7,7 @@ const rs = async (ports, opts) => {
     return parser.parseURL(url);
   }
   
-  const url = 'https://lobste.rs/rss';
-  
-  const { trace = false } = opts;
+  const { url = 'https://lobste.rs/rss', trace = false } = opts;
   const { log, debug, rss = defaultRssFeed, get = () => Promise.reject('No `get` port supplied') } = ports;
 
   if (trace) {
@@ -23,6 +21,7 @@ const rs = async (ports, opts) => {
     
     return {
       ...item,
+      id:   item.guid,
       url:  url.parse(item.link),
       host: url.parse(item.link).host,
       date: new Date(new Date(item.pubDate).toUTCString()),

@@ -1,5 +1,6 @@
 const { get }         = require('../../internet');
 const { top, single } = require('../../hn');
+const { rs }          = require('../../lobste');
 const { takeAsync }   = require('../../../core/array');
 const DiskCache       = require('../../cli/hacker-news/disk-cache').DiskCache;
 const TraceLog        = require('./trace-log').TraceLog;
@@ -19,7 +20,13 @@ const cache     = new DiskCache('.cache');
 
 const topNew = async (ports = {}, opts = {}) => {
   const { count }   = opts;
-  const results     = await top(ports, { count: 100 }).then(results => results.map((result, index) => ({...result, index})));
+
+  const sourceName  = opts.useLobsters ? 'lobste.rs' : 'hn'; 
+  const source      = opts.useLobsters ? rs : top;
+
+  ports.debug(`useLobsters: ${opts.useLobsters}`);
+
+  const results     = await source(ports, { count: 100 }).then(results => results.map((result, index) => ({...result, index, source: sourceName})));
 
   const fn = item => database.isUnseen(item.id).then(it => it === true ? item : null);
 
@@ -38,7 +45,7 @@ const render = (stories = [], format) =>
       log(
         color(`${label.padEnd(3)} ${chalk.white.dim(`(${(story.index + 1).toString()})`.padEnd(4))} ${story.title.padEnd(80)}`) + ' ' + 
         chalk.yellow.dim(`${moment.duration(moment().diff(moment(story.date))).humanize()} ago`.padEnd(15)) + ' ' + 
-        chalk.green.dim(story.url.host) + '\n');
+        chalk.green.dim(story.url.host.padEnd(30)) + chalk.green.dim(story.source) + '\n');
       
       if (format == 'long') {
         log(`   ${story.id}, ${story.url.href}\n`);
@@ -53,10 +60,11 @@ program.
   option("-l --logLabels <logLabels...>", "Log labels", []).
   option("-c --count <count>"           , "Count"             , 25).
   option("-f --format <format>"         , "Output formatting" , 'short').
+  option("-r --rs"                      , "[EXPERIMENTAL] Use lobste.rs instead").
   action(async (opts) => {
     const debug = select(opts);
 
-    const results = await topNew({ get, log, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count });
+    const results = await topNew({ get, log, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count, useLobsters: opts.rs || false });
 
     log(`\nShowing <${results.length}> stories\n`);
 

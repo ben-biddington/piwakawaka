@@ -52,6 +52,7 @@ describe('Querying lobste.rs for top stories', () => {
     
     const item = result[0];
 
+    expect(item.id                  ).to.equal('https://lobste.rs/s/i6ph0r');
     expect(item.host                ).to.equal('lpil.uk');
     expect(item.title               ).to.equal('The first release of Gleam, a statically typed language for the Erlang VM');
     expect(item.date.toUTCString()  ).to.equal('Mon, 15 Apr 2019 21:35:02 GMT');
