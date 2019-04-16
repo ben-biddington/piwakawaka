@@ -1,3 +1,4 @@
+const { timeAsync } = require('../core/time');
 
 // [i] https://github.com/lobsters/lobsters/blob/master/config/routes.rb
 const rs = async (ports, opts = {}) => {
@@ -6,15 +7,11 @@ const rs = async (ports, opts = {}) => {
     const parser  = new Parser({ customFields: {} });
     return parser.parseURL(url);
   }
-  
-  const { url = 'https://lobste.rs/rss', trace = false, count = 50 } = opts;
-  const { log, debug, rss = defaultRssFeed, get = () => Promise.reject('No `get` port supplied') } = ports;
 
-  if (trace) {
-    const xml = await (get(url).catch(e => {throw e;}));
-    
-    debug(`Reply from <${url}>:\n\n${xml.body}`);
-  }
+  const timedRss = url => timeAsync(() => defaultRssFeed(url));
+  
+  const { url = 'https://lobste.rs/rss', count = 50 } = opts;
+  const { log, debug, rss = timedRss, trace, get = () => Promise.reject('No `get` port supplied') } = ports;
 
   const mapItem = item => {
     const url = require('url');
@@ -29,9 +26,10 @@ const rs = async (ports, opts = {}) => {
   }
 
   return rss(url).
-    then(result => result.items).
-    then(items  => items.map(mapItem)).
-    then(items    => items.slice(0, count));
+    then(timedResult  => { trace(`It took <${timedResult.duration} ms> to fetch rss from <${url}>`); return timedResult.result; }).
+    then(result       => result.items).
+    then(items        => items.map(mapItem)).
+    then(items        => items.slice(0, count));
 }
 
 module.exports.rs = rs;
