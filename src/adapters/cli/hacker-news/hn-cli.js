@@ -28,11 +28,11 @@ const topNew = async (ports = {}, opts = {}) => {
 
   const results     = await source(ports, { count: 100 }).then(results => results.map((result, index) => ({...result, index, source: sourceName})));
 
-  const fn = item => database.isUnseen(item.id).then(it => it === true ? item : null);
+  const isUnseen = item => database.isUnseen(item.id).then(it => it === true ? item : null);
 
   ports.debug(count);
 
-  return takeAsync(results, count, item => fn(item)).then(results => results.map(it => it.item));
+  return takeAsync(results, count, isUnseen).then(results => results.map(it => it.item));
 }
 
 const render = (stories = [], format) => 
@@ -64,7 +64,9 @@ program.
   action(async (opts) => {
     const debug = select(opts);
 
-    const results = await topNew({ get, log, debug, cache, trace: m => traceLog.record(m) }, { count: opts.count, useLobsters: opts.rs || false });
+    const results = await topNew(
+      { get, log, debug, cache, trace: m => traceLog.record(m) }, 
+      { count: opts.count, useLobsters: opts.rs || false });
 
     log(`\nShowing <${results.length}> stories\n`);
 
@@ -83,14 +85,15 @@ program.
   option("-s --save"            , "Whether to save or hide", false).
   option("-c --count <count>"   , "How many to hide", 0).
   option("-d --domain <domain>" , "A domain to block").
+  option("-r --rs"              , "[EXPERIMENTAL] Use lobste.rs instead").
   action(async (id, opts) => {
     const hide = opts.save ? ids => database.addSaved(ids) : ids => database.addSeen(ids);
     
     if (opts.count) {
       log(`Hiding the top <${opts.count}> items`);
 
-      return await 
-        topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count }).
+      return await
+        topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count, useLobsters: opts.rs || false }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => hide(results.map(result => result.id))).
         then(count   => log(`You have <${count}> ${opts.save ? 'saved' : 'seen'} items`));
