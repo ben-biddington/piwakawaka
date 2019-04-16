@@ -2,19 +2,16 @@ const { timeAsync } = require('../core/time');
 
 // [i] https://github.com/lobsters/lobsters/blob/master/config/routes.rb
 const rs = async (ports, opts = {}) => {
-  const rss = url => timeAsync(() => {
-    const fn = ports.rss || defaultRssFeed;
-    return fn(url);
-  });
-  
   const { url = 'https://lobste.rs/rss', count = 50 } = opts;
   const { trace = () => {} }          = ports;  
+  
+  const rss = url => timeAsync(() => (ports.rss || defaultRssFeed)(url));
 
   return rss(url).
-    then(timedResult  => { trace(`It took <${timedResult.duration} ms> to fetch rss from <${url}>`); return timedResult.result; }).
-    then(result       => result.items).
-    then(items        => items.map(mapItem)).
-    then(items        => items.slice(0, count));
+    then(timed  => { trace(`It took <${timed.duration} ms> to fetch rss from <${url}>`); return timed.result; }).
+    then(result => result.items).
+    then(items  => items.map(mapItem)).
+    then(items  => items.slice(0, count));
 }
 
 const defaultRssFeed = url => {
