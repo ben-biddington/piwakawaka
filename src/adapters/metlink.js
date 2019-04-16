@@ -43,6 +43,7 @@ const realTime = async (ports = {}, opts = {}) => {
         destination:        service.DestinationStopName,
         aimedArrival:       new Date(service.AimedArrival),
         aimedDeparture:     new Date(service.AimedArrival),
+        departureTime:      new Date(service.DisplayDeparture),
         departureInSeconds: service.DisplayDepartureSeconds,
         status:             service.DepartureStatus,
         isRealtime:         service.IsRealtime,

@@ -94,7 +94,7 @@ describe('Querying for realtime information', () => {
           "VehicleFeature": 'lowFloor',
           "DepartureStatus": 'ontime',
           "ExpectedDeparture": null,
-          "DisplayDeparture": "2019-03-13T08:25:00+13:00",
+          "DisplayDeparture": "2019-03-13T08:27:00+13:00",
           "DisplayDepartureSeconds": 84,
           "Service": {
             "Code": "14",
@@ -120,6 +120,7 @@ describe('Querying for realtime information', () => {
       expect(first.destination).to.equal('Courtenay Pl');
       expect(first.aimedArrival).to.deep.equal(new Date('2019-03-13T08:25:00+13:00'));
       expect(first.aimedDeparture).to.deep.equal(new Date('2019-03-13T08:25:00+13:00'));
+      expect(first.departureTime).to.deep.equal(new Date('2019-03-13T08:27:00+13:00'));
       expect(first.departureInSeconds).to.deep.equal(84);
       expect(first.destination).to.equal('Courtenay Pl');
       expect(first.status).to.equal('ontime');

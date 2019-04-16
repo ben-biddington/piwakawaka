@@ -39,7 +39,7 @@ const render = (ports, result, opts) => {
 };
 
 const arrivalTime = arrival => {
-  const arrivalTime = moment(arrival.aimedArrival);
+  const arrivalTime = moment(arrival.departureTime);
   
   const diff = moment.duration(arrivalTime.diff(new moment())).minutes();
   
