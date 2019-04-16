@@ -20,6 +20,21 @@ const defaultRssFeed = url => {
   return parser.parseURL(url);
 }
 
+const hottest = (ports = { }, opts = {}) => {
+  const { url = 'https://lobste.rs/hottest', count = 50 } = opts;
+  const { get, trace = () => {} }          = ports;
+  
+  return get(url).
+    then(reply => JSON.parse(reply.body)).
+    then(items => items.map(item => {
+      return mapItem({ 
+        ...item,
+        guid:     item.short_id_url,
+        link:     item.url, 
+        pubDate:  item.created_at });
+    }));
+}
+
 const mapItem = item => {
   const url = require('url');
   
@@ -30,13 +45,6 @@ const mapItem = item => {
     host: url.parse(item.link).host,
     date: new Date(new Date(item.pubDate).toUTCString()),
   };
-}
-
-const hottest = (ports = { }, opts = {}) => {
-  const { url = 'https://lobste.rs/hottest', count = 50 } = opts;
-  const { get, trace = () => {} }          = ports;
-  
-  return get(url).then(reply => reply.body).then(JSON.parse);
 }
 
 module.exports.rs = rs;
