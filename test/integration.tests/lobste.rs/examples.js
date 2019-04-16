@@ -39,6 +39,7 @@ const rs = async (ports, opts) => {
       ...item,
       url:  url.parse(item.link),
       host: url.parse(item.link).host,
+      date: new Date(new Date(item.pubDate).toUTCString()),
     };
   }
 
@@ -90,7 +91,8 @@ describe('Querying lobste.rs for top stories', () => {
     
     const item = result[0];
 
-    expect(item.host        ).to.equal("lpil.uk");
-    expect(item.title       ).to.equal("The first release of Gleam, a statically typed language for the Erlang VM");
+    expect(item.host                ).to.equal('lpil.uk');
+    expect(item.title               ).to.equal('The first release of Gleam, a statically typed language for the Erlang VM');
+    expect(item.date.toUTCString()  ).to.equal('Mon, 15 Apr 2019 21:35:02 GMT');
   });
 });
