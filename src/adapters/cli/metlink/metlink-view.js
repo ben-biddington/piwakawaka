@@ -1,6 +1,7 @@
 const realTime  = require('../../metlink').realTime;
 const { watch } = require('./metlink-watch');
-const moment = require('moment');
+const moment    = require('moment');
+const chalk     = require('chalk');
 
 const run = (ports, opts) => {
   const { log, debug, get } = ports;
@@ -25,12 +26,16 @@ const render = (ports, result, opts) => {
     log(`(Filtering to route number <${opts.routeNumber}>)\n`);
   }
 
+  const green   = chalk.green;
+  const yellow  = chalk.yellow;
+  const grey    = chalk.green.dim;
+
   result.arrivals.map(arrival => {
     const scheduled = arrival.isRealtime ? '' : 'SCHEDULED';
-    log(`${arrival.code.padEnd(5)} ${arrival.destination.padEnd(20)} ${(arrival.status || '-').padEnd(10)} ` + 
-        `${moment.duration(arrival.departureInSeconds, "seconds").humanize().padEnd(15)} ` + 
-        `${arrivalTime(arrival)}` + 
-        `${scheduled}`);
+    log(`${chalk.bgYellow.black(arrival.code.padEnd(5))} ${yellow(arrival.destination.padEnd(20))} ${(arrival.status || '-').padEnd(10)} ` + 
+        `${green(moment.duration(arrival.departureInSeconds, "seconds").humanize().padEnd(15))} ` + 
+        `${green(arrivalTime(arrival))}` + 
+        `${grey(scheduled)}`);
   });
 
   log('');
