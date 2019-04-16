@@ -1,5 +1,6 @@
 const realTime  = require('../../metlink').realTime;
 const { watch } = require('./metlink-watch');
+const moment = require('moment');
 
 const run = (ports, opts) => {
   const { log, debug, get } = ports;
@@ -19,21 +20,10 @@ const render = (ports, result, opts) => {
 
   log(`${result.stop.name} (${result.stop.sms})\n`);
 
-  const moment = require('moment');
 
   if (opts.routeNumber != '') {
     log(`(Filtering to route number <${opts.routeNumber}>)\n`);
   }
-
-  const arrivalTime = arrival => {
-    const arrivalTime = moment(arrival.aimedArrival);
-
-    if (arrivalTime.fromNow() < 60) { 
-      return arrivalTime.format('HH:mm A').padEnd(10);
-    } else {
-      return "".padEnd(5);
-    }
-  } 
 
   result.arrivals.map(arrival => {
     const scheduled = arrival.isRealtime ? '' : 'SCHEDULED';
@@ -47,5 +37,17 @@ const render = (ports, result, opts) => {
 
   debug(JSON.stringify(result, null, 2));
 };
+
+const arrivalTime = arrival => {
+  const arrivalTime = moment(arrival.aimedArrival);
+  
+  const diff = moment.duration(arrivalTime.diff(new moment())).minutes();
+  
+  if (diff < 60) { 
+    return arrivalTime.format('HH:mm A').padEnd(10);
+  } else {
+    return "".padEnd(5);
+  }
+} 
 
 module.exports.run = run;
