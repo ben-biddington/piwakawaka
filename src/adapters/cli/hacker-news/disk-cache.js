@@ -13,11 +13,11 @@ class DiskCache {
   }
 
   async count() {
-    return ls(this._dir).then(files => files.length);
+    return this.ensureDir().then(() => ls(this._dir)).then(files => files.length);
   }
 
   async set(name, what) {
-    return write(this.fullPath(name), JSON.stringify(what));
+    return this.ensureDir().then(() => write(this.fullPath(name), JSON.stringify(what)));
   }
 
   async get(name) {
