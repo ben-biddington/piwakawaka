@@ -1,13 +1,13 @@
 
 // [i] https://github.com/lobsters/lobsters/blob/master/config/routes.rb
-const rs = async (ports, opts) => {
+const rs = async (ports, opts = {}) => {
   const defaultRssFeed = url => {
     const Parser  = require('rss-parser');
     const parser  = new Parser({ customFields: {} });
     return parser.parseURL(url);
   }
   
-  const { url = 'https://lobste.rs/rss', trace = false } = opts;
+  const { url = 'https://lobste.rs/rss', trace = false, count = 50 } = opts;
   const { log, debug, rss = defaultRssFeed, get = () => Promise.reject('No `get` port supplied') } = ports;
 
   if (trace) {
@@ -30,7 +30,8 @@ const rs = async (ports, opts) => {
 
   return rss(url).
     then(result => result.items).
-    then(items  => items.map(mapItem));
+    then(items  => items.map(mapItem)).
+    then(items    => items.slice(0, count));
 }
 
 module.exports.rs = rs;

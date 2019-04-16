@@ -57,4 +57,32 @@ describe('Querying lobste.rs for top stories', () => {
     expect(item.title               ).to.equal('The first release of Gleam, a statically typed language for the Erlang VM');
     expect(item.date.toUTCString()  ).to.equal('Mon, 15 Apr 2019 21:35:02 GMT');
   });
+
+  it('returns the number you supply as `count`', async () => {
+    const rss = () => Promise.resolve({
+      items: Array(5).map(i => ({
+         id: 1,
+         url: 'http://abc/sample',
+         pubDate: new Date() 
+      }))
+    });
+
+    const ports = { rss, log: settings.log, debug: settings.debug };
+    
+    const result = await rs(ports, { count: 3 });
+    
+    expect(result.length).to.equal(3);
+  });
+
+  it('returns 50 by default', async () => {
+    const rss = () => Promise.resolve({
+      items: Array(100).map(i => ({ id: 1 })) 
+    });
+
+    const ports = { rss, log: settings.log, debug: settings.debug };
+    
+    const result = await rs(ports);
+    
+    expect(result.length).to.equal(50);
+  });
 });
