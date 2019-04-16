@@ -295,7 +295,7 @@ eval("const tap = (fn) => {\r\n  return (args) => {\r\n    fn(args); return args
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-eval("const timeAsync = async (fn, opts) => {\r\n  const start = new Date();\r\n\r\n  return fn().\r\n    then(result => ({ duration: (new Date() - start), result })).\r\n    catch(error => {\r\n      if (opts.timeErrors) \r\n         return Promise.reject({ duration: (new Date() - start), error });\r\n      \r\n      return Promise.reject(error);\r\n    });\r\n}\r\n\r\nmodule.exports.timeAsync = timeAsync;\n\n//# sourceURL=webpack://adapters/./src/core/time.js?");
+eval("const timeAsync = (fn, opts) => {\r\n  const start = new Date();\r\n\r\n  return fn().\r\n    then(result => ({ duration: (new Date() - start), result })).\r\n    catch(error => {\r\n      if (opts.timeErrors) \r\n         return Promise.reject({ duration: (new Date() - start), error });\r\n      \r\n      return Promise.reject(error);\r\n    });\r\n}\r\n\r\nmodule.exports.timeAsync = timeAsync;\n\n//# sourceURL=webpack://adapters/./src/core/time.js?");
 
 /***/ })
 

@@ -1,4 +1,4 @@
-const timeAsync = async (fn, opts) => {
+const timeAsync = (fn, opts) => {
   const start = new Date();
 
   return fn().

@@ -21,7 +21,7 @@ describe('Querying lobste.rs for top stories', () => {
   });
 
   it('parses xml like this', async () => {
-    const rss = () => parse(`<?xml version="1.0" encoding="UTF-8"?>
+    const rss = () => Promise.resolve(parse(`<?xml version="1.0" encoding="UTF-8"?>
       <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
         <channel>
           <title>Lobsters</title>
@@ -42,7 +42,7 @@ describe('Querying lobste.rs for top stories', () => {
           </item>
         </channel>
       </rss>
-    `);
+    `));
 
     const ports = { rss, log: settings.log, debug: settings.debug };
     
@@ -60,11 +60,7 @@ describe('Querying lobste.rs for top stories', () => {
 
   it('returns the number you supply as `count`', async () => {
     const rss = () => Promise.resolve({
-      items: Array(5).map(i => ({
-         id: 1,
-         url: 'http://abc/sample',
-         pubDate: new Date() 
-      }))
+      items: Array(5).map(i => ({ id: 1 }))
     });
 
     const ports = { rss, log: settings.log, debug: settings.debug };
