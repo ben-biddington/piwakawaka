@@ -19,12 +19,12 @@ const database  = new Database('hn.db');
 const cache     = new DiskCache('.cache');
 
 const topNew = async (ports = {}, opts = {}) => {
-  const { count }   = opts;
+  const { count, useLobsters = false }   = opts;
 
-  const sourceName  = opts.useLobsters ? 'lobste.rs' : 'hn'; 
-  const source      = opts.useLobsters ? rs : top;
+  const sourceName  = useLobsters ? 'lobste.rs' : 'hn'; 
+  const source      = useLobsters ? rs : top;
 
-  ports.debug(`useLobsters: ${opts.useLobsters}`);
+  ports.debug(`useLobsters: ${useLobsters}`);
 
   const results     = await source(ports, { count: 100 }).then(results => results.map((result, index) => ({...result, index, source: sourceName})));
 
@@ -66,7 +66,7 @@ program.
 
     const results = await topNew(
       { get, log, debug, cache, trace: m => traceLog.record(m) }, 
-      { count: opts.count, useLobsters: opts.rs || false });
+      { count: opts.count, useLobsters: opts.rs });
 
     log(`\nShowing <${results.length}> stories\n`);
 
@@ -93,7 +93,9 @@ program.
       log(`Hiding the top <${opts.count}> items`);
 
       return await
-        topNew({ get, debug: select(opts), cache, trace: m => traceLog.record(m) }, { count: opts.count, useLobsters: opts.rs || false }).
+        topNew(
+          { get, debug: select(opts), cache, trace: m => traceLog.record(m) }, 
+          { count: opts.count, useLobsters: opts.rs }).
         then(results => { log(results.map(it => it.id).join(', ')); return results; }).
         then(results => hide(results.map(result => result.id))).
         then(count   => log(`You have <${count}> ${opts.save ? 'saved' : 'seen'} items`));
