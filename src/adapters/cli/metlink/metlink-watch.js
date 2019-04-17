@@ -1,5 +1,5 @@
 const realTime  = require('../../metlink').realTime;
-
+const { render } = require('./internal/console-render');
 const watch = (ports, opts) => {
   const limit = 20;
   const { log, debug, get } = ports;
@@ -28,18 +28,19 @@ const watch = (ports, opts) => {
         wait: false,
         icon: path.join(__dirname, 'metlink.ico'),
         appId: 'xxx'
-      }, function(args) {
-        log(`${args}`);
-      }
+      }, args => log(`${args}`)
     );
   }
 
-  log(`Starting watch, notifying every ${interval}s`);
+  log(`Starting watch, notifying every ${interval}s\n`);
 
   const action = () => {
     realTime({ get, log }, opts).
     catch(e     => { throw e; }).
-    then(result => notify(result, opts));
+    then(result => { 
+      notify(result, opts);
+      render(ports, result, opts); 
+    });
   }
 
   action();
@@ -61,9 +62,8 @@ const watch = (ports, opts) => {
   });
   
   return new Promise((resolve, reject) => {
-    rl.question('Press any key to quit', () => {
+    rl.question('CTRL+C to quit\n\n', () => {
       rl.close(); 
-      log(`Stopping...`);
       resolve();
     })
   });
