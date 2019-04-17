@@ -10,18 +10,17 @@ const program = require('commander');
 program.
   version('0.0.1').
   command("due <stopNumber> [routeNumber...]").
-  option("-i --interval <interval>" , "How often to poll in seconds" , 30).
   option("-d --dryRrun"             , "Dry run only").
-  option("-w --watch"               , "Watch and notify").
+  option("-w --watch [watch]"       , "Watch and notify", 30).
   option("-v --verbose"             , "Enable verbose logging").
   option("-s --sound"               , "Play sound").
-  option("-l --limit <limit>"       , "Limit how many results"       , 3).
+  option("-l --limit <limit>"       , "Limit how many results", 3).
   action((stopNumber, routeNumber, cmd) => {
     const opts = { 
       stopNumber, 
       routeNumber, 
       enableDebug:  process.env.DEBUG == 1,
-      interval:     cmd.interval, 
+      interval:     cmd.watch, 
       dryRun:       cmd.dryRun  || false,
       watch:        cmd.watch   || false,
       verbose:      cmd.verbose || false,
