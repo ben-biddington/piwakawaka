@@ -22,7 +22,7 @@ program.
       enableDebug:  process.env.DEBUG == 1,
       interval:     cmd.watch, 
       dryRun:       cmd.dryRun  || false,
-      watch:        cmd.watch   || false,
+      watch:        program.rawArgs.includes('-w') || program.rawArgs.includes('--watch'),
       verbose:      cmd.verbose || false,
       enableSound:  cmd.sound   || false,
       limit:        cmd.limit
