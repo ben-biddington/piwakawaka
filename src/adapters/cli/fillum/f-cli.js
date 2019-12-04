@@ -12,6 +12,20 @@ const debugLog = (opts) => (process.env.DEBUG == 1 || opts.verbose === true) ? t
 
 const program = require('commander');
 
+const rssEarl = async () => {
+  const fromFile = () => new Promise((a,r) => {
+    fs.readFile('.rss_url', (e, data) => {
+      if (e) {
+        r(e);
+      } else {
+        a(data.toString());
+      }
+    });
+  });
+  
+  return Promise.resolve(process.env.RSS_URL || await fromFile());
+}
+
 program.
   version('0.0.1').
   command("rating [title...]").
@@ -61,7 +75,7 @@ program.
           feed: [],
           item: ['torrent']}});
 
-    const url     = process.env.RSS_URL;
+    const url = await rssEarl().then(it => it.trim());
     
     if (!url)
       throw `You need to set the <RSS_URL> env var`;
