@@ -13,7 +13,7 @@ const parse = (urlText, log = _ => {}) => {
     result = result.withEnableSave(params.get("ENABLE_SAVE") == 1)
   }
 
-  log(`[questStringFeatureToggles#parse] url <${urlText}> <${JSON.stringify(url)}> parsed to ${JSON.stringify(params)} and returning <${JSON.stringify(result)}>`);
+  log(`[queryStringFeatureToggles#parse] url <${urlText}> <${JSON.stringify(url)}> parsed to ${JSON.stringify(params)} and returning <${JSON.stringify(result)}>`);
 
   return result;
 }
