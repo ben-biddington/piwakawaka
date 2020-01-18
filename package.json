@@ -6,7 +6,7 @@
   "scripts": {
     "test.unit": "mocha --timeout 10000 test/unit.tests/**/*-test.js test/unit.tests/**/*examples.js",
     "install": "bash install.sh",
-    "test.integration": "mocha test/integration.tests/**/*-test.js test/integration.tests/**/**/*examples.js --timeout 10000 --file test/acceptance.tests/support/server.js",
+    "test.integration": "mocha test/integration.tests/**/*-test.js test/integration.tests/**/*examples.js --timeout 10000 --file test/acceptance.tests/support/server.js",
     "test.acceptance": "mocha test/acceptance.tests/**/*-test.js --timeout 10000 --file test/acceptance.tests/support/server.js",
     "server": "node src/adapters/web/server.js",
     "build": "bash build.sh"
