@@ -35,12 +35,12 @@ describe('Querying for bus stops', () => {
     const ports = { 
       get: (url) => {
         actualUrls.push(url);
-        return Promise.resolve({ statusCode: 404, body: "NOT FOUND" });
+        return Promise.resolve({ statusCode: 200, body: "{}" });
       }, 
       log: settings.log
     };
     
-    const stopsContainingBlanks = ['1','',' ', null,'4'];
+    const stopsContainingBlanks = ['1','',' ', null,'5'];
 
     await stops(ports, { enableDebug, baseUrl: 'http://example' }, ...stopsContainingBlanks);
 
