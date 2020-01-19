@@ -29,3 +29,23 @@ describe('Querying for bus stops', () => {
     expect(result.sms) .to.equal('20');
   });
 });
+
+describe('how it treats the supplied stops list', () => {
+  it('ignores blanks', async () => {
+    const actualUrls = [];
+
+    const ports = { 
+      get: (url) => {
+        actualUrls.push(url);
+        return Promise.resolve({ statusCode: 404, body: "NOT FOUND" });
+      }, 
+      log: settings.log
+    };
+    
+    const stopsContainingBlanks = ['1','',' ', null,'4'];
+
+    await stops(ports, { enableDebug, baseUrl: 'http://example' }, ...stopsContainingBlanks);
+
+    expect(actualUrls).to.eql([ 'http://example/1', 'http://example/4' ]);
+  });
+});

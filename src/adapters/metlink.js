@@ -63,7 +63,11 @@ const stops = async (ports = {}, opts = {}, ...stopNumbers) => {
   
   debug(`stopNumbers: ${stopNumbers}`);
 
-  const result = await Promise.all(stopNumbers.map(async stopNumber => {
+  const validStopNumbers = stopNumbers.
+    filter(it => it != null).
+    filter(it => it.trim() != '');
+
+  const result = await Promise.all(validStopNumbers.map(async stopNumber => {
     const url  = `${baseUrl}/${stopNumber}`;
     
     debug(`URL: ${url}, stopNumber: ${stopNumber}`);
