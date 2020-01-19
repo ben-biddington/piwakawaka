@@ -28,9 +28,7 @@ describe('Querying for bus stops', () => {
     expect(result.name).to.equal('UNKNOWN STOP');
     expect(result.sms) .to.equal('20');
   });
-});
 
-describe('how it treats the supplied stops list', () => {
   it('ignores blanks', async () => {
     const actualUrls = [];
 
