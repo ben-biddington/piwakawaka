@@ -1,0 +1,4 @@
+#!/bin/bash
+
+node src/adapters/cli/charge/charge-cli.js $@
+
