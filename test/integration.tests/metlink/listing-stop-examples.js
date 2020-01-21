@@ -44,6 +44,6 @@ describe('Querying for bus stops', () => {
 
     await stops(ports, { enableDebug, baseUrl: 'http://example' }, ...stopsContainingBlanks);
 
-    expect(actualUrls).to.eql([ 'http://example/1', 'http://example/4' ]);
+    expect(actualUrls).to.eql([ 'http://example/1', 'http://example/5' ]);
   });
 });
