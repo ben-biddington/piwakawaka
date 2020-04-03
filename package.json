@@ -22,7 +22,7 @@
     "node-notifier": "^5.4.0",
     "request": "^2.88.0",
     "rss-parser": "^3.7.0",
-    "sqlite3": "^4.0.6",
+    "sqlite3": "^4.1.1",
     "xml-formatter": "^1.1.0"
   },
   "devDependencies": {
