@@ -80,10 +80,14 @@ class Database {
     });
   }
 
-  connected(fn) {
+  async connected(fn) {
     const db = this.open();
 
-    return fn(db).finally(() => db.close());
+    try {
+      return await fn(db);
+    } finally {
+      db.close();
+    }
   }
 
   open () {
