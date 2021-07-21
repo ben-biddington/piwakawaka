@@ -3,6 +3,7 @@ const settings    = require('../../acceptance.tests/support/settings');
 const stops       = require('../../../src/adapters/metlink').stops;
 const enableDebug = settings.features.enableDebug;
 const { cannedGet } = require('../support/net');
+const { get }       = require('../../../src/adapters/internet');
 
 describe('Querying for bus stops', () => {
   it('can find stops by id', async () => {
@@ -45,5 +46,19 @@ describe('Querying for bus stops', () => {
     await stops(ports, { enableDebug, baseUrl: 'http://example' }, ...stopsContainingBlanks);
 
     expect(actualUrls).to.eql([ 'http://example/1', 'http://example/5' ]);
+  });
+});
+
+describe('access tokens', () => {
+  it('get one like this', async () => {
+    const url = 'https://www.metlink.org.nz/api/v2/access_token';
+
+    const reply = await get(url);
+
+    //console.log(JSON.stringify(JSON.parse(reply.body), null, 2));
+
+    const token = JSON.parse(reply.body).access_token;
+
+    console.log(token);
   });
 });
