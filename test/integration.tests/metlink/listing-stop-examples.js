@@ -7,16 +7,88 @@ const { get }       = require('../../../src/adapters/internet');
 
 describe('Querying for bus stops', () => {
   it('can find stops by id', async () => {
-    const jsonText = '{"Name":"Manners Street at Cuba Street - Stop A","Sms":"5515","Farezone":"1","Lat":-41.2914083,"Long":174.7771028,"LastModified":"2019-03-27T00:01:07+13:00"}';
+    let jsonText = '{"Name":"Manners Street at Cuba Street - Stop A","Sms":"5515","Farezone":"1","Lat":-41.2914083,"Long":174.7771028,"LastModified":"2019-03-27T00:01:07+13:00"}';
     
+    jsonText= `{
+      "stop_id": "4130",
+      "stop_name": "Wilton Road at Warwick Street",
+      "stop_code": "4130",
+      "stop_lat": -41.267979,
+      "stop_lon": 174.760231,
+      "route_ids": [
+        "140"
+      ],
+      "tags": [],
+      "demand_info": {
+        "default_dataset": "weekdays",
+        "data": {
+          "weekdays": [
+            0.4,
+            0.6,
+            1.41,
+            0.2,
+            0.2,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.2,
+            0.2,
+            0.2,
+            0.2,
+            0
+          ],
+          "saturday": [
+            0,
+            0.2,
+            0.2,
+            0.2,
+            0.6,
+            0.2,
+            0.4,
+            0.2,
+            1.21,
+            0.4,
+            0.2,
+            0.2,
+            0.4,
+            0.2,
+            0.2,
+            0
+          ],
+          "sunday": [
+            0,
+            0,
+            0.2,
+            0.4,
+            0.2,
+            0.4,
+            0.2,
+            0.2,
+            0.4,
+            0.6,
+            0.2,
+            0.4,
+            0.2,
+            0.2,
+            0.2,
+            0.2
+          ]
+        }
+      },
+      "lastEdited": "2021-07-12T09:09:39+1200"
+    }`
+
     const ports = { get: cannedGet(jsonText), log: settings.log };
     
-    const results = await stops(ports, { enableDebug }, '5515');
+    const results = await stops(ports, { enableDebug }, '4130');
 
     const result = results[0];
 
-    expect(result.name).to.equal('Manners Street at Cuba Street - Stop A');
-    expect(result.sms) .to.equal('5515');
+    expect(result.name).to.equal('Wilton Road at Warwick Street');
+    expect(result.sms) .to.equal('4130');
   });
 
   it('it handle nonexistent stops', async () => {
@@ -46,19 +118,5 @@ describe('Querying for bus stops', () => {
     await stops(ports, { enableDebug, baseUrl: 'http://example' }, ...stopsContainingBlanks);
 
     expect(actualUrls).to.eql([ 'http://example/1', 'http://example/5' ]);
-  });
-});
-
-describe('access tokens', () => {
-  it('get one like this', async () => {
-    const url = 'https://www.metlink.org.nz/api/v2/access_token';
-
-    const reply = await get(url);
-
-    //console.log(JSON.stringify(JSON.parse(reply.body), null, 2));
-
-    const token = JSON.parse(reply.body).access_token;
-
-    console.log(token);
   });
 });

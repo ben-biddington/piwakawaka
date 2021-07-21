@@ -1,5 +1,5 @@
-const moment    = require('moment');
 const chalk     = require('chalk');
+const { formatDistance, differenceInSeconds, differenceInMinutes, format } = require('date-fns')
 
 const render = (ports, result, opts) => {
   const { debug, log } = ports;
@@ -16,8 +16,9 @@ const render = (ports, result, opts) => {
 
   result.arrivals.map(arrival => {
     const scheduled = arrival.isRealtime ? '' : 'SCHEDULED';
+
     log(`${chalk.bgYellow.black(arrival.code.padEnd(5))} ${yellow(arrival.destination.padEnd(20))} ${(arrival.status || '-').padEnd(10)} ` + 
-        `${green(moment.duration(arrival.departureInSeconds, "seconds").humanize().padEnd(15))} ` + 
+        `${green(formatDistance(new Date(), new Date(arrival.departureTime)).padEnd(15))} ` + 
         `${green(arrivalTime(arrival))}` + 
         `${grey(scheduled)}`);
   });
@@ -28,14 +29,14 @@ const render = (ports, result, opts) => {
 };
 
 const arrivalTime = arrival => {
-  const arrivalTime = moment(arrival.departureTime);
+  const arrivalTime = new Date(arrival.departureTime);
   
-  const diff = moment.duration(arrivalTime.diff(new moment())).minutes();
+  const diff = differenceInMinutes(arrivalTime, new Date());// moment.duration(arrivalTime.diff(new moment())).minutes();
   
   if (diff < 60) { 
-    return arrivalTime.format('HH:mm A').padEnd(10);
+    return format(arrivalTime, 'HH:mm aaa').padEnd(10);
   } else {
-    return "".padEnd(5);
+    return "".padEnd(10);
   }
 } 
 

@@ -43,16 +43,15 @@ const realTime = async (ports = {}, opts = {}) => {
     map(   service => ( 
       { 
         code:               service.service_id,
-        destination:        service.name, //service.DestinationStopName,
+        destination:        service.destination.name,
         aimedArrival:       new Date(service.arrival.aimed),
-        aimedDeparture:     new Date(service.departure.aimed),
-        departureTime:      new Date(service.DisplayDeparture),
-        //departureInSeconds: service.DisplayDepartureSeconds,
-        status:             service.status, //service.DepartureStatus,
-        //isRealtime:         service.IsRealtime,
+        aimedDeparture:     new Date(service.departure.aimed),                                        // aimed means scheduled
+        departureTime:      new Date(service.departure.expected || service.departure.aimed),          // expected is the actual expected time
+        status:             service.status,
+        isRealtime:         service.departure.expected != null || service.arrival.expected != null,
       }));
 
-  return { stop: { name: reply.departures[0].name, sms: reply.departures[0].service_id}, arrivals };
+  return { stop: { name: reply.departures[0].name, sms: reply.departures[0].stop_id}, arrivals };
 }
 
 const stops = async (ports = {}, opts = {}, ...stopNumbers) => {

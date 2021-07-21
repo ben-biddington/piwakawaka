@@ -1,0 +1,1369 @@
+{
+  "farezone": "2",
+  "closed": false,
+  "departures": [
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "-PT9S",
+      "vehicle_id": "2066",
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T11:03:00+12:00",
+        "expected": "2021-07-22T11:02:51+12:00"
+      },
+      "departure": {
+        "aimed": "2021-07-22T11:03:00+12:00",
+        "expected": "2021-07-22T11:02:51+12:00"
+      },
+      "status": "ontime",
+      "monitored": true,
+      "wheelchair_accessible": true,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "-PT23S",
+      "vehicle_id": "2202",
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T11:33:00+12:00",
+        "expected": "2021-07-22T11:32:37+12:00"
+      },
+      "departure": {
+        "aimed": "2021-07-22T11:33:00+12:00",
+        "expected": "2021-07-22T11:32:37+12:00"
+      },
+      "status": "ontime",
+      "monitored": true,
+      "wheelchair_accessible": true,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T12:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T12:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T12:33:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T12:33:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T13:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T13:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T13:33:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T13:33:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T14:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T14:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T14:33:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T14:33:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T15:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T15:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T15:23:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T15:23:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T15:43:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T15:43:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T16:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T16:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T16:18:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T16:18:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T16:30:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T16:30:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T16:43:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T16:43:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T16:55:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T16:55:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T17:08:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T17:08:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T17:23:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T17:23:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T17:38:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T17:38:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T17:53:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T17:53:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T18:08:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T18:08:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T18:28:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T18:28:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T18:48:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T18:48:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T19:08:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T19:08:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T19:33:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T19:33:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T20:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T20:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T20:33:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T20:33:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T21:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T21:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T22:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T22:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-22T23:03:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-22T23:03:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T06:28:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T06:28:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T06:48:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T06:48:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T07:09:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T07:09:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "5516",
+        "name": "Courtenay Pl"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T07:19:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T07:19:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T07:29:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T07:29:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "5516",
+        "name": "Courtenay Pl"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T07:39:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T07:39:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T07:49:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T07:49:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T07:59:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T07:59:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "5516",
+        "name": "Courtenay Pl"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T08:05:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T08:05:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T08:11:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T08:11:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "5516",
+        "name": "Courtenay Pl"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T08:17:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T08:17:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T08:23:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T08:23:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "5516",
+        "name": "Courtenay Pl"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T08:29:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T08:29:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T08:39:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T08:39:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "5516",
+        "name": "Courtenay Pl"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T08:49:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T08:49:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T09:04:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T09:04:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    },
+    {
+      "stop_id": "4130",
+      "service_id": "14",
+      "direction": "inbound",
+      "operator": "NBM",
+      "origin": {
+        "stop_id": "4136",
+        "name": "Wilton-SurreySt"
+      },
+      "destination": {
+        "stop_id": "6224",
+        "name": "Kilbirnie"
+      },
+      "delay": "PT0S",
+      "vehicle_id": null,
+      "name": "WiltonRd at Warwick",
+      "arrival": {
+        "aimed": "2021-07-23T09:33:00+12:00",
+        "expected": null
+      },
+      "departure": {
+        "aimed": "2021-07-23T09:33:00+12:00",
+        "expected": null
+      },
+      "status": null,
+      "monitored": false,
+      "wheelchair_accessible": false,
+      "trip_id": false
+    }
+  ]
+}
