@@ -19,7 +19,7 @@
     "date-fns": "^2.22.1",
     "express": "^4.16.4",
     "geopoint": "^1.0.1",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "mysql": "^2.16.0",
     "node-notifier": "^5.4.0",
     "request": "^2.88.0",
